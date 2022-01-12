@@ -1,0 +1,27 @@
+app:
+  name: 'Goovpn'
+  version: '1.0.0'
+  id_app: 'Goovpn'
+  stop_time: 400 
+  image_path_connected: 'assets/connecting.png'
+  image_path_disconnected: 'assets/disconnect.png'
+  image_path_blink: 'assets/blink.png'
+  image_path_open: 'assets/open.png'
+  app_icon: 'assets/app.png'
+  temp_dir: '/tmp/goovpn/'
+  configs_path: '~/ovpnconfigs/'
+  height_app: 500
+  width_app: 600 
+  verb_log: 5
+  use_systemd: false
+  disable_cert: false
+  mode: 'yes' #yes no 
+  conn_timeout: 30
+
+logger:
+  log_level: 'debug' #info
+  #log_file:
+  #log_file_count:  
+  #log_file_size:
+   
+  
