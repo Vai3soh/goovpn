@@ -54,9 +54,9 @@ type Session struct {
 	callbacks       interface{}
 	tunnelSetup     TunnelSetup
 	finished        sync.WaitGroup
-	stop            sync.WaitGroup
-	reconnectChan   chan int
-
+	//stop            sync.WaitGroup
+	reconnectChan chan int
+	stopChan      chan string
 	// runtime variables
 	resError error
 }
@@ -70,6 +70,7 @@ func NewSession(config Config, userCredentials UserCredentials, callbacks interf
 		tunnelSetup:     &NoOpTunnelSetup{},
 		resError:        nil,
 		reconnectChan:   make(chan int, 1),
+		stopChan:        make(chan string, 1),
 	}
 }
 
@@ -82,6 +83,7 @@ type MobileSessionCallbacks interface {
 
 // NewMobileSession creates a new mobile session provided the required callbacks and tunnel setup
 func NewMobileSession(config Config, userCredentials UserCredentials, callbacks MobileSessionCallbacks, tunSetup TunnelSetup) *Session {
+
 	return &Session{
 		config:          config,
 		userCredentials: userCredentials,
@@ -100,16 +102,16 @@ var ErrConnectFailed = errors.New("openvpn3 connect failed")
 
 // Start starts the session
 func (session *Session) Start() {
+
 	session.finished.Add(1)
-	session.stop.Add(1)
+	//session.stop.Add(1)
 	go func() {
-		defer session.finished.Done()
+		//defer session.finished.Done()
 		cConfig, cConfigUnregister := session.config.toPtr()
 		defer cConfigUnregister()
 
 		cCredentials, cCredentialsUnregister := session.userCredentials.toPtr()
 		defer cCredentialsUnregister()
-
 		callbacksDelegate, removeCallback := registerCallbackDelegate(session.callbacks)
 		defer removeCallback()
 
@@ -128,22 +130,32 @@ func (session *Session) Start() {
 			return
 		}
 
-		go func() {
-			session.stop.Wait()
-			C.stop_session(sessionPtr)
-		}()
-
-		go func() {
-			for seconds := range session.reconnectChan {
+		go func(reconnectChan chan int) {
+			//block
+			for seconds := range reconnectChan {
 				C.reconnect_session(sessionPtr, C.int(seconds))
 			}
-		}()
+		}(session.reconnectChan)
 
+		go func(stopChan chan string) {
+
+			//session.stop.Wait()
+			session.stopChan <- "open"
+			session.finished.Wait()
+			C.stop_session(sessionPtr)
+			for sessionCondition := range stopChan {
+				func(sessionCondition string) {}(sessionCondition)
+				stopChan <- "close"
+				return
+			}
+		}(session.stopChan)
+
+		//block
 		res, _ := C.start_session(sessionPtr)
 		if res != 0 {
+			defer session.finished.Done()
 			session.resError = ErrConnectFailed
 		}
-
 		C.cleanup_session(sessionPtr)
 	}()
 }
@@ -156,7 +168,8 @@ func (session *Session) Wait() error {
 
 // Stop stops the session
 func (session *Session) Stop() {
-	session.stop.Done()
+	//session.stop.Done()
+	session.finished.Done()
 	close(session.reconnectChan)
 }
 
@@ -164,4 +177,22 @@ func (session *Session) Stop() {
 func (session *Session) Reconnect(seconds int) error {
 	session.reconnectChan <- seconds
 	return nil
+}
+
+//Check session close or not
+func (session *Session) IsClose() bool {
+
+	if len(session.stopChan) == 0 {
+		return true
+	}
+
+	for sessionCondition := range session.stopChan {
+		if sessionCondition == "close" {
+			close(session.stopChan)
+			return true
+		} else {
+			return false
+		}
+	}
+	return true
 }
