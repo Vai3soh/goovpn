@@ -26,7 +26,7 @@ Download deb, rpm, appimage package in realese:
 ```github.com/Vai3soh/goovpn/releases```
 
 Install package:
-```sudo dpkg -i goovpn-1.0.0.x86_64.deb/sudo dnf goovpn-1.0.0.x86_64.deb```
+```sudo dpkg -i goovpn_1.0.0_amd64.deb or sudo dnf goovpn-1.0.0.x86_64.rpm```
 
 After install run:
 ```sudo edit /etc/goovpn/config.yml```
