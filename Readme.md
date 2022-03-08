@@ -23,7 +23,7 @@ make build_appimage
 
 Download deb, rpm, appimage package in realese:
 
-https://github.com/Vai3soh/goovpn/releases/tag/v.0.0.1
+github.com/Vai3soh/goovpn/releases
 
 Install package:
 sudo dpkg -i goovpn-1.0.0.x86_64.deb/sudo dnf goovpn-1.0.0.x86_64.deb
