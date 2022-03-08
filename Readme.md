@@ -36,6 +36,7 @@ move your openvpn configs files to this dir and run program:
 1. From terminal: goovpn -config /etc/goovpn/config.yml
 2. From menu in DE 
 
+If use Goovpn-x86_64.AppImage, config file is located ~/.config/goovpn/config.yml
 
 Screenshot:
 ![Data_Label](https://raw.githubusercontent.com/Vai3soh/goovpn/master/goovpn_screen.png)
