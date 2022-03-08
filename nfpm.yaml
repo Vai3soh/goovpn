@@ -1,0 +1,69 @@
+name: "goovpn"
+arch: "amd64"
+platform: "linux"
+version: "v1.0.0"
+section: "default"
+priority: "extra"
+
+maintainer: "Vai3soh <he9tei7@protonmail.com>"
+description: |
+  Goovpn openvpn client gui(use qt) for linux.
+    
+license: "MIT"
+changelog: "changelog.yaml"
+
+contents:
+- src: ./cmd/app/goovpn
+  dst: /usr/sbin/goovpn
+  file_info:
+    mode: 0755
+
+- src: ./scripts/goovpn
+  dst: /usr/bin/goovpn
+  file_info:
+    mode: 0755
+
+- src: ./scripts/goovpn.desktop
+  dst: /usr/share/applications/goovpn.desktop
+      
+- src: ./config/config.yml
+  dst: /etc/goovpn/config.yml
+  type: config
+
+- src: ./embedfile/assets/app.png
+  dst: /usr/share/icons/hicolor/128x128/apps/goovpn.png
+
+overrides:
+  deb:
+    depends:
+      - iproute2
+      - libfontconfig1
+      - libfreetype6
+      - libxcb-glx0
+      - libx11-xcb1
+      - libxcb1
+      - libxrender1
+      - libx11-6
+      - libc6
+      - libxkbcommon0
+      - libglib2.0-0
+      - libgl1
+      - libstdc++6
+      - libgcc-s1
+      - libexpat1
+      - libuuid1
+      - libpng16-16
+      - zlib1g
+      - libbrotli1
+      - libxau6
+      - libxdmcp6
+      - libpcre3
+      - libglvnd0
+      - libglx0
+      - libbsd0
+      - libmd0
+
+  rpm:
+    depends:
+      - iproute
+

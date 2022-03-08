@@ -1,0 +1,4 @@
+.vscode/*
+cmd/app/goovpn
+build/package/*
+bug
