@@ -47,6 +47,7 @@ type Config struct {
 }
 
 func (config *Config) toPtr() (cConfig C.config, unregister func()) {
+
 	cProfileContent := newCharPointer(config.ProfileContent)
 	cGuiVersion := newCharPointer(config.GuiVersion)
 	cCompressionMode := newCharPointer(config.CompressionMode)
@@ -61,6 +62,7 @@ func (config *Config) toPtr() (cConfig C.config, unregister func()) {
 		tunPersist:        C.bool(config.TunPersist),
 		compressionMode:   cCompressionMode.Ptr,
 	}
+
 	unregister = func() {
 		cProfileContent.delete()
 		cGuiVersion.delete()

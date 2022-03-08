@@ -19,6 +19,7 @@ package openvpn3
 
 import "errors"
 
+
 // TunnelSetup is the interface representing the tunnel setup
 type TunnelSetup interface {
 	NewBuilder() bool
@@ -65,6 +66,7 @@ func (setup *NoOpTunnelSetup) SetLayer(layer int) bool {
 // SetRemoteAddress - noop - returns false
 func (setup *NoOpTunnelSetup) SetRemoteAddress(ipAddress string, ipv6 bool) bool {
 	return false
+
 }
 
 // AddAddress - noop - returns false
@@ -94,6 +96,7 @@ func (setup *NoOpTunnelSetup) ExcludeRoute(address string, prefixLength int, met
 
 // AddDnsServer - noop - returns false
 func (setup *NoOpTunnelSetup) AddDnsServer(address string, ipv6 bool) bool {
+
 	return false
 }
 
