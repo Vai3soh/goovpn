@@ -10,35 +10,35 @@ Program uses the following libraries:
 
 Build:
 
-git clone github.com/Vai3soh/goovpn
+```git clone github.com/Vai3soh/goovpn```
 
 Build binary with docker:
-make build_docker
+```make build_docker```
 
 And then run build(deb/rpm package):
-make build_package
+```make build_package```
 
 Or build appimage:
-make build_appimage
+```make build_appimage```
 
 Download deb, rpm, appimage package in realese:
 
-github.com/Vai3soh/goovpn/releases
+```github.com/Vai3soh/goovpn/releases```
 
 Install package:
-sudo dpkg -i goovpn-1.0.0.x86_64.deb/sudo dnf goovpn-1.0.0.x86_64.deb
+```sudo dpkg -i goovpn-1.0.0.x86_64.deb/sudo dnf goovpn-1.0.0.x86_64.deb```
 
 After install run:
-sudo edit /etc/goovpn/config.yml
+```sudo edit /etc/goovpn/config.yml```
 
 and modify path to configs dir (configs_path: '~/ovpnconfigs/')
-add path to current user aka: /home/user/ovpnconfigs
+add path to current user aka: ```/home/user/ovpnconfigs```
 move your openvpn configs files to this dir and run program:
 
-1. From terminal: goovpn -config /etc/goovpn/config.yml
+1. From terminal: ```goovpn -config /etc/goovpn/config.yml```
 2. From menu in DE 
 
-If use Goovpn-x86_64.AppImage, config file is located ~/.config/goovpn/config.yml
+If use Goovpn-x86_64.AppImage, config file is located ```~/.config/goovpn/config.yml```
 
 Screenshot:
 
