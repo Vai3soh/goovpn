@@ -73,10 +73,12 @@ func (vp *VpnUseCase) caseFlickeringIcon(text string) {
 	}
 }
 
-func (vp *VpnUseCase) caseOpenvpnSessionEnd() {
+func (vp *VpnUseCase) caseOpenvpnSessionEnd(UseSystemd *bool) {
 	vp.UiRepo.ButtonConnectEnable()
 	vp.UiRepo.EnableComboBox()
-	vp.ReturnResolvConf()
+	if !*UseSystemd {
+		vp.ReturnResolvConf()
+	}
 }
 
 func (vp *VpnUseCase) caseSetLogsInTextWidget(text string) {
@@ -98,7 +100,7 @@ func (vp *VpnUseCase) ReadLogsAndStartProcess(UseSystemd *bool, wg *sync.WaitGro
 			vp.caseAddDnsAddress(text)
 		}
 		if strings.Contains(text, "Openvpn3 session ended") {
-			vp.caseOpenvpnSessionEnd()
+			vp.caseOpenvpnSessionEnd(UseSystemd)
 			vp.UiRepo.ButtonDisconnectDisable()
 			err := vp.TrayRepo.SetDisconnectIcon()
 			if err != nil {
