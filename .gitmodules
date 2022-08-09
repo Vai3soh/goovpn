@@ -1,0 +1,3 @@
+[submodule "go-openvpn"]
+	path = go-openvpn
+	url = https://github.com/Vai3soh/go-openvpn

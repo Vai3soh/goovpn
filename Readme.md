@@ -11,7 +11,7 @@ Program uses the following libraries:
 
 Build:
 
-```git clone github.com/Vai3soh/goovpn```
+```git clone --recurse-submodules github.com/Vai3soh/goovpn```
 
 Build binary with docker:
 ```make build_docker```

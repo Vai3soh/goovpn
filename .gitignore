@@ -2,3 +2,4 @@
 cmd/app/goovpn
 build/package/*
 bug
+go-openvpn/*
