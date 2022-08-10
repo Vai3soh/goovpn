@@ -1,5 +1,5 @@
 .vscode/*
 cmd/app/goovpn
+cmd/app/qtbox
 build/package/*
 bug
-go-openvpn/*

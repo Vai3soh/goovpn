@@ -49,7 +49,7 @@ func WithPermisson(perm fs.FileMode) Option {
 	}
 }
 
-func (f *File) FilesInDir(dir string) (*[]string, error) {
+func (f *File) FilesInDir(dir string) ([]string, error) {
 
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
@@ -62,7 +62,7 @@ func (f *File) FilesInDir(dir string) (*[]string, error) {
 				filepath.Ext(file.Name())))
 		}
 	}
-	return &arr, nil
+	return arr, nil
 }
 
 func (f *File) ReadFileAsByte() ([]byte, error) {

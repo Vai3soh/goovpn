@@ -209,15 +209,26 @@ func (ui *uiMainWindow) ClearTextEdit() {
 	ui.textEditReadOnly.Clear()
 }
 
-func (s *sysTray) SetupSysTray() (*widgets.QAction, *widgets.QAction, error) {
+func (ui *uiMainWindow) IsEnableCombo() bool {
+	return ui.comboBox.IsEnabled()
+}
+
+func (ui *uiMainWindow) UpdateComboBox(configs []string) {
+	ui.comboBox.Clear()
+	ui.comboBox.AddItems(configs)
+}
+
+func (s *sysTray) SetupSysTray() (*widgets.QAction,
+	*widgets.QAction, *widgets.QAction, error) {
 	path, err := s.SearchKeyInMap("disconnect")
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	s.SetIcon(*path)
 	main := s.menu.AddAction("Open main window")
+	updateComboBox := s.menu.AddAction("Update configs")
 	exit := s.menu.AddAction("Exit")
-	return exit, main, nil
+	return exit, main, updateComboBox, nil
 }
 
 func (s *sysTray) Image() map[string][]byte {

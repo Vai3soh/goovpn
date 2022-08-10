@@ -67,7 +67,7 @@ func Run(cfg *config.Config) {
 	file := fileextended.NewFile()
 	files, err := file.FilesInDir(cfg.ConfigsPath)
 	if err != nil {
-		l.Fatalf("don't read dir: %s", err)
+		l.Fatalf("don't read dir: %s\n", err)
 	}
 
 	command := cmdextended.NewCmd()
@@ -142,10 +142,10 @@ func Run(cfg *config.Config) {
 		cfg.Log.Level, cfg.TempDir,
 		cfg.Name,
 		*appIconPath,
-		*files,
+		files,
 	)
 
-	exit, main, err := stray.SetupSysTray()
+	exit, main, updateCfgs, err := stray.SetupSysTray()
 	if err != nil {
 		l.Fatal(err)
 	}
@@ -153,7 +153,15 @@ func Run(cfg *config.Config) {
 	app.SetQuitOnLastWindowClosed(false)
 
 	main.ConnectTriggered(func(bool) { mainWindown.Show() })
-
+	updateCfgs.ConnectTriggered(func(bool) {
+		if mainUiWindow.IsEnableCombo() {
+			files, err := file.FilesInDir(cfg.ConfigsPath)
+			if err != nil {
+				l.Fatalf("don't read dir: %s\n", err)
+			}
+			mainUiWindow.UpdateComboBox(files)
+		}
+	})
 	VpnUseCase.FileRepo.SetPath(cfg.TempDir)
 	VpnUseCase.CreateDir()
 	VpnUseCase.CopyImages()
@@ -183,6 +191,7 @@ func Run(cfg *config.Config) {
 	mainUiWindow.PushButtonExit.ConnectClicked(func(_ bool) {
 		closeAppTrigger(session, &m, cfg, VpnUseCase, app)
 	})
+
 	exit.ConnectTriggered(func(bool) {
 		closeAppTrigger(session, &m, cfg, VpnUseCase, app)
 	})
