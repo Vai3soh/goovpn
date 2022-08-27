@@ -1,3 +1,3 @@
-[submodule "go-openvpn"]
-	path = go-openvpn
+[submodule "third_party/go-openvpn"]
+	path = third_party/go-openvpn
 	url = https://github.com/Vai3soh/go-openvpn
