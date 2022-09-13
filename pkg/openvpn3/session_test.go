@@ -18,36 +18,40 @@
 package openvpn3
 
 import (
-	"testing"
-
+	"context"
 	"fmt"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestSessionStartStopDoesNotPanic(t *testing.T) {
-	session := NewSession(Config{}, UserCredentials{}, &fmtLogger{})
-	session.Start()
-	session.Stop()
-}
-
-func TestSessionInitFailsForInvalidProfile(t *testing.T) {
-	session := NewSession(Config{}, UserCredentials{}, &fmtLogger{})
-	session.Start()
-	err := session.Wait()
-	assert.Equal(t, ErrInitFailed, err)
-}
-
-func TestSessionConnectFailsForInvalidRemote(t *testing.T) {
-	session := NewSession(NewConfig("remote localhost 1111"), UserCredentials{}, &fmtLogger{})
-	session.Start()
-	err := session.Wait()
-	assert.Equal(t, ErrConnectFailed, err)
-}
 
 type fmtLogger struct {
 }
 
 func (l *fmtLogger) Log(text string) {
 	fmt.Println(text)
+}
+
+func TestSessionStartStopDoesNotPanic(t *testing.T) {
+	ctx, _ := context.WithCancel(context.Background())
+	session := NewSession(Config{}, UserCredentials{}, &fmtLogger{})
+	session.Start(ctx)
+	session.Stop()
+}
+
+func TestSessionInitFailsForInvalidProfile(t *testing.T) {
+	ctx, _ := context.WithCancel(context.Background())
+	session := NewSession(Config{}, UserCredentials{}, &fmtLogger{})
+	session.Start(ctx)
+	err := session.CallbackError()
+	assert.Equal(t, ErrInitFailed, err)
+}
+
+func TestSessionConnectFailsForInvalidRemote(t *testing.T) {
+	ctx, _ := context.WithCancel(context.Background())
+	cfg := NewConfig(`remote localhost 1111`)
+	session := NewSession(cfg, UserCredentials{}, &fmtLogger{})
+	session.Start(ctx)
+	err := session.CallbackError()
+	assert.Equal(t, ErrConnectFailed, err)
 }

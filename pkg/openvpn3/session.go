@@ -43,34 +43,40 @@ package openvpn3
 */
 import "C"
 import (
+	"context"
 	"errors"
-	"sync"
+	"unsafe"
+
+	"golang.org/x/sync/errgroup"
 )
 
 // Session represents the openvpn session
 type Session struct {
 	config          Config
-	userCredentials UserCredentials
+	userCredentials *UserCredentials
 	callbacks       interface{}
 	tunnelSetup     TunnelSetup
-	finished        sync.WaitGroup
-	//stop            sync.WaitGroup
-	reconnectChan chan int
-	stopChan      chan string
-	// runtime variables
-	resError error
+	g               *errgroup.Group
+	resError        error
+	errorChan       chan error
+	ptSession       unsafe.Pointer
 }
 
 // NewSession creates a new session given the callbacks
-func NewSession(config Config, userCredentials UserCredentials, callbacks interface{}) *Session {
+func NewSession(
+	config Config, userCredentials UserCredentials, callbacks interface{},
+
+) *Session {
+
 	return &Session{
 		config:          config,
-		userCredentials: userCredentials,
+		userCredentials: &userCredentials,
 		callbacks:       callbacks,
 		tunnelSetup:     &NoOpTunnelSetup{},
+		g:               &errgroup.Group{},
 		resError:        nil,
-		reconnectChan:   make(chan int, 1),
-		stopChan:        make(chan string, 1),
+		ptSession:       nil,
+		errorChan:       make(chan error),
 	}
 }
 
@@ -82,15 +88,20 @@ type MobileSessionCallbacks interface {
 }
 
 // NewMobileSession creates a new mobile session provided the required callbacks and tunnel setup
-func NewMobileSession(config Config, userCredentials UserCredentials, callbacks MobileSessionCallbacks, tunSetup TunnelSetup) *Session {
+func NewMobileSession(
+	config Config, userCredentials UserCredentials,
+	callbacks MobileSessionCallbacks, tunSetup TunnelSetup,
+) *Session {
 
 	return &Session{
 		config:          config,
-		userCredentials: userCredentials,
+		userCredentials: &userCredentials,
 		callbacks:       callbacks,
 		tunnelSetup:     tunSetup,
+		g:               &errgroup.Group{},
 		resError:        nil,
-		reconnectChan:   make(chan int, 1),
+		ptSession:       nil,
+		errorChan:       make(chan error),
 	}
 }
 
@@ -100,99 +111,127 @@ var ErrInitFailed = errors.New("openvpn3 init failed")
 // ErrConnectFailed is the error we return when openvpn3 fails to connect
 var ErrConnectFailed = errors.New("openvpn3 connect failed")
 
-// Start starts the session
-func (session *Session) Start() {
+func (session *Session) controlCancelContext(ctx context.Context) {
+	for {
+		select {
+		case <-ctx.Done():
+			if session.ptSession != nil {
+				C.stop_session(session.ptSession)
+				return
+			}
+		default:
+			continue
+		}
+	}
+}
 
-	session.finished.Add(1)
-	//session.stop.Add(1)
-	go func() {
-		//defer session.finished.Done()
-		cConfig, cConfigUnregister := session.config.toPtr()
+func (session *Session) getConfig() (*C.struct___3, func()) {
+	cConfig, cConfigUnregister := session.config.toPtr()
+	return &cConfig, cConfigUnregister
+}
+
+func (session *Session) getCread() (*C.struct___4, func()) {
+	cCredentials, cCredentialsUnregister := session.userCredentials.toPtr()
+	return &cCredentials, cCredentialsUnregister
+}
+
+func (session *Session) getCallbackDelegate() (expCallbacks, func()) {
+	callbacksDelegate, removeCallback := registerCallbackDelegate(session.callbacks)
+	return callbacksDelegate, removeCallback
+}
+
+func (session *Session) getTunnelBuilderCallbacks() (*C.struct___8, func()) {
+	tunBuilderCallbacks, removeTunCallbacks := registerTunnelSetupDelegate(session.tunnelSetup)
+	return &tunBuilderCallbacks, removeTunCallbacks
+}
+
+func (session *Session) getSessionPtr(
+	cConfig *C.struct___3, cCredentials *C.struct___4,
+	callbacksDelegate expCallbacks, tunBuilderCallbacks *C.struct___8,
+) unsafe.Pointer {
+	sessionPtr, _ := C.new_session(
+		*cConfig,
+		*cCredentials,
+		C.callbacks_delegate(callbacksDelegate),
+		C.tun_builder_callbacks(*tunBuilderCallbacks),
+	)
+	return sessionPtr
+}
+
+func (session *Session) Start(ctx context.Context) {
+
+	cConfig, cConfigUnregister := session.getConfig()
+	cCredentials, cCredentialsUnregister := session.getCread()
+	callbacksDelegate, removeCallback := session.getCallbackDelegate()
+	tunBuilderCallbacks, removeTunCallbacks := session.getTunnelBuilderCallbacks()
+
+	sessionPtr := session.getSessionPtr(
+		cConfig, cCredentials,
+		callbacksDelegate, tunBuilderCallbacks,
+	)
+
+	session.g.Go(func() error {
+
 		defer cConfigUnregister()
-
-		cCredentials, cCredentialsUnregister := session.userCredentials.toPtr()
 		defer cCredentialsUnregister()
-		callbacksDelegate, removeCallback := registerCallbackDelegate(session.callbacks)
 		defer removeCallback()
-
-		tunBuilderCallbacks, removeTunCallbacks := registerTunnelSetupDelegate(session.tunnelSetup)
 		defer removeTunCallbacks()
-
-		sessionPtr, _ := C.new_session(
-			cConfig,
-			cCredentials,
-			C.callbacks_delegate(callbacksDelegate),
-			C.tun_builder_callbacks(tunBuilderCallbacks),
-		)
 
 		if sessionPtr == nil {
 			session.resError = ErrInitFailed
-			return
+			return session.resError
 		}
 
-		go func(reconnectChan chan int) {
-			//block
-			for seconds := range reconnectChan {
-				C.reconnect_session(sessionPtr, C.int(seconds))
-			}
-		}(session.reconnectChan)
+		session.ptSession = sessionPtr
+		go session.controlCancelContext(ctx)
 
-		go func(stopChan chan string) {
-
-			//session.stop.Wait()
-			session.stopChan <- "open"
-			session.finished.Wait()
-			C.stop_session(sessionPtr)
-			for sessionCondition := range stopChan {
-				func(sessionCondition string) {}(sessionCondition)
-				stopChan <- "close"
-				return
-			}
-		}(session.stopChan)
-
-		//block
-		res, _ := C.start_session(sessionPtr)
-		if res != 0 {
-			defer session.finished.Done()
-			session.resError = ErrConnectFailed
+		err := session.run()
+		if err != nil {
+			return err
 		}
 		C.cleanup_session(sessionPtr)
-	}()
+		session.ptSession = nil
+		return nil
+	})
+
+	go session.getErrorFromSession()
 }
 
-// Wait waits for the session to complete
-func (session *Session) Wait() error {
-	session.finished.Wait()
+func (session *Session) getErrorFromSession() {
+	session.errorChan <- session.g.Wait()
+}
+
+func (session *Session) CallbackError() error {
+	for {
+		select {
+		case err := <-session.errorChan:
+			if err != nil {
+				return err
+			}
+		default:
+			continue
+		}
+	}
+}
+
+func (session *Session) run() error {
+	if session.ptSession != nil {
+		res, _ := C.start_session(session.ptSession)
+		if res != 0 {
+			session.resError = ErrConnectFailed
+		}
+	}
 	return session.resError
 }
 
-// Stop stops the session
+func (session *Session) Reconnect(seconds int) {
+	if session.ptSession != nil {
+		C.reconnect_session(session.ptSession, C.int(seconds))
+	}
+}
+
 func (session *Session) Stop() {
-	//session.stop.Done()
-	session.finished.Done()
-	close(session.reconnectChan)
-}
-
-// Reconnect session without propagating DISCONNECT event after `seconds` time
-func (session *Session) Reconnect(seconds int) error {
-	session.reconnectChan <- seconds
-	return nil
-}
-
-//Check session close or not
-func (session *Session) IsClose() bool {
-
-	if len(session.stopChan) == 0 {
-		return true
+	if session.ptSession != nil {
+		C.stop_session(session.ptSession)
 	}
-
-	for sessionCondition := range session.stopChan {
-		if sessionCondition == "close" {
-			close(session.stopChan)
-			return true
-		} else {
-			return false
-		}
-	}
-	return true
 }
