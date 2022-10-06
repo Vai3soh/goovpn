@@ -7,11 +7,6 @@ import (
 	"github.com/fangdingjun/go-log/v5"
 )
 
-type InterfaceLogger interface {
-	log.Interface
-	log.StdLog
-}
-
 type Logger struct {
 	*log.FixedSizeFileWriter
 	*log.Logger

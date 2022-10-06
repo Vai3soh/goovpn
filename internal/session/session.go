@@ -1,22 +1,31 @@
 package session
 
 import (
-	"time"
+	"context"
 
-	"github.com/Vai3soh/goovpn/internal/usecase"
 	"github.com/Vai3soh/goovpn/pkg/openvpn3"
 )
 
-type Openvpn struct {
-	openvpn3.Config
-	openvpn3.Session
-	usecase.UiInteractor
+type OpenvpnClient struct {
+	cread *Cread
+	*openvpn3.Config
+	*openvpn3.Session
+	ui interface{}
 }
 
-type Option func(*Openvpn)
+type Cread struct {
+	Username string
+	Password string
+}
 
-func NewOpenvpn(opts ...Option) *Openvpn {
-	op := &Openvpn{}
+type Option func(*OpenvpnClient)
+
+func NewOpenvpnClient(opts ...Option) *OpenvpnClient {
+	op := &OpenvpnClient{
+		cread:   &Cread{},
+		Config:  &openvpn3.Config{},
+		Session: &openvpn3.Session{},
+	}
 	for _, opt := range opts {
 		opt(op)
 	}
@@ -24,63 +33,60 @@ func NewOpenvpn(opts ...Option) *Openvpn {
 }
 
 func WithConfig(config string) Option {
-	return func(op *Openvpn) {
+	return func(op *OpenvpnClient) {
 		op.ProfileContent = config
 	}
 }
 
 func WithCompressionMode(mode string) Option {
-	return func(op *Openvpn) {
+	return func(op *OpenvpnClient) {
 		op.CompressionMode = mode
 	}
 }
 
 func WithTimeout(timeout int) Option {
-	return func(op *Openvpn) {
+	return func(op *OpenvpnClient) {
 		op.ConnTimeout = timeout
 	}
 }
 
 func WithDisableClientCert(b bool) Option {
-	return func(op *Openvpn) {
+	return func(op *OpenvpnClient) {
 		op.DisableClientCert = b
 	}
 }
 
-func WithUi(ui usecase.UiInteractor) Option {
-	return func(op *Openvpn) {
-		op.UiInteractor = ui
+func WithUi(callbacks interface{}) Option {
+	return func(op *OpenvpnClient) {
+		op.ui = callbacks
 	}
 }
 
-func (op *Openvpn) SetConfig(config string) {
+func (op *OpenvpnClient) SetConfig(config string) {
 	op.ProfileContent = config
 }
 
-func (op *Openvpn) SetSession(username, password string) {
-	op.Session = *openvpn3.NewSession(
-		op.Config,
+func (op *OpenvpnClient) SetCread(user, pwd string) {
+	op.cread = &Cread{Username: user, Password: pwd}
+}
+
+func (op *OpenvpnClient) SetSession() {
+
+	op.Session = openvpn3.NewSession(
+		*op.Config,
 		openvpn3.UserCredentials{
-			Username: username,
-			Password: password,
+			Username: op.cread.Username,
+			Password: op.cread.Password,
 		},
-		op.UiInteractor,
+		op.ui,
 	)
 }
 
-func (op *Openvpn) StartSession() {
-	op.Session.Start()
+func (op *OpenvpnClient) StartSession(ctx context.Context) {
+	op.Session.Start(ctx)
+
 }
 
-func (op *Openvpn) StopSession() {
+func (op *OpenvpnClient) StopSession() {
 	op.Session.Stop()
-}
-
-func (op *Openvpn) StopSessionWithTimeout(timeout int) {
-	op.StopSession()
-	time.Sleep(time.Duration(timeout) * time.Millisecond)
-}
-
-func (op *Openvpn) SessionIsClose() bool {
-	return op.Session.IsClose()
 }

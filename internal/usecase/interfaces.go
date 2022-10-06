@@ -1,121 +1,131 @@
 package usecase
 
 import (
+	"context"
 	"io/fs"
 	"os"
-	"os/exec"
 
 	"github.com/Vai3soh/goovpn/entity"
 )
 
 type (
-	LoggerInteractor interface {
-		Fatal(...interface{})
-		Debugf(string, ...interface{})
-		Fatalf(string, ...interface{})
+	SessionSetters interface {
+		SetConfig(config string)
+		SetCread(user, pwd string)
+		SetSession()
 	}
 
-	ManagerInteractor interface {
-		Connect(ConfigsPath, Level string, StopTimeout int, UseSystemd bool) func()
-		Disconnect(StopTimeout int, UseSystemd bool) func()
+	SessionManager interface {
+		StartSession(ctx context.Context)
+		StopSession()
 	}
 
-	GlueConfigInteractor interface {
+	ConfigSetters interface {
 		SetBody(body string)
 		SetPath(path string)
+	}
+
+	ConfigBody interface {
 		GetBody() string
+	}
+
+	ConfigRemover interface {
 		RemoveSpaceLines()
 		RemoveCommentLines()
 		RemoveEmptyString()
 		RemoveNotCertsAndKeys()
 		RemoveCertsAndKeys()
+	}
+
+	ConfigChecker interface {
 		CheckConfigUseFiles() bool
-		AddStringToConfig(inFile *os.File) string
-		SearchFilesPaths() map[string]string
-		MergeCertsAndKeys(key string) string
-		GetAuthpathFileName() string
-		GetUserAndPass() (string, string)
 		CheckStringAuthUserPass() bool
 	}
 
-	SessionInteractor interface {
-		SetConfig(config string)
-		SetSession(username, password string)
-		StartSession()
-		StopSession()
-		StopSessionWithTimeout(timeout int)
+	ConfigMerger interface {
+		MergeCertsAndKeys(key string) string
 	}
 
-	CloseAppInteractor interface {
-		CloseApp()
-		SetBind(bind func())
+	ConfigTools interface {
+		AddStringToConfig(inFile *os.File) string
+		SearchFilesPaths() map[string]string
+		GetAuthpathFileName() string
+		GetUserAndPass() (string, string)
 	}
 
-	UiInteractor interface {
-		DisableComboBox()
-		EnableComboBox()
+	UiLoger interface {
+		ChanVpnLog() chan string
+	}
+
+	UiLogFormManager interface {
+		GetTextFromLogForm() string
+		SetTextInLogForm(text string)
+		ClearLogForm()
+	}
+
+	UiButtonsManager interface {
 		ButtonConnectEnable()
 		ButtonConnectDisable()
 		ButtonDisconnectEnable()
 		ButtonDisconnectDisable()
-		GetTextFromTextEdit() string
-		SetTextInTextEdit(text string)
-		SelectedFromComboBox() *string
-		ClearTextEdit()
-		ChanVpnLog() chan string
-		CloseChanVpnLog()
-		Log(text string)
 	}
 
-	SysTrayInteractor interface {
+	UiListConfigsManager interface {
+		DisableListConfigsBox()
+		EnableListConfigsBox()
+		SelectedCfgFromListConfigs() *string
+	}
+
+	SysTrayIconsManager interface {
 		SetIcon(path string)
 		SetDisconnectIcon() error
 		SetConnectIcon() error
 		SetOpenIcon() error
 		SetBlinkIcon() error
+	}
+
+	SysTrayImagesManager interface {
 		SearchKeyInMap(s string) (*string, error)
 		Image() map[string][]byte
 	}
 
-	FileInteractor interface {
-		FileNameWithoutExtension() *string
-		ReadFileAsByte() ([]byte, error)
-		ReadFileAsString() (*string, error)
+	FileSetters interface {
 		SetBody([]byte)
 		SetPath(path string)
+		SetDestPath(destPath string)
+	}
+
+	FileGetters interface {
 		Path() string
+		Body() []byte
+	}
+
+	FileReader interface {
+		ReadFileAsByte() ([]byte, error)
+		ReadFileAsString() (*string, error)
+	}
+
+	FileWriter interface {
+		WriteStringToFile(file *os.File, data string) error
+		WriteByteFile() error
+	}
+
+	FileToolsManager interface {
+		FileNameWithoutExtension() *string
 		FileOpen() (*os.File, error)
 		SetPermissonFile(fs.FileMode)
-		WriteByteFile() error
 		CreateFile() (*os.File, error)
-		WriteStringToFile(file *os.File, data string) error
 		AbsolutePath() (*string, error)
-		SetDestPath(destPath string)
 		CopyFile() error
-		Body() []byte
 		CheckFileExists() bool
 	}
 
-	DnsInteractor interface {
-		CmdSystemdResolv() (*string, error)
-		CmdResolvConf() (*string, *string, error)
-		CmdDownResolvConf() (*string, error)
-		SetAddress(addr []string)
+	DnsSetters interface {
 		SetInterface(iface string)
 	}
 
-	CommandInteractor interface {
-		SetCommand(command string)
-		SplitCmd() ([]string, error)
-		PassArgumentsToExec([]string) *exec.Cmd
-		SetToProc(*exec.Cmd)
-		StartProc() error
-		Proc() *exec.Cmd
-		RunCmdWithPipe(args1, args2 []string) error
-	}
-
-	MemoryInteractor interface {
-		Save(cfgPath, body string)
-		GetProfile(cfgPath string) entity.Profile
+	ProfileRepository interface {
+		Store(p entity.Profile)
+		Find(key string) entity.Profile
 	}
 )
