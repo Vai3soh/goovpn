@@ -4,14 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Vai3soh/goovpn/internal/usecase"
 	qtgui "github.com/therecipe/qt/gui"
 	"github.com/therecipe/qt/widgets"
 )
-
-type Manager struct {
-	usecase.ManagerInteractor
-}
 
 type sysTray struct {
 	Tray  *widgets.QSystemTrayIcon
@@ -168,11 +163,11 @@ func (ui *uiMainWindow) SetupUI(
 
 }
 
-func (ui *uiMainWindow) DisableComboBox() {
+func (ui *uiMainWindow) DisableListConfigsBox() {
 	ui.comboBox.SetDisabled(true)
 }
 
-func (ui *uiMainWindow) EnableComboBox() {
+func (ui *uiMainWindow) EnableListConfigsBox() {
 	ui.comboBox.SetEnabled(true)
 }
 
@@ -192,20 +187,20 @@ func (ui *uiMainWindow) ButtonDisconnectEnable() {
 	ui.PushButtonDiscconnect.SetEnabled(true)
 }
 
-func (ui *uiMainWindow) SelectedFromComboBox() *string {
+func (ui *uiMainWindow) SelectedCfgFromListConfigs() *string {
 	s := ui.comboBox.CurrentText()
 	return &s
 }
 
-func (ui *uiMainWindow) SetTextInTextEdit(text string) {
+func (ui *uiMainWindow) SetTextInLogForm(text string) {
 	ui.textEditReadOnly.SetPlainText(text)
 }
 
-func (ui *uiMainWindow) GetTextFromTextEdit() string {
+func (ui *uiMainWindow) GetTextFromLogForm() string {
 	return ui.textEditReadOnly.ToPlainText()
 }
 
-func (ui *uiMainWindow) ClearTextEdit() {
+func (ui *uiMainWindow) ClearLogForm() {
 	ui.textEditReadOnly.Clear()
 }
 
@@ -241,7 +236,7 @@ func (s *sysTray) SearchKeyInMap(st string) (*string, error) {
 			return &key, nil
 		}
 	}
-	return nil, fmt.Errorf("key in map not found?")
+	return nil, fmt.Errorf("key in map not found")
 }
 
 func (g *uiMainWindow) ChanVpnLog() chan string {
@@ -265,7 +260,7 @@ func (s *sysTray) SetIcon(path string) {
 func (s *sysTray) SetConnectIcon() error {
 	path, err := s.SearchKeyInMap("connecting")
 	if err != nil {
-		return err
+		return fmt.Errorf("search key in map error: [%w]", err)
 	}
 	s.SetIcon(*path)
 	return nil
@@ -274,7 +269,7 @@ func (s *sysTray) SetConnectIcon() error {
 func (s *sysTray) SetDisconnectIcon() error {
 	path, err := s.SearchKeyInMap("disconnect")
 	if err != nil {
-		return err
+		return fmt.Errorf("search key in map error: [%w]", err)
 	}
 	s.SetIcon(*path)
 	return nil
@@ -283,7 +278,7 @@ func (s *sysTray) SetDisconnectIcon() error {
 func (s *sysTray) SetOpenIcon() error {
 	path, err := s.SearchKeyInMap("open")
 	if err != nil {
-		return err
+		return fmt.Errorf("search key in map error: [%w]", err)
 	}
 
 	s.SetIcon(*path)
@@ -293,7 +288,7 @@ func (s *sysTray) SetOpenIcon() error {
 func (s *sysTray) SetBlinkIcon() error {
 	path, err := s.SearchKeyInMap("blink")
 	if err != nil {
-		return err
+		return fmt.Errorf("search key in map error: [%w]", err)
 	}
 	s.SetIcon(*path)
 	return nil

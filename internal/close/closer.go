@@ -6,7 +6,7 @@ type ShutdownApp struct {
 	Bind func()
 }
 
-func (s *ShutdownApp) CloseApp() {
+func (s *ShutdownApp) Binder() {
 	closer.Bind(s.Bind)
 }
 
