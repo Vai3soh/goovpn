@@ -1,3 +1,6 @@
+//go:build linux
+// +build linux
+
 package main
 
 import (
@@ -19,11 +22,11 @@ func init() {
 }
 
 func main() {
-	var cfg config.Config
-
+	cfg := config.Config{}
 	err := cleanenv.ReadConfig(*Config, &cfg)
 	if err != nil {
-		log.Fatalf("Config error: %s", err)
+		log.Fatalf("Config error: [%s]\n", err)
 	}
+
 	app.Run(&cfg)
 }

@@ -1,18 +1,25 @@
 package app
 
 import (
+	"context"
+	"runtime"
+
 	"github.com/Vai3soh/goovpn/config"
 	"github.com/Vai3soh/goovpn/embedfile"
 	"github.com/Vai3soh/goovpn/entity"
-	"github.com/Vai3soh/goovpn/internal/cache"
+	"github.com/Vai3soh/goovpn/internal/adapters/db/memory"
+	"github.com/Vai3soh/goovpn/internal/cli"
 	"github.com/Vai3soh/goovpn/internal/close"
-	"github.com/Vai3soh/goovpn/internal/cmdextended"
+
 	"github.com/Vai3soh/goovpn/internal/dns"
 	"github.com/Vai3soh/goovpn/internal/fileextended"
-	"github.com/Vai3soh/goovpn/internal/glue"
 	"github.com/Vai3soh/goovpn/internal/gui"
+	"github.com/Vai3soh/goovpn/internal/parser"
 	"github.com/Vai3soh/goovpn/internal/session"
+	transport "github.com/Vai3soh/goovpn/internal/transport/openvpn"
 	"github.com/Vai3soh/goovpn/internal/usecase"
+	"github.com/Vai3soh/goovpn/internal/usecase/usecasedns"
+	"github.com/Vai3soh/goovpn/internal/usecase/usecaseprofile"
 	"github.com/Vai3soh/goovpn/pkg/logger"
 
 	"os"
@@ -22,6 +29,31 @@ import (
 	"github.com/therecipe/qt/widgets"
 )
 
+type fileEmbbed interface {
+	usecase.FileSetters
+	usecase.FileGetters
+	usecase.FileToolsManager
+	usecase.FileWriter
+}
+
+func CreateDir(path string, file fileEmbbed) {
+	file.SetPath(path)
+	if _, err := os.Stat(file.Path()); os.IsNotExist(err) {
+		os.MkdirAll(file.Path(), 0755)
+	}
+}
+
+func CopyImages(file fileEmbbed, stray usecase.SysTrayImagesManager) {
+
+	mode := os.FileMode(int(0644))
+	for key, value := range stray.Image() {
+		file.SetPath(key)
+		file.SetBody(value)
+		file.SetPermissonFile(mode)
+		file.WriteByteFile()
+	}
+}
+
 func readEmbed(path string, l *logger.Logger) []byte {
 	dataImage, err := embedfile.ReadFs(path)
 	if err != nil {
@@ -30,23 +62,11 @@ func readEmbed(path string, l *logger.Logger) []byte {
 	return dataImage
 }
 
-func closeAppTrigger(s *session.Openvpn,
-	manager *gui.Manager,
-	cfg *config.Config,
-	VpnUseCase *usecase.VpnUseCase,
-	app *widgets.QApplication,
-) {
-	if !s.SessionIsClose() {
-		manager.Disconnect(cfg.StopTimeout, cfg.App.UseSystemd)()
-	}
-
-	app.Exit(0)
-	usecase.Wg.Wait()
-}
-
 func Run(cfg *config.Config) {
 
-	l := logger.NewLogger(logger.WithLogTextFormatter(), logger.WithLogLevel(&cfg.Log.Level))
+	l := logger.NewLogger(
+		logger.WithLogTextFormatter(), logger.WithLogLevel(&cfg.Log.Level),
+	)
 
 	ImageMap := make(map[string][]byte)
 	dataPng := readEmbed(cfg.AppImagePathConnected, l)
@@ -70,7 +90,8 @@ func Run(cfg *config.Config) {
 		l.Fatalf("don't read dir: %s\n", err)
 	}
 
-	command := cmdextended.NewCmd()
+	command := cli.NewCmd()
+	cmdResolver := cli.NewResolver(cli.WithCliResolver(command))
 
 	logVpn := make(chan string)
 	app := widgets.NewQApplication(len(os.Args), os.Args)
@@ -110,32 +131,59 @@ func Run(cfg *config.Config) {
 		gui.WithImage(ImageMap),
 	)
 
-	gl := glue.NewConfig()
+	gl := parser.NewConfig()
 	cl := &close.ShutdownApp{}
 
-	session := session.NewOpenvpn(
+	sessOvpn := session.NewOpenvpnClient(
 		session.WithCompressionMode(cfg.App.CompressionMode),
 		session.WithDisableClientCert(cfg.App.CheckDisableClientCert),
 		session.WithTimeout(cfg.App.ConnectTimeout),
 		session.WithUi(mainUiWindow),
 	)
 
-	dns := dns.NewDns()
-	memory := cache.NewDb(cache.WithMapMemory(
+	memory := memory.NewDb(memory.WithMapMemory(
 		make(map[string]entity.Profile)),
 	)
-	VpnUseCase := usecase.New(
-		l, gl, cl,
-		session, mainUiWindow,
-		stray, file,
-		command, dns, memory,
+
+	profileUseCase, err := usecaseprofile.NewProfileUseCase(
+		file, file, file, gl, gl, gl, gl, gl, gl, memory,
+	)
+	if err != nil {
+		l.Fatalf("don't get constructor [%w]\n", err)
+	}
+
+	dnsUseCase, err := usecasedns.NewDnsUseCase(
+		command, command, cmdResolver, command, cmdResolver,
+	)
+	if err != nil {
+		l.Fatalf("don't get constructor [%w]\n", err)
+	}
+
+	vpnUseCase, _ := usecase.NewVpnUseCase(
+		sessOvpn, sessOvpn, gl, gl, gl, gl, gl, gl,
+		mainUiWindow, mainUiWindow, mainUiWindow, mainUiWindow,
+		stray, file, file, cmdResolver,
 	)
 
-	m := gui.Manager{ManagerInteractor: VpnUseCase}
+	sys, err := dns.NewSystem(runtime.GOOS, dnsUseCase, dnsUseCase, cfg.App.UseSystemd)
+	if err != nil {
+		l.Fatalf("don't get constructor [%w]\n", err)
+	}
+
+	names, err := dns.NewNames(dnsUseCase)
+	if err != nil {
+		l.Fatalf("don't get constructor [%w]\n", err)
+	}
+	names.SetGoos(*sys)
+
+	tr := transport.New(
+		cfg.App.ConfigsPath, cfg.StopTimeout,
+		vpnUseCase, profileUseCase, names,
+	)
 
 	appIconPath, err := stray.SearchKeyInMap("app")
 	if err != nil {
-		l.Fatal(err)
+		l.Fatalf("don't found key in map [%w]\n", err)
 	}
 	mainUiWindow.SetupUI(
 		app, cfg.ConfigsPath,
@@ -147,7 +195,7 @@ func Run(cfg *config.Config) {
 
 	exit, main, updateCfgs, err := stray.SetupSysTray()
 	if err != nil {
-		l.Fatal(err)
+		l.Fatalf("setup systray failed: [%w]\n", err)
 	}
 	mainWindown.SetWindowFlags(core.Qt__Dialog)
 	app.SetQuitOnLastWindowClosed(false)
@@ -157,51 +205,66 @@ func Run(cfg *config.Config) {
 		if mainUiWindow.IsEnableCombo() {
 			files, err := file.FilesInDir(cfg.ConfigsPath)
 			if err != nil {
-				l.Fatalf("don't read dir: %s\n", err)
+				l.Fatalf("don't read dir: [%s]\n", err)
 			}
 			mainUiWindow.UpdateComboBox(files)
 		}
 	})
-	VpnUseCase.FileRepo.SetPath(cfg.TempDir)
-	VpnUseCase.CreateDir()
-	VpnUseCase.CopyImages()
 
-	path, err := VpnUseCase.TrayRepo.SearchKeyInMap("disconnect")
+	CreateDir(cfg.TempDir, file)
+	CopyImages(file, stray)
+
+	path, err := stray.SearchKeyInMap(`disconnect`)
 	if err != nil {
-		VpnUseCase.LogRepo.Fatal(err)
+		l.Fatalf("don't found key in map: [%w]\n", err)
 	}
-	VpnUseCase.TrayRepo.SetIcon(*path)
+	stray.SetIcon(*path)
 
 	trayIcon.SetContextMenu(menu)
 	trayIcon.Show()
 	mainWindown.Show()
 
-	VpnUseCase.CloseRepo.SetBind(m.Disconnect(cfg.StopTimeout, cfg.App.UseSystemd))
-	VpnUseCase.CloseRepo.CloseApp()
-
-	mainUiWindow.PushButtonDiscconnect.ConnectClicked(func(_ bool) {
-		m.Disconnect(cfg.StopTimeout, cfg.App.UseSystemd)()
-	})
 	mainUiWindow.PushButtonClear.ConnectClicked(func(_ bool) {
-		mainUiWindow.ClearTextEdit()
+		mainUiWindow.ClearLogForm()
 	})
+
 	mainUiWindow.PushButtonConnect.ConnectClicked(func(_ bool) {
-		m.Connect(cfg.ConfigsPath, cfg.Level, cfg.StopTimeout, cfg.UseSystemd)()
-	})
-	mainUiWindow.PushButtonExit.ConnectClicked(func(_ bool) {
-		closeAppTrigger(session, &m, cfg, VpnUseCase, app)
+
+		ctx, cancel := context.WithCancel(context.Background())
+
+		cl.SetBind(tr.Disconnect(cancel))
+		cl.Binder()
+
+		err := tr.Connect(ctx)()
+		if err != nil {
+			l.Fatalf("connect failed: [%w]\n", err)
+		}
+
+		mainUiWindow.PushButtonDiscconnect.ConnectClicked(func(_ bool) {
+			mainUiWindow.ButtonDisconnectDisable()
+			cancel()
+		})
+
+		exit.ConnectTriggered(func(bool) {
+			tr.Disconnect(cancel)()
+			app.Exit(0)
+		})
+
+		mainUiWindow.PushButtonExit.ConnectClicked(func(_ bool) {
+			tr.Disconnect(cancel)()
+			app.Exit(0)
+		})
+
 	})
 
 	exit.ConnectTriggered(func(bool) {
-		closeAppTrigger(session, &m, cfg, VpnUseCase, app)
+		app.Exit(0)
 	})
 
-	stray.Tray.ConnectActivated(func(reason widgets.QSystemTrayIcon__ActivationReason) {
-		if reason == widgets.QSystemTrayIcon__Trigger {
-			m.Connect(cfg.ConfigsPath, cfg.Level, cfg.StopTimeout, cfg.UseSystemd)
-		}
+	mainUiWindow.PushButtonExit.ConnectClicked(func(_ bool) {
+		app.Exit(0)
 	})
 
-	VpnUseCase.UiRepo.ButtonDisconnectDisable()
+	mainUiWindow.ButtonDisconnectDisable()
 	widgets.QApplication_Exec()
 }
