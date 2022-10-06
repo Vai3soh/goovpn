@@ -6,7 +6,6 @@ package main
 import (
 	"flag"
 	"log"
-	"runtime"
 
 	"github.com/Vai3soh/goovpn/config"
 	"github.com/Vai3soh/goovpn/internal/app"
