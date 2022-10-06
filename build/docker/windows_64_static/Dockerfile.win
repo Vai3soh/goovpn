@@ -20,7 +20,7 @@ tar -xzf $GO -C /usr/local
 
 WORKDIR $WORK_DIR
 
-RUN git clone --recursive $REPO && git checkout windows_builder && \
+RUN git clone --recursive $REPO && cd goovpn && git checkout windows_builder && \
 cd $SUB_MODULE_PATH && git checkout goovpn_dev && \
 cp $LIB $ABS_BRIDGE_PATH  && \
 cd $WORK_DIR/goovpn/cmd/app/ && qtdeploy build windows
