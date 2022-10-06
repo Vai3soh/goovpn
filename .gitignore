@@ -3,3 +3,4 @@ cmd/app/goovpn
 cmd/app/qtbox
 build/package/*
 bug
+extra
