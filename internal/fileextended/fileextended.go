@@ -1,8 +1,8 @@
 package fileextended
 
 import (
+	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -49,12 +49,21 @@ func WithPermisson(perm fs.FileMode) Option {
 	}
 }
 
+func (f *File) filesDir(dir string) ([]fs.DirEntry, error) {
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, fmt.Errorf("read directory failed: [%w]", err)
+	}
+	return files, nil
+}
+
 func (f *File) FilesInDir(dir string) ([]string, error) {
 
-	files, err := ioutil.ReadDir(dir)
+	files, err := f.filesDir(dir)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get files failed: [%w]", err)
 	}
+
 	var arr []string
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".ovpn" || filepath.Ext(file.Name()) == ".conf" {
@@ -66,17 +75,17 @@ func (f *File) FilesInDir(dir string) ([]string, error) {
 }
 
 func (f *File) ReadFileAsByte() ([]byte, error) {
-	body, err := ioutil.ReadFile(f.path)
+	body, err := os.ReadFile(f.path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("read file failed: [%w]", err)
 	}
 	return body, nil
 }
 
 func (f *File) ReadFileAsString() (*string, error) {
-	body, err := ioutil.ReadFile(f.path)
+	body, err := os.ReadFile(f.path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("read file failed: [%w]", err)
 	}
 	s := string(body)
 	return &s, nil
@@ -85,15 +94,15 @@ func (f *File) ReadFileAsString() (*string, error) {
 func (f *File) FileOpen() (*os.File, error) {
 	inFile, err := os.Open(f.path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("open file failed: [%w]", err)
 	}
 	return inFile, nil
 }
 
 func (f *File) CopyFile() error {
-	err := ioutil.WriteFile(f.destPath, f.body, f.perm)
+	err := os.WriteFile(f.destPath, f.body, f.perm)
 	if err != nil {
-		return err
+		return fmt.Errorf("write file failed: [%w]", err)
 	}
 	return nil
 }
@@ -101,7 +110,7 @@ func (f *File) CopyFile() error {
 func (f *File) AbsolutePath() (*string, error) {
 	full, err := filepath.Abs(f.path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("absolute representation of path error: [%w]", err)
 	}
 	return &full, nil
 }
@@ -139,7 +148,7 @@ func (f *File) FileNameWithoutExtension() *string {
 func (f *File) CreateFile() (*os.File, error) {
 	file, err := os.Create(f.path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("create file error: [%w]", err)
 	}
 	return file, nil
 }
@@ -148,15 +157,15 @@ func (f *File) WriteStringToFile(file *os.File, data string) error {
 	defer file.Close()
 	_, err := file.WriteString(data)
 	if err != nil {
-		return err
+		return fmt.Errorf("write string to file error: [%w]", err)
 	}
 	return nil
 }
 
 func (f *File) WriteByteFile() error {
-	err := ioutil.WriteFile(f.path, f.body, f.perm)
+	err := os.WriteFile(f.path, f.body, f.perm)
 	if err != nil {
-		return err
+		return fmt.Errorf("write byte file error: [%w]", err)
 	}
 	return nil
 }

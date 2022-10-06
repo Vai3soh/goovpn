@@ -1,82 +1,130 @@
 package dns
 
 import (
-	"os"
-	"os/exec"
-	"strconv"
-	"strings"
+	"fmt"
 )
 
-type Dns struct {
-	iface   string
-	address []string
+type DnsCore interface {
+	CaseSetupDnsNotUseSystemd() error
+	CaseSetupDnsWithUseSystemd() error
+	GetCmdReturnResolver() (*string, error)
+	CaseAddDnsAddress(text string)
 }
 
-type Option func(*Dns)
+type CmdCore interface {
+	SplitCommand(cmd string) ([]string, error)
+	RunProcessCmd([]string) error
+}
 
-func NewDns(opts ...Option) *Dns {
-	f := &Dns{}
-	for _, opt := range opts {
-		opt(f)
+type system struct {
+	name       string
+	useSystemd bool
+	CmdCore
+	DnsCore
+}
+
+func NewSystem(
+	name string, cmdCore CmdCore, dnsCore DnsCore, useSystemd bool,
+) (obj *system, err error) {
+	obj = &system{
+		name:       name,
+		useSystemd: useSystemd,
+		CmdCore:    cmdCore,
+		DnsCore:    dnsCore,
 	}
-	return f
+	return
 }
 
-func WithInterface(iface string) Option {
-	return func(d *Dns) {
-		d.iface = iface
+func (s *system) Name() string {
+	return s.name
+}
+
+type Names struct {
+	goos []system
+	dns  map[string]map[string]func() error
+	DnsCore
+}
+
+func NewNames(dnscore DnsCore) (obj *Names, err error) {
+	obj = &Names{
+
+		goos:    make([]system, 0),
+		dns:     make(map[string]map[string]func() error),
+		DnsCore: dnscore,
+	}
+	return
+}
+
+func (n *Names) SetGoos(sys ...system) {
+	n.goos = append(n.goos, sys...)
+}
+
+func (n *Names) ConfigureDns(key string) {
+
+	m := make(map[string]func() error)
+
+	for _, sys := range n.goos {
+		if key == `revert` {
+			m[`linux`] = sys.LinuxRevertDns
+			m[`windows`] = sys.WindowsRevertDns
+			n.dns[key] = m
+		} else {
+			m[`linux`] = sys.LinuxSetupDns
+			m[`windows`] = sys.WindowsSetupDns
+			n.dns[key] = m
+		}
 	}
 }
 
-func WithAddress(address []string) Option {
-	return func(d *Dns) {
-		d.address = address
+func (n *Names) SetupDns(key string) error {
+	for _, sys := range n.goos {
+		return n.dns[key][sys.Name()]()
 	}
+	return fmt.Errorf(`not found OS`)
 }
 
-func (d *Dns) SetAddress(addr []string) {
-	d.address = addr
+func (s *system) WindowsSetupDns() error {
+	return nil
 }
 
-func (d *Dns) SetInterface(iface string) {
-	d.iface = iface
+func (s *system) WindowsRevertDns() error {
+	return nil
 }
 
-func (d *Dns) CmdSystemdResolv() (*string, error) {
-	os.Setenv("PATH", "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin")
-	full, err := exec.LookPath("systemd-resolve")
+func (s *system) LinuxSetupDns() error {
+	if !s.useSystemd {
+		err := s.DnsCore.CaseSetupDnsNotUseSystemd()
+		if err != nil {
+			return fmt.Errorf("setup dns err [%w]", err)
+		}
+	} else {
+		err := s.DnsCore.CaseSetupDnsWithUseSystemd()
+		if err != nil {
+			return fmt.Errorf("setup dns err [%w]", err)
+		}
+	}
+	return nil
+}
+
+func (s *system) LinuxRevertDns() error {
+	if s.useSystemd {
+		return nil
+	}
+	cmd, err := s.DnsCore.GetCmdReturnResolver()
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("don't get cmd return resolver [%w]", err)
 	}
-	cmd := full + " " + "-i " + d.iface + " --set-dns=" +
-		strings.Join(d.address[:], " --set-dns=") + " --set-domain=~"
-	return &cmd, nil
+	cmdArg, err := s.CmdCore.SplitCommand(*cmd)
+	if err != nil {
+		return fmt.Errorf("don't split cmd: [%w]", err)
+	}
+	err = s.CmdCore.RunProcessCmd(cmdArg)
+	if err != nil {
+		return fmt.Errorf("process don't running: [%w]", err)
+	}
+	return nil
 }
 
-func (d *Dns) CmdResolvConf() (*string, *string, error) {
-	os.Setenv("PATH", "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin")
-	full, err := exec.LookPath("resolvconf")
-	if err != nil {
-		return nil, nil, err
-	}
-	printf, err := exec.LookPath("printf")
-	if err != nil {
-		return nil, nil, err
-	}
-	for i, value := range d.address {
-		d.address[i] = value + "\\n"
-	}
-	cmdPrintf := printf + " " + strconv.Quote("nameserver "+strings.Join(d.address[:], "nameserver "))
-	cmdResolv := full + " -a " + d.iface + ".openvpn -m 0 -x"
-	return &cmdPrintf, &cmdResolv, nil
-}
-
-func (d *Dns) CmdDownResolvConf() (*string, error) {
-	os.Setenv("PATH", "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin")
-	full, err := exec.LookPath("resolvconf")
-	if err != nil {
-		return nil, err
-	}
-	cmdDown := full + " -d " + d.iface + ".openvpn"
-	return &cmdDown, nil
+func (n *Names) AddDnsAddrs(text string) {
+	n.DnsCore.CaseAddDnsAddress(text)
 }
