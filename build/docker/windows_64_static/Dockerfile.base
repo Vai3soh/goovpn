@@ -1,0 +1,31 @@
+#docker build -t therecipe/qt:windows_64_static_base_posix -f Dockerfile.base .
+#docker load --input windows_64_static_base_posix.tar
+
+FROM ubuntu:20.04 as base
+
+RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive \ 
+apt-get --no-install-recommends -qq -y install ca-certificates git \
+curl autoconf automake autopoint bash bison bzip2 flex g++ g++-multilib \
+gettext git gperf intltool libc6-dev-i386 libgdk-pixbuf2.0-dev \
+libltdl-dev libssl-dev libtool-bin libxml-parser-perl make openssl \
+p7zip-full patch perl pkg-config python python3 python3-pip  \
+ruby scons sed unzip wget xz-utils lzip && \
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && \
+python2 get-pip.py && pip install Mako && \
+pip3 install Mako && \
+git clone https://github.com/mxe/mxe.git /usr/lib/mxe && \
+cd /usr/lib/mxe && git pull && \
+find . -type f -print0 | \
+xargs -0 sed -i 's/download\.qt\.io/ftp\.jaist\.ac\.jp\/pub\/qtproject\//g' && \
+cd /usr/lib/mxe && \
+make -j $(grep -c ^processor /proc/cpuinfo) \
+MXE_TARGETS='x86_64-w64-mingw32.static x86_64-w64-mingw32.static.posix' qt5  && \
+rm -rf /usr/lib/mxe/log && \
+rm -rf /usr/lib/mxe/pkg && \
+rm -rf /usr/lib/mxe/.ccache
+
+FROM ubuntu:20.04
+LABEL maintainer therecipe
+
+COPY --from=base /usr/lib/mxe /usr/lib/mxe
+
