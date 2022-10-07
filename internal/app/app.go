@@ -186,10 +186,19 @@ func Run(cfg *config.Config) {
 	}
 	names.SetGoos(*sys)
 
-	tr := transport.New(
-		cfg.App.ConfigsPath, cfg.StopTimeout,
-		vpnUseCase, profileUseCase, names,
-	)
+	var tr *transport.TransportOvpnClient
+	if runtime.GOOS != "windows" {
+		tr = transport.New(
+			cfg.App.ConfigsPath, cfg.StopTimeout,
+			vpnUseCase, profileUseCase, names,
+		)
+	} else {
+		path := os.Getenv(`USERPROFILE`)
+		tr = transport.New(
+			path+"\\"+cfg.ConfigsPath, cfg.StopTimeout,
+			vpnUseCase, profileUseCase, names,
+		)
+	}
 
 	appIconPath, err := stray.SearchKeyInMap("app")
 	if err != nil {
