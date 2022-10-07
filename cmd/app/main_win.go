@@ -13,7 +13,7 @@ import (
 )
 
 var Config = flag.String(
-	"config", "C:\\ProgramData\\config_win.yml",
+	"config", "C:\\ProgramData\\goovpn\\config_win.yml",
 	"path to configuration file",
 )
 
