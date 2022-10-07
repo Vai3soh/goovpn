@@ -9,7 +9,7 @@ app:
   image_path_open: 'assets/open.png'
   app_icon: 'assets/app.png'
   temp_dir: 'C:\Users\Default\AppData\Local\Temp\'
-  configs_path: 'C:\Users\%USERNAME%\Desktop\OVPNCONFIGS\'
+  configs_path: 'Desktop\OVPNCONFIGS\' #use os.Getenv(`USERPROFILE`)
   height_app: 500
   width_app: 600 
   verb_log: 5

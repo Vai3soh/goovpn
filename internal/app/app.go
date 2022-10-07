@@ -43,6 +43,14 @@ func CreateDir(path string, file fileEmbbed) {
 	}
 }
 
+func getFiles(l *logger.Logger, file *fileextended.File, path string) []string {
+	files, err := file.FilesInDir(path)
+	if err != nil {
+		l.Fatalf("don't read dir: %s\n", err)
+	}
+	return files
+}
+
 func CopyImages(file fileEmbbed, stray usecase.SysTrayImagesManager) {
 
 	mode := os.FileMode(int(0644))
@@ -84,12 +92,14 @@ func Run(cfg *config.Config) {
 	dataPng = readEmbed(cfg.AppIcon, l)
 	ImageMap[cfg.TempDir+strings.Split(cfg.AppIcon, "/")[1]] = dataPng
 
+	var files []string
 	file := fileextended.NewFile()
-	files, err := file.FilesInDir(cfg.ConfigsPath)
-	if err != nil {
-		l.Fatalf("don't read dir: %s\n", err)
+	if runtime.GOOS == "windows" {
+		path := os.Getenv(`USERPROFILE`)
+		files = getFiles(l, file, path+"\\"+cfg.ConfigsPath)
+	} else {
+		files = getFiles(l, file, cfg.ConfigsPath)
 	}
-
 	command := cli.NewCmd()
 	cmdResolver := cli.NewResolver(cli.WithCliResolver(command))
 
