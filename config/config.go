@@ -21,6 +21,9 @@ type (
 		Height                   float32 `env-required:"true" yaml:"height_app" env:"HEIGHT_APP"`
 		Width                    float32 `env-required:"true" yaml:"width_app" env:"WIDTH_APP"`
 		UseSystemd               bool    `yaml:"use_systemd" env:"USE_SYSTEMD"`
+		TunPersist               bool    `yaml:"tun_persist" env:"TUN_PERSIST"`
+		ClockTicks               int     `env-required:"true" yaml:"clock_ticks_time_ms" env:"CLOCK_TICKS_TIME_MS"`
+		VerbLogs                 bool    `yaml:"verbose_logs" env:"VERB_LOGS"`
 		ConnectTimeout           int     `env-required:"true" yaml:"conn_timeout" env:"CONN_TIMEOUT"`
 		CompressionMode          string  `env-required:"true" yaml:"mode" env:"MODE"`
 		CheckDisableClientCert   bool    `yaml:"disable_cert" env:"DISABLE_CERT"`

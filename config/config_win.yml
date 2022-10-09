@@ -12,8 +12,10 @@ app:
   configs_path: 'Desktop\OVPNCONFIGS\' #use os.Getenv(`USERPROFILE`)
   height_app: 500
   width_app: 600 
-  verb_log: 5
   use_systemd: false
+  tun_persist: true
+  clock_ticks_time_ms: 1000
+  verbose_logs: false
   disable_cert: false
   mode: 'yes' #yes no 
   conn_timeout: 30

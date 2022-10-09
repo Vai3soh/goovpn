@@ -44,6 +44,24 @@ func WithCompressionMode(mode string) Option {
 	}
 }
 
+func WithTunPersist(enable bool) Option {
+	return func(op *OpenvpnClient) {
+		op.TunPersist = enable
+	}
+}
+
+func WithClockTicks(i int) Option {
+	return func(op *OpenvpnClient) {
+		op.ClockTickMS = i
+	}
+}
+
+func WithVerboseLog(enable bool) Option {
+	return func(op *OpenvpnClient) {
+		op.Info = enable
+	}
+}
+
 func WithTimeout(timeout int) Option {
 	return func(op *OpenvpnClient) {
 		op.ConnTimeout = timeout

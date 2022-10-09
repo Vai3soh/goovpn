@@ -148,6 +148,9 @@ func Run(cfg *config.Config) {
 		session.WithCompressionMode(cfg.App.CompressionMode),
 		session.WithDisableClientCert(cfg.App.CheckDisableClientCert),
 		session.WithTimeout(cfg.App.ConnectTimeout),
+		session.WithVerboseLog(cfg.App.VerbLogs),
+		session.WithClockTicks(cfg.App.ClockTicks),
+		session.WithTunPersist(cfg.App.TunPersist),
 		session.WithUi(mainUiWindow),
 	)
 
