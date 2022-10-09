@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -71,7 +72,9 @@ func (v *VpnUseCase) GetChanVpnLog() chan string {
 }
 
 func (vp *VpnUseCase) CaseSetLogsInTextWidget(text string) {
-	time.Sleep(time.Duration(50) * time.Millisecond)
+	if runtime.GOOS != "windows" {
+		time.Sleep(time.Duration(50) * time.Millisecond)
+	}
 	originalText := vp.uiLogFormManager.GetTextFromLogForm() + text + "\n"
 	vp.uiLogFormManager.SetTextInLogForm(originalText)
 }
@@ -123,17 +126,23 @@ func (v *VpnUseCase) SetPhyseInterface(i string) {
 
 func (vp *VpnUseCase) CaseFlickeringIcon() error {
 
-	time.Sleep(time.Duration(250) * time.Millisecond)
+	if runtime.GOOS != "windows" {
+		time.Sleep(time.Duration(250) * time.Millisecond)
+	}
 	err := vp.sysTrayIconsManager.SetBlinkIcon()
 	if err != nil {
 		return fmt.Errorf("don't set image blink [%w]", err)
 	}
-	time.Sleep(time.Duration(30) * time.Millisecond)
+	if runtime.GOOS != "windows" {
+		time.Sleep(time.Duration(30) * time.Millisecond)
+	}
 	err = vp.sysTrayIconsManager.SetOpenIcon()
 	if err != nil {
 		return fmt.Errorf("don't set image open [%w]", err)
 	}
-	time.Sleep(time.Duration(60) * time.Millisecond)
+	if runtime.GOOS != "windows" {
+		time.Sleep(time.Duration(60) * time.Millisecond)
+	}
 	err = vp.sysTrayIconsManager.SetDisconnectIcon()
 	if err != nil {
 		return fmt.Errorf("don't set image disconnect [%w]", err)
