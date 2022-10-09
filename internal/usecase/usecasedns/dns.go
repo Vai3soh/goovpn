@@ -92,10 +92,15 @@ func (dns *DnsUseCase) GetCmdReturnResolver() (*string, error) {
 func (dns *DnsUseCase) CaseAddDnsAddress(text string) {
 	reg := regexp.MustCompile(`(?m)DNS Servers:\s+[^*]+\d$`)
 	matches := reg.FindAllString(text, -1)
-	matches = strings.Split(matches[0], "\n")
-	matches = append(matches[:0], matches[0+1:]...)
-	for i := range matches {
-		matches[i] = strings.TrimSpace(matches[i])
+	if len(matches) != 0 {
+		matches = strings.Split(matches[0], "\n")
+		matches = append(matches[:0], matches[0+1:]...)
+		for i := range matches {
+			matches[i] = strings.TrimSpace(matches[i])
+		}
+		dns.dnsSetters.SetAddress(matches)
+	} else {
+		matches = []string{"1.1.1.1"}
+		dns.dnsSetters.SetAddress(matches)
 	}
-	dns.dnsSetters.SetAddress(matches)
 }
