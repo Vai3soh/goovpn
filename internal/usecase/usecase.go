@@ -16,7 +16,7 @@ type VpnUseCase struct {
 	cfgCheck             ConfigChecker
 	cfgMerg              ConfigMerger
 	cfgTools             ConfigTools
-	uiLoger              UiLoger
+	sessionLoger         SessionLoger
 	uiLogFormManager     UiLogFormManager
 	uiButtonsManager     UiButtonsManager
 	uiListConfigsManager UiListConfigsManager
@@ -36,7 +36,7 @@ func NewVpnUseCase(
 	cfgCheck ConfigChecker,
 	cfgMerg ConfigMerger,
 	cfgTools ConfigTools,
-	uiLoger UiLoger,
+	sessionLoger SessionLoger,
 	uiLogFormManager UiLogFormManager,
 	uiButtonsManager UiButtonsManager,
 	uiListConfigsManager UiListConfigsManager,
@@ -54,7 +54,7 @@ func NewVpnUseCase(
 		cfgCheck:             cfgCheck,
 		cfgMerg:              cfgMerg,
 		cfgTools:             cfgTools,
-		uiLoger:              uiLoger,
+		sessionLoger:         sessionLoger,
 		uiLogFormManager:     uiLogFormManager,
 		uiButtonsManager:     uiButtonsManager,
 		uiListConfigsManager: uiListConfigsManager,
@@ -67,7 +67,7 @@ func NewVpnUseCase(
 }
 
 func (v *VpnUseCase) GetChanVpnLog() chan string {
-	logChan := v.uiLoger.ChanVpnLog()
+	logChan := v.sessionLoger.ChanVpnLog()
 	return logChan
 }
 
@@ -175,16 +175,20 @@ func (vp *VpnUseCase) CheckOvpnUseAuthUserPass() bool {
 	return vp.cfgCheck.CheckStringAuthUserPass()
 }
 
-func (vp *VpnUseCase) RunSession(ctx context.Context) {
-	vp.sessionManager.StartSession(ctx)
+func (vp *VpnUseCase) RunSession(ctx context.Context) error {
+	return vp.sessionManager.StartSession(ctx)
 }
 
-func (vp *VpnUseCase) NewSession() {
-	vp.sessionSetters.SetSession()
+func (vp *VpnUseCase) DestroyVpnClient() {
+	vp.sessionManager.DestroyClient()
 }
 
-func (vp *VpnUseCase) SetSessionCread(u, p string) {
-	vp.sessionSetters.SetCread(u, p)
+func (vp *VpnUseCase) ExitSession() {
+	vp.sessionManager.StopSession()
+}
+
+func (vp *VpnUseCase) SetSessionCread(u, p string) error {
+	return vp.sessionSetters.SetCread(u, p)
 }
 
 func (vp *VpnUseCase) SetPathToFile(path string) {

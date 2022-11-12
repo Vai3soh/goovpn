@@ -11,13 +11,17 @@ import (
 type (
 	SessionSetters interface {
 		SetConfig(config string)
-		SetCread(user, pwd string)
-		SetSession()
+		SetCread(u, p string) error
+	}
+
+	SessionLoger interface {
+		ChanVpnLog() chan string
 	}
 
 	SessionManager interface {
-		StartSession(ctx context.Context)
+		StartSession(ctx context.Context) error
 		StopSession()
+		DestroyClient()
 	}
 
 	ConfigSetters interface {
@@ -51,10 +55,6 @@ type (
 		SearchFilesPaths() map[string]string
 		GetAuthpathFileName() string
 		GetUserAndPass() (string, string)
-	}
-
-	UiLoger interface {
-		ChanVpnLog() chan string
 	}
 
 	UiLogFormManager interface {

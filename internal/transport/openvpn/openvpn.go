@@ -17,7 +17,7 @@ type Logger interface {
 }
 
 type core interface {
-	SetSessionCread(u, p string)
+	SetSessionCread(u, p string) error
 	GetOvpnAuthPathFileName() string
 	SetPathToFile(path string)
 	ReadFile() ([]byte, error)
@@ -25,8 +25,9 @@ type core interface {
 	GetVpnCread() (string, string)
 	CheckOvpnUseAuthUserPass() bool
 	SetProfileBody(profileBody string)
-	NewSession()
-	RunSession(ctx context.Context)
+	RunSession(ctx context.Context) error
+	DestroyVpnClient()
+	ExitSession()
 	OffComboBoxAndClear()
 	DisableConnectionButton()
 	GetTextFromComboBox() string
@@ -67,7 +68,7 @@ type TransportOvpnClient struct {
 
 func New(
 	configsPath string, stopTimeout int,
-	core core, pcore ProfileCore, dnsManager DnsManager,
+	core core, pcore ProfileCore, dnsManager DnsManager, l Logger,
 ) *TransportOvpnClient {
 
 	return &TransportOvpnClient{
@@ -76,11 +77,12 @@ func New(
 		core:        core,
 		dnsManager:  dnsManager,
 		pcore:       pcore,
+		l:           l,
 	}
 }
 
-func (t *TransportOvpnClient) setVpnCread(username, password string) {
-	t.core.SetSessionCread(username, password)
+func (t *TransportOvpnClient) setVpnCread(username, password string) error {
+	return t.core.SetSessionCread(username, password)
 }
 
 func (t *TransportOvpnClient) getVpnCread(ok bool) (string, string) {
@@ -110,20 +112,25 @@ func (t *TransportOvpnClient) getVpnCread(ok bool) (string, string) {
 func (t *TransportOvpnClient) initSession() {
 	ok := t.core.CheckOvpnUseAuthUserPass()
 	username, password := t.getVpnCread(ok)
-	t.setVpnCread(username, password)
-	t.core.NewSession()
+	err := t.setVpnCread(username, password)
+	if err != nil {
+		t.l.Fatal(err)
+	}
 }
 
 func (t *TransportOvpnClient) caseRunSessionOpenvpn(ctx context.Context, profile string) {
 	t.core.SetProfileBody(profile)
 	t.initSession()
-	t.core.RunSession(ctx)
+	err := t.core.RunSession(ctx)
+	if err != nil {
+		t.l.Fatal(err)
+	}
 }
 
-func (t *TransportOvpnClient) Connect(ctx context.Context) func() error {
+func (t *TransportOvpnClient) Connect(ctx context.Context, countReccon int) func() error {
 
 	f := func() error {
-		go t.readLogsFromChan()
+		go t.readLogsFromChan(countReccon)
 		t.core.OffComboBoxAndClear()
 		t.core.DisableConnectionButton()
 		cfg := t.configsPath + t.core.GetTextFromComboBox()
@@ -137,7 +144,6 @@ func (t *TransportOvpnClient) Connect(ctx context.Context) func() error {
 				profile := t.pcore.GetProfileFromCache(cfg)
 				os.Chdir(t.configsPath)
 				t.caseRunSessionOpenvpn(ctx, profile.Body)
-				t.core.EnableDisconnectButton()
 			} else {
 				os.Chdir(t.configsPath)
 				err := t.pcore.SaveProfileWithCfgFile(cfg)
@@ -146,13 +152,10 @@ func (t *TransportOvpnClient) Connect(ctx context.Context) func() error {
 				}
 				profile := t.pcore.GetProfileFromCache(cfg)
 				t.caseRunSessionOpenvpn(ctx, profile.Body)
-				t.core.EnableDisconnectButton()
 			}
 		} else {
 			t.caseRunSessionOpenvpn(ctx, profile.Body)
-			t.core.EnableDisconnectButton()
 		}
-
 		return nil
 	}
 	return f
@@ -169,38 +172,67 @@ func (t *TransportOvpnClient) Disconnect(stop context.CancelFunc) func() {
 	}
 }
 
-func (t *TransportOvpnClient) readLogsFromChan() {
+func (t *TransportOvpnClient) readLogsFromChan(countReccon int) {
+
 	logChan := t.core.GetChanVpnLog()
 	iterSkip := false
+	toBreak := false
+	count := 0
 	for text := range logChan {
 		t.core.CaseSetLogsInTextWidget(text)
+		if toBreak {
+			t.core.DestroyVpnClient()
+			break
+		}
+
+		if strings.Contains(text, `Server poll timeout, trying next remote entry...`) {
+			count++
+			if count == countReccon {
+				t.core.TurnOnConfigsBox()
+				t.core.EnableConnectButton()
+				toBreak = true
+			}
+		}
+
+		if strings.Contains(text, `event name: CONNECTING`) {
+			t.core.EnableDisconnectButton()
+		}
 
 		if strings.Contains(text, `DNS Servers:`) {
 			t.dnsManager.AddDnsAddrs(text)
 		}
 
-		if strings.Contains(text, `Openvpn3 session ended`) {
+		if strings.Contains(text, `event name: DISCONNECTED`) {
 			t.core.EnableConnectButton()
 			t.core.TurnOnConfigsBox()
-			t.dnsManager.ConfigureDns(`revert`)
-			err := t.dnsManager.SetupDns(`revert`)
-			if err != nil {
-				t.l.Fatalf("don't manager dns: [%w]\n", err)
+			if !iterSkip {
+				t.dnsManager.ConfigureDns(`revert`)
+				err := t.dnsManager.SetupDns(`revert`)
+				if err != nil {
+					t.l.Fatalf("don't manager dns: [%w]\n", err)
+				}
 			}
 			t.core.DisableDisconnectButton()
-			err = t.core.TraySetImageDisconnect()
+			err := t.core.TraySetImageDisconnect()
 			if err != nil {
 				t.l.Info("don't set image: [%w]\n", err)
 			}
-			break
+			toBreak = true
 		}
 
-		if strings.Contains(text, "Connected via") {
+		if strings.Contains(text, `event name: CONNECTED`) {
 			err := t.core.TraySetImageConnect()
 			if err != nil {
 				t.l.Info("don't set image: [%w]\n", err)
 			}
 			continue
+		}
+
+		if strings.Contains(text, `event name: RECONNECTING`) {
+			err := t.core.CaseFlickeringIcon()
+			if err != nil {
+				t.l.Fatalf("case flick icon fatal err: [%w]", err)
+			}
 		}
 
 		if iterSkip {

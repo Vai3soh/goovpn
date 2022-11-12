@@ -5,220 +5,193 @@
 package usecaserepomocks
 
 import (
+	context "context"
 	fs "io/fs"
 	os "os"
-	exec "os/exec"
 	reflect "reflect"
 
 	entity "github.com/Vai3soh/goovpn/entity"
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockLoggerInteractor is a mock of LoggerInteractor interface.
-type MockLoggerInteractor struct {
+// MockSessionSetters is a mock of SessionSetters interface.
+type MockSessionSetters struct {
 	ctrl     *gomock.Controller
-	recorder *MockLoggerInteractorMockRecorder
+	recorder *MockSessionSettersMockRecorder
 }
 
-// MockLoggerInteractorMockRecorder is the mock recorder for MockLoggerInteractor.
-type MockLoggerInteractorMockRecorder struct {
-	mock *MockLoggerInteractor
+// MockSessionSettersMockRecorder is the mock recorder for MockSessionSetters.
+type MockSessionSettersMockRecorder struct {
+	mock *MockSessionSetters
 }
 
-// NewMockLoggerInteractor creates a new mock instance.
-func NewMockLoggerInteractor(ctrl *gomock.Controller) *MockLoggerInteractor {
-	mock := &MockLoggerInteractor{ctrl: ctrl}
-	mock.recorder = &MockLoggerInteractorMockRecorder{mock}
+// NewMockSessionSetters creates a new mock instance.
+func NewMockSessionSetters(ctrl *gomock.Controller) *MockSessionSetters {
+	mock := &MockSessionSetters{ctrl: ctrl}
+	mock.recorder = &MockSessionSettersMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockLoggerInteractor) EXPECT() *MockLoggerInteractorMockRecorder {
+func (m *MockSessionSetters) EXPECT() *MockSessionSettersMockRecorder {
 	return m.recorder
 }
 
-// Debugf mocks base method.
-func (m *MockLoggerInteractor) Debugf(arg0 string, arg1 ...interface{}) {
+// SetConfig mocks base method.
+func (m *MockSessionSetters) SetConfig(config string) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Debugf", varargs...)
+	m.ctrl.Call(m, "SetConfig", config)
 }
 
-// Debugf indicates an expected call of Debugf.
-func (mr *MockLoggerInteractorMockRecorder) Debugf(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+// SetConfig indicates an expected call of SetConfig.
+func (mr *MockSessionSettersMockRecorder) SetConfig(config interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Debugf", reflect.TypeOf((*MockLoggerInteractor)(nil).Debugf), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetConfig", reflect.TypeOf((*MockSessionSetters)(nil).SetConfig), config)
 }
 
-// Fatal mocks base method.
-func (m *MockLoggerInteractor) Fatal(arg0 ...interface{}) {
+// SetCread mocks base method.
+func (m *MockSessionSetters) SetCread(user, pwd string) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{}
-	for _, a := range arg0 {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Fatal", varargs...)
+	m.ctrl.Call(m, "SetCread", user, pwd)
 }
 
-// Fatal indicates an expected call of Fatal.
-func (mr *MockLoggerInteractorMockRecorder) Fatal(arg0 ...interface{}) *gomock.Call {
+// SetCread indicates an expected call of SetCread.
+func (mr *MockSessionSettersMockRecorder) SetCread(user, pwd interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Fatal", reflect.TypeOf((*MockLoggerInteractor)(nil).Fatal), arg0...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCread", reflect.TypeOf((*MockSessionSetters)(nil).SetCread), user, pwd)
 }
 
-// Fatalf mocks base method.
-func (m *MockLoggerInteractor) Fatalf(arg0 string, arg1 ...interface{}) {
+// SetSession mocks base method.
+func (m *MockSessionSetters) SetSession() {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	m.ctrl.Call(m, "Fatalf", varargs...)
+	m.ctrl.Call(m, "SetSession")
 }
 
-// Fatalf indicates an expected call of Fatalf.
-func (mr *MockLoggerInteractorMockRecorder) Fatalf(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+// SetSession indicates an expected call of SetSession.
+func (mr *MockSessionSettersMockRecorder) SetSession() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Fatalf", reflect.TypeOf((*MockLoggerInteractor)(nil).Fatalf), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSession", reflect.TypeOf((*MockSessionSetters)(nil).SetSession))
 }
 
-// MockManagerInteractor is a mock of ManagerInteractor interface.
-type MockManagerInteractor struct {
+// MockSessionManager is a mock of SessionManager interface.
+type MockSessionManager struct {
 	ctrl     *gomock.Controller
-	recorder *MockManagerInteractorMockRecorder
+	recorder *MockSessionManagerMockRecorder
 }
 
-// MockManagerInteractorMockRecorder is the mock recorder for MockManagerInteractor.
-type MockManagerInteractorMockRecorder struct {
-	mock *MockManagerInteractor
+// MockSessionManagerMockRecorder is the mock recorder for MockSessionManager.
+type MockSessionManagerMockRecorder struct {
+	mock *MockSessionManager
 }
 
-// NewMockManagerInteractor creates a new mock instance.
-func NewMockManagerInteractor(ctrl *gomock.Controller) *MockManagerInteractor {
-	mock := &MockManagerInteractor{ctrl: ctrl}
-	mock.recorder = &MockManagerInteractorMockRecorder{mock}
+// NewMockSessionManager creates a new mock instance.
+func NewMockSessionManager(ctrl *gomock.Controller) *MockSessionManager {
+	mock := &MockSessionManager{ctrl: ctrl}
+	mock.recorder = &MockSessionManagerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockManagerInteractor) EXPECT() *MockManagerInteractorMockRecorder {
+func (m *MockSessionManager) EXPECT() *MockSessionManagerMockRecorder {
 	return m.recorder
 }
 
-// Connect mocks base method.
-func (m *MockManagerInteractor) Connect(ConfigsPath, Level string, StopTimeout int, UseSystemd bool) func() {
+// StartSession mocks base method.
+func (m *MockSessionManager) StartSession(ctx context.Context) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Connect", ConfigsPath, Level, StopTimeout, UseSystemd)
-	ret0, _ := ret[0].(func())
-	return ret0
+	m.ctrl.Call(m, "StartSession", ctx)
 }
 
-// Connect indicates an expected call of Connect.
-func (mr *MockManagerInteractorMockRecorder) Connect(ConfigsPath, Level, StopTimeout, UseSystemd interface{}) *gomock.Call {
+// StartSession indicates an expected call of StartSession.
+func (mr *MockSessionManagerMockRecorder) StartSession(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Connect", reflect.TypeOf((*MockManagerInteractor)(nil).Connect), ConfigsPath, Level, StopTimeout, UseSystemd)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartSession", reflect.TypeOf((*MockSessionManager)(nil).StartSession), ctx)
 }
 
-// Disconnect mocks base method.
-func (m *MockManagerInteractor) Disconnect(StopTimeout int, UseSystemd bool) func() {
+// StopSession mocks base method.
+func (m *MockSessionManager) StopSession() {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Disconnect", StopTimeout, UseSystemd)
-	ret0, _ := ret[0].(func())
-	return ret0
+	m.ctrl.Call(m, "StopSession")
 }
 
-// Disconnect indicates an expected call of Disconnect.
-func (mr *MockManagerInteractorMockRecorder) Disconnect(StopTimeout, UseSystemd interface{}) *gomock.Call {
+// StopSession indicates an expected call of StopSession.
+func (mr *MockSessionManagerMockRecorder) StopSession() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Disconnect", reflect.TypeOf((*MockManagerInteractor)(nil).Disconnect), StopTimeout, UseSystemd)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopSession", reflect.TypeOf((*MockSessionManager)(nil).StopSession))
 }
 
-// MockGlueConfigInteractor is a mock of GlueConfigInteractor interface.
-type MockGlueConfigInteractor struct {
+// MockConfigSetters is a mock of ConfigSetters interface.
+type MockConfigSetters struct {
 	ctrl     *gomock.Controller
-	recorder *MockGlueConfigInteractorMockRecorder
+	recorder *MockConfigSettersMockRecorder
 }
 
-// MockGlueConfigInteractorMockRecorder is the mock recorder for MockGlueConfigInteractor.
-type MockGlueConfigInteractorMockRecorder struct {
-	mock *MockGlueConfigInteractor
+// MockConfigSettersMockRecorder is the mock recorder for MockConfigSetters.
+type MockConfigSettersMockRecorder struct {
+	mock *MockConfigSetters
 }
 
-// NewMockGlueConfigInteractor creates a new mock instance.
-func NewMockGlueConfigInteractor(ctrl *gomock.Controller) *MockGlueConfigInteractor {
-	mock := &MockGlueConfigInteractor{ctrl: ctrl}
-	mock.recorder = &MockGlueConfigInteractorMockRecorder{mock}
+// NewMockConfigSetters creates a new mock instance.
+func NewMockConfigSetters(ctrl *gomock.Controller) *MockConfigSetters {
+	mock := &MockConfigSetters{ctrl: ctrl}
+	mock.recorder = &MockConfigSettersMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockGlueConfigInteractor) EXPECT() *MockGlueConfigInteractorMockRecorder {
+func (m *MockConfigSetters) EXPECT() *MockConfigSettersMockRecorder {
 	return m.recorder
 }
 
-// AddStringToConfig mocks base method.
-func (m *MockGlueConfigInteractor) AddStringToConfig(inFile *os.File) string {
+// SetBody mocks base method.
+func (m *MockConfigSetters) SetBody(body string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddStringToConfig", inFile)
-	ret0, _ := ret[0].(string)
-	return ret0
+	m.ctrl.Call(m, "SetBody", body)
 }
 
-// AddStringToConfig indicates an expected call of AddStringToConfig.
-func (mr *MockGlueConfigInteractorMockRecorder) AddStringToConfig(inFile interface{}) *gomock.Call {
+// SetBody indicates an expected call of SetBody.
+func (mr *MockConfigSettersMockRecorder) SetBody(body interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddStringToConfig", reflect.TypeOf((*MockGlueConfigInteractor)(nil).AddStringToConfig), inFile)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBody", reflect.TypeOf((*MockConfigSetters)(nil).SetBody), body)
 }
 
-// CheckConfigUseFiles mocks base method.
-func (m *MockGlueConfigInteractor) CheckConfigUseFiles() bool {
+// SetPath mocks base method.
+func (m *MockConfigSetters) SetPath(path string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckConfigUseFiles")
-	ret0, _ := ret[0].(bool)
-	return ret0
+	m.ctrl.Call(m, "SetPath", path)
 }
 
-// CheckConfigUseFiles indicates an expected call of CheckConfigUseFiles.
-func (mr *MockGlueConfigInteractorMockRecorder) CheckConfigUseFiles() *gomock.Call {
+// SetPath indicates an expected call of SetPath.
+func (mr *MockConfigSettersMockRecorder) SetPath(path interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckConfigUseFiles", reflect.TypeOf((*MockGlueConfigInteractor)(nil).CheckConfigUseFiles))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPath", reflect.TypeOf((*MockConfigSetters)(nil).SetPath), path)
 }
 
-// CheckStringAuthUserPass mocks base method.
-func (m *MockGlueConfigInteractor) CheckStringAuthUserPass() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckStringAuthUserPass")
-	ret0, _ := ret[0].(bool)
-	return ret0
+// MockConfigBody is a mock of ConfigBody interface.
+type MockConfigBody struct {
+	ctrl     *gomock.Controller
+	recorder *MockConfigBodyMockRecorder
 }
 
-// CheckStringAuthUserPass indicates an expected call of CheckStringAuthUserPass.
-func (mr *MockGlueConfigInteractorMockRecorder) CheckStringAuthUserPass() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckStringAuthUserPass", reflect.TypeOf((*MockGlueConfigInteractor)(nil).CheckStringAuthUserPass))
+// MockConfigBodyMockRecorder is the mock recorder for MockConfigBody.
+type MockConfigBodyMockRecorder struct {
+	mock *MockConfigBody
 }
 
-// GetAuthpathFileName mocks base method.
-func (m *MockGlueConfigInteractor) GetAuthpathFileName() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAuthpathFileName")
-	ret0, _ := ret[0].(string)
-	return ret0
+// NewMockConfigBody creates a new mock instance.
+func NewMockConfigBody(ctrl *gomock.Controller) *MockConfigBody {
+	mock := &MockConfigBody{ctrl: ctrl}
+	mock.recorder = &MockConfigBodyMockRecorder{mock}
+	return mock
 }
 
-// GetAuthpathFileName indicates an expected call of GetAuthpathFileName.
-func (mr *MockGlueConfigInteractorMockRecorder) GetAuthpathFileName() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthpathFileName", reflect.TypeOf((*MockGlueConfigInteractor)(nil).GetAuthpathFileName))
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockConfigBody) EXPECT() *MockConfigBodyMockRecorder {
+	return m.recorder
 }
 
 // GetBody mocks base method.
-func (m *MockGlueConfigInteractor) GetBody() string {
+func (m *MockConfigBody) GetBody() string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBody")
 	ret0, _ := ret[0].(string)
@@ -226,13 +199,235 @@ func (m *MockGlueConfigInteractor) GetBody() string {
 }
 
 // GetBody indicates an expected call of GetBody.
-func (mr *MockGlueConfigInteractorMockRecorder) GetBody() *gomock.Call {
+func (mr *MockConfigBodyMockRecorder) GetBody() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBody", reflect.TypeOf((*MockGlueConfigInteractor)(nil).GetBody))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBody", reflect.TypeOf((*MockConfigBody)(nil).GetBody))
+}
+
+// MockConfigRemover is a mock of ConfigRemover interface.
+type MockConfigRemover struct {
+	ctrl     *gomock.Controller
+	recorder *MockConfigRemoverMockRecorder
+}
+
+// MockConfigRemoverMockRecorder is the mock recorder for MockConfigRemover.
+type MockConfigRemoverMockRecorder struct {
+	mock *MockConfigRemover
+}
+
+// NewMockConfigRemover creates a new mock instance.
+func NewMockConfigRemover(ctrl *gomock.Controller) *MockConfigRemover {
+	mock := &MockConfigRemover{ctrl: ctrl}
+	mock.recorder = &MockConfigRemoverMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockConfigRemover) EXPECT() *MockConfigRemoverMockRecorder {
+	return m.recorder
+}
+
+// RemoveCertsAndKeys mocks base method.
+func (m *MockConfigRemover) RemoveCertsAndKeys() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "RemoveCertsAndKeys")
+}
+
+// RemoveCertsAndKeys indicates an expected call of RemoveCertsAndKeys.
+func (mr *MockConfigRemoverMockRecorder) RemoveCertsAndKeys() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveCertsAndKeys", reflect.TypeOf((*MockConfigRemover)(nil).RemoveCertsAndKeys))
+}
+
+// RemoveCommentLines mocks base method.
+func (m *MockConfigRemover) RemoveCommentLines() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "RemoveCommentLines")
+}
+
+// RemoveCommentLines indicates an expected call of RemoveCommentLines.
+func (mr *MockConfigRemoverMockRecorder) RemoveCommentLines() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveCommentLines", reflect.TypeOf((*MockConfigRemover)(nil).RemoveCommentLines))
+}
+
+// RemoveEmptyString mocks base method.
+func (m *MockConfigRemover) RemoveEmptyString() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "RemoveEmptyString")
+}
+
+// RemoveEmptyString indicates an expected call of RemoveEmptyString.
+func (mr *MockConfigRemoverMockRecorder) RemoveEmptyString() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveEmptyString", reflect.TypeOf((*MockConfigRemover)(nil).RemoveEmptyString))
+}
+
+// RemoveNotCertsAndKeys mocks base method.
+func (m *MockConfigRemover) RemoveNotCertsAndKeys() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "RemoveNotCertsAndKeys")
+}
+
+// RemoveNotCertsAndKeys indicates an expected call of RemoveNotCertsAndKeys.
+func (mr *MockConfigRemoverMockRecorder) RemoveNotCertsAndKeys() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveNotCertsAndKeys", reflect.TypeOf((*MockConfigRemover)(nil).RemoveNotCertsAndKeys))
+}
+
+// RemoveSpaceLines mocks base method.
+func (m *MockConfigRemover) RemoveSpaceLines() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "RemoveSpaceLines")
+}
+
+// RemoveSpaceLines indicates an expected call of RemoveSpaceLines.
+func (mr *MockConfigRemoverMockRecorder) RemoveSpaceLines() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveSpaceLines", reflect.TypeOf((*MockConfigRemover)(nil).RemoveSpaceLines))
+}
+
+// MockConfigChecker is a mock of ConfigChecker interface.
+type MockConfigChecker struct {
+	ctrl     *gomock.Controller
+	recorder *MockConfigCheckerMockRecorder
+}
+
+// MockConfigCheckerMockRecorder is the mock recorder for MockConfigChecker.
+type MockConfigCheckerMockRecorder struct {
+	mock *MockConfigChecker
+}
+
+// NewMockConfigChecker creates a new mock instance.
+func NewMockConfigChecker(ctrl *gomock.Controller) *MockConfigChecker {
+	mock := &MockConfigChecker{ctrl: ctrl}
+	mock.recorder = &MockConfigCheckerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockConfigChecker) EXPECT() *MockConfigCheckerMockRecorder {
+	return m.recorder
+}
+
+// CheckConfigUseFiles mocks base method.
+func (m *MockConfigChecker) CheckConfigUseFiles() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckConfigUseFiles")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// CheckConfigUseFiles indicates an expected call of CheckConfigUseFiles.
+func (mr *MockConfigCheckerMockRecorder) CheckConfigUseFiles() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckConfigUseFiles", reflect.TypeOf((*MockConfigChecker)(nil).CheckConfigUseFiles))
+}
+
+// CheckStringAuthUserPass mocks base method.
+func (m *MockConfigChecker) CheckStringAuthUserPass() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckStringAuthUserPass")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// CheckStringAuthUserPass indicates an expected call of CheckStringAuthUserPass.
+func (mr *MockConfigCheckerMockRecorder) CheckStringAuthUserPass() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckStringAuthUserPass", reflect.TypeOf((*MockConfigChecker)(nil).CheckStringAuthUserPass))
+}
+
+// MockConfigMerger is a mock of ConfigMerger interface.
+type MockConfigMerger struct {
+	ctrl     *gomock.Controller
+	recorder *MockConfigMergerMockRecorder
+}
+
+// MockConfigMergerMockRecorder is the mock recorder for MockConfigMerger.
+type MockConfigMergerMockRecorder struct {
+	mock *MockConfigMerger
+}
+
+// NewMockConfigMerger creates a new mock instance.
+func NewMockConfigMerger(ctrl *gomock.Controller) *MockConfigMerger {
+	mock := &MockConfigMerger{ctrl: ctrl}
+	mock.recorder = &MockConfigMergerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockConfigMerger) EXPECT() *MockConfigMergerMockRecorder {
+	return m.recorder
+}
+
+// MergeCertsAndKeys mocks base method.
+func (m *MockConfigMerger) MergeCertsAndKeys(key string) string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MergeCertsAndKeys", key)
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// MergeCertsAndKeys indicates an expected call of MergeCertsAndKeys.
+func (mr *MockConfigMergerMockRecorder) MergeCertsAndKeys(key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MergeCertsAndKeys", reflect.TypeOf((*MockConfigMerger)(nil).MergeCertsAndKeys), key)
+}
+
+// MockConfigTools is a mock of ConfigTools interface.
+type MockConfigTools struct {
+	ctrl     *gomock.Controller
+	recorder *MockConfigToolsMockRecorder
+}
+
+// MockConfigToolsMockRecorder is the mock recorder for MockConfigTools.
+type MockConfigToolsMockRecorder struct {
+	mock *MockConfigTools
+}
+
+// NewMockConfigTools creates a new mock instance.
+func NewMockConfigTools(ctrl *gomock.Controller) *MockConfigTools {
+	mock := &MockConfigTools{ctrl: ctrl}
+	mock.recorder = &MockConfigToolsMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockConfigTools) EXPECT() *MockConfigToolsMockRecorder {
+	return m.recorder
+}
+
+// AddStringToConfig mocks base method.
+func (m *MockConfigTools) AddStringToConfig(inFile *os.File) string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddStringToConfig", inFile)
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// AddStringToConfig indicates an expected call of AddStringToConfig.
+func (mr *MockConfigToolsMockRecorder) AddStringToConfig(inFile interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddStringToConfig", reflect.TypeOf((*MockConfigTools)(nil).AddStringToConfig), inFile)
+}
+
+// GetAuthpathFileName mocks base method.
+func (m *MockConfigTools) GetAuthpathFileName() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthpathFileName")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetAuthpathFileName indicates an expected call of GetAuthpathFileName.
+func (mr *MockConfigToolsMockRecorder) GetAuthpathFileName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthpathFileName", reflect.TypeOf((*MockConfigTools)(nil).GetAuthpathFileName))
 }
 
 // GetUserAndPass mocks base method.
-func (m *MockGlueConfigInteractor) GetUserAndPass() (string, string) {
+func (m *MockConfigTools) GetUserAndPass() (string, string) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserAndPass")
 	ret0, _ := ret[0].(string)
@@ -241,87 +436,13 @@ func (m *MockGlueConfigInteractor) GetUserAndPass() (string, string) {
 }
 
 // GetUserAndPass indicates an expected call of GetUserAndPass.
-func (mr *MockGlueConfigInteractorMockRecorder) GetUserAndPass() *gomock.Call {
+func (mr *MockConfigToolsMockRecorder) GetUserAndPass() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserAndPass", reflect.TypeOf((*MockGlueConfigInteractor)(nil).GetUserAndPass))
-}
-
-// MergeCertsAndKeys mocks base method.
-func (m *MockGlueConfigInteractor) MergeCertsAndKeys(key string) string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MergeCertsAndKeys", key)
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// MergeCertsAndKeys indicates an expected call of MergeCertsAndKeys.
-func (mr *MockGlueConfigInteractorMockRecorder) MergeCertsAndKeys(key interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MergeCertsAndKeys", reflect.TypeOf((*MockGlueConfigInteractor)(nil).MergeCertsAndKeys), key)
-}
-
-// RemoveCertsAndKeys mocks base method.
-func (m *MockGlueConfigInteractor) RemoveCertsAndKeys() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RemoveCertsAndKeys")
-}
-
-// RemoveCertsAndKeys indicates an expected call of RemoveCertsAndKeys.
-func (mr *MockGlueConfigInteractorMockRecorder) RemoveCertsAndKeys() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveCertsAndKeys", reflect.TypeOf((*MockGlueConfigInteractor)(nil).RemoveCertsAndKeys))
-}
-
-// RemoveCommentLines mocks base method.
-func (m *MockGlueConfigInteractor) RemoveCommentLines() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RemoveCommentLines")
-}
-
-// RemoveCommentLines indicates an expected call of RemoveCommentLines.
-func (mr *MockGlueConfigInteractorMockRecorder) RemoveCommentLines() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveCommentLines", reflect.TypeOf((*MockGlueConfigInteractor)(nil).RemoveCommentLines))
-}
-
-// RemoveEmptyString mocks base method.
-func (m *MockGlueConfigInteractor) RemoveEmptyString() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RemoveEmptyString")
-}
-
-// RemoveEmptyString indicates an expected call of RemoveEmptyString.
-func (mr *MockGlueConfigInteractorMockRecorder) RemoveEmptyString() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveEmptyString", reflect.TypeOf((*MockGlueConfigInteractor)(nil).RemoveEmptyString))
-}
-
-// RemoveNotCertsAndKeys mocks base method.
-func (m *MockGlueConfigInteractor) RemoveNotCertsAndKeys() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RemoveNotCertsAndKeys")
-}
-
-// RemoveNotCertsAndKeys indicates an expected call of RemoveNotCertsAndKeys.
-func (mr *MockGlueConfigInteractorMockRecorder) RemoveNotCertsAndKeys() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveNotCertsAndKeys", reflect.TypeOf((*MockGlueConfigInteractor)(nil).RemoveNotCertsAndKeys))
-}
-
-// RemoveSpaceLines mocks base method.
-func (m *MockGlueConfigInteractor) RemoveSpaceLines() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "RemoveSpaceLines")
-}
-
-// RemoveSpaceLines indicates an expected call of RemoveSpaceLines.
-func (mr *MockGlueConfigInteractorMockRecorder) RemoveSpaceLines() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveSpaceLines", reflect.TypeOf((*MockGlueConfigInteractor)(nil).RemoveSpaceLines))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserAndPass", reflect.TypeOf((*MockConfigTools)(nil).GetUserAndPass))
 }
 
 // SearchFilesPaths mocks base method.
-func (m *MockGlueConfigInteractor) SearchFilesPaths() map[string]string {
+func (m *MockConfigTools) SearchFilesPaths() map[string]string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchFilesPaths")
 	ret0, _ := ret[0].(map[string]string)
@@ -329,238 +450,36 @@ func (m *MockGlueConfigInteractor) SearchFilesPaths() map[string]string {
 }
 
 // SearchFilesPaths indicates an expected call of SearchFilesPaths.
-func (mr *MockGlueConfigInteractorMockRecorder) SearchFilesPaths() *gomock.Call {
+func (mr *MockConfigToolsMockRecorder) SearchFilesPaths() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchFilesPaths", reflect.TypeOf((*MockGlueConfigInteractor)(nil).SearchFilesPaths))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchFilesPaths", reflect.TypeOf((*MockConfigTools)(nil).SearchFilesPaths))
 }
 
-// SetBody mocks base method.
-func (m *MockGlueConfigInteractor) SetBody(body string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetBody", body)
-}
-
-// SetBody indicates an expected call of SetBody.
-func (mr *MockGlueConfigInteractorMockRecorder) SetBody(body interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBody", reflect.TypeOf((*MockGlueConfigInteractor)(nil).SetBody), body)
-}
-
-// SetPath mocks base method.
-func (m *MockGlueConfigInteractor) SetPath(path string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetPath", path)
-}
-
-// SetPath indicates an expected call of SetPath.
-func (mr *MockGlueConfigInteractorMockRecorder) SetPath(path interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPath", reflect.TypeOf((*MockGlueConfigInteractor)(nil).SetPath), path)
-}
-
-// MockSessionInteractor is a mock of SessionInteractor interface.
-type MockSessionInteractor struct {
+// MockUiLoger is a mock of UiLoger interface.
+type MockUiLoger struct {
 	ctrl     *gomock.Controller
-	recorder *MockSessionInteractorMockRecorder
+	recorder *MockUiLogerMockRecorder
 }
 
-// MockSessionInteractorMockRecorder is the mock recorder for MockSessionInteractor.
-type MockSessionInteractorMockRecorder struct {
-	mock *MockSessionInteractor
+// MockUiLogerMockRecorder is the mock recorder for MockUiLoger.
+type MockUiLogerMockRecorder struct {
+	mock *MockUiLoger
 }
 
-// NewMockSessionInteractor creates a new mock instance.
-func NewMockSessionInteractor(ctrl *gomock.Controller) *MockSessionInteractor {
-	mock := &MockSessionInteractor{ctrl: ctrl}
-	mock.recorder = &MockSessionInteractorMockRecorder{mock}
+// NewMockUiLoger creates a new mock instance.
+func NewMockUiLoger(ctrl *gomock.Controller) *MockUiLoger {
+	mock := &MockUiLoger{ctrl: ctrl}
+	mock.recorder = &MockUiLogerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSessionInteractor) EXPECT() *MockSessionInteractorMockRecorder {
+func (m *MockUiLoger) EXPECT() *MockUiLogerMockRecorder {
 	return m.recorder
-}
-
-// SetConfig mocks base method.
-func (m *MockSessionInteractor) SetConfig(config string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetConfig", config)
-}
-
-// SetConfig indicates an expected call of SetConfig.
-func (mr *MockSessionInteractorMockRecorder) SetConfig(config interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetConfig", reflect.TypeOf((*MockSessionInteractor)(nil).SetConfig), config)
-}
-
-// SetSession mocks base method.
-func (m *MockSessionInteractor) SetSession(username, password string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetSession", username, password)
-}
-
-// SetSession indicates an expected call of SetSession.
-func (mr *MockSessionInteractorMockRecorder) SetSession(username, password interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetSession", reflect.TypeOf((*MockSessionInteractor)(nil).SetSession), username, password)
-}
-
-// StartSession mocks base method.
-func (m *MockSessionInteractor) StartSession() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "StartSession")
-}
-
-// StartSession indicates an expected call of StartSession.
-func (mr *MockSessionInteractorMockRecorder) StartSession() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartSession", reflect.TypeOf((*MockSessionInteractor)(nil).StartSession))
-}
-
-// StopSession mocks base method.
-func (m *MockSessionInteractor) StopSession() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "StopSession")
-}
-
-// StopSession indicates an expected call of StopSession.
-func (mr *MockSessionInteractorMockRecorder) StopSession() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopSession", reflect.TypeOf((*MockSessionInteractor)(nil).StopSession))
-}
-
-// StopSessionWithTimeout mocks base method.
-func (m *MockSessionInteractor) StopSessionWithTimeout(timeout int) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "StopSessionWithTimeout", timeout)
-}
-
-// StopSessionWithTimeout indicates an expected call of StopSessionWithTimeout.
-func (mr *MockSessionInteractorMockRecorder) StopSessionWithTimeout(timeout interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopSessionWithTimeout", reflect.TypeOf((*MockSessionInteractor)(nil).StopSessionWithTimeout), timeout)
-}
-
-// MockCloseAppInteractor is a mock of CloseAppInteractor interface.
-type MockCloseAppInteractor struct {
-	ctrl     *gomock.Controller
-	recorder *MockCloseAppInteractorMockRecorder
-}
-
-// MockCloseAppInteractorMockRecorder is the mock recorder for MockCloseAppInteractor.
-type MockCloseAppInteractorMockRecorder struct {
-	mock *MockCloseAppInteractor
-}
-
-// NewMockCloseAppInteractor creates a new mock instance.
-func NewMockCloseAppInteractor(ctrl *gomock.Controller) *MockCloseAppInteractor {
-	mock := &MockCloseAppInteractor{ctrl: ctrl}
-	mock.recorder = &MockCloseAppInteractorMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCloseAppInteractor) EXPECT() *MockCloseAppInteractorMockRecorder {
-	return m.recorder
-}
-
-// CloseApp mocks base method.
-func (m *MockCloseAppInteractor) CloseApp() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CloseApp")
-}
-
-// CloseApp indicates an expected call of CloseApp.
-func (mr *MockCloseAppInteractorMockRecorder) CloseApp() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseApp", reflect.TypeOf((*MockCloseAppInteractor)(nil).CloseApp))
-}
-
-// SetBind mocks base method.
-func (m *MockCloseAppInteractor) SetBind(bind func()) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetBind", bind)
-}
-
-// SetBind indicates an expected call of SetBind.
-func (mr *MockCloseAppInteractorMockRecorder) SetBind(bind interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBind", reflect.TypeOf((*MockCloseAppInteractor)(nil).SetBind), bind)
-}
-
-// MockUiInteractor is a mock of UiInteractor interface.
-type MockUiInteractor struct {
-	ctrl     *gomock.Controller
-	recorder *MockUiInteractorMockRecorder
-}
-
-// MockUiInteractorMockRecorder is the mock recorder for MockUiInteractor.
-type MockUiInteractorMockRecorder struct {
-	mock *MockUiInteractor
-}
-
-// NewMockUiInteractor creates a new mock instance.
-func NewMockUiInteractor(ctrl *gomock.Controller) *MockUiInteractor {
-	mock := &MockUiInteractor{ctrl: ctrl}
-	mock.recorder = &MockUiInteractorMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUiInteractor) EXPECT() *MockUiInteractorMockRecorder {
-	return m.recorder
-}
-
-// ButtonConnectDisable mocks base method.
-func (m *MockUiInteractor) ButtonConnectDisable() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ButtonConnectDisable")
-}
-
-// ButtonConnectDisable indicates an expected call of ButtonConnectDisable.
-func (mr *MockUiInteractorMockRecorder) ButtonConnectDisable() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonConnectDisable", reflect.TypeOf((*MockUiInteractor)(nil).ButtonConnectDisable))
-}
-
-// ButtonConnectEnable mocks base method.
-func (m *MockUiInteractor) ButtonConnectEnable() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ButtonConnectEnable")
-}
-
-// ButtonConnectEnable indicates an expected call of ButtonConnectEnable.
-func (mr *MockUiInteractorMockRecorder) ButtonConnectEnable() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonConnectEnable", reflect.TypeOf((*MockUiInteractor)(nil).ButtonConnectEnable))
-}
-
-// ButtonDisconnectDisable mocks base method.
-func (m *MockUiInteractor) ButtonDisconnectDisable() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ButtonDisconnectDisable")
-}
-
-// ButtonDisconnectDisable indicates an expected call of ButtonDisconnectDisable.
-func (mr *MockUiInteractorMockRecorder) ButtonDisconnectDisable() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonDisconnectDisable", reflect.TypeOf((*MockUiInteractor)(nil).ButtonDisconnectDisable))
-}
-
-// ButtonDisconnectEnable mocks base method.
-func (m *MockUiInteractor) ButtonDisconnectEnable() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ButtonDisconnectEnable")
-}
-
-// ButtonDisconnectEnable indicates an expected call of ButtonDisconnectEnable.
-func (mr *MockUiInteractorMockRecorder) ButtonDisconnectEnable() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonDisconnectEnable", reflect.TypeOf((*MockUiInteractor)(nil).ButtonDisconnectEnable))
 }
 
 // ChanVpnLog mocks base method.
-func (m *MockUiInteractor) ChanVpnLog() chan string {
+func (m *MockUiLoger) ChanVpnLog() chan string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ChanVpnLog")
 	ret0, _ := ret[0].(chan string)
@@ -568,136 +487,320 @@ func (m *MockUiInteractor) ChanVpnLog() chan string {
 }
 
 // ChanVpnLog indicates an expected call of ChanVpnLog.
-func (mr *MockUiInteractorMockRecorder) ChanVpnLog() *gomock.Call {
+func (mr *MockUiLogerMockRecorder) ChanVpnLog() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChanVpnLog", reflect.TypeOf((*MockUiInteractor)(nil).ChanVpnLog))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChanVpnLog", reflect.TypeOf((*MockUiLoger)(nil).ChanVpnLog))
 }
 
-// ClearTextEdit mocks base method.
-func (m *MockUiInteractor) ClearTextEdit() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "ClearTextEdit")
-}
-
-// ClearTextEdit indicates an expected call of ClearTextEdit.
-func (mr *MockUiInteractorMockRecorder) ClearTextEdit() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearTextEdit", reflect.TypeOf((*MockUiInteractor)(nil).ClearTextEdit))
-}
-
-// CloseChanVpnLog mocks base method.
-func (m *MockUiInteractor) CloseChanVpnLog() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CloseChanVpnLog")
-}
-
-// CloseChanVpnLog indicates an expected call of CloseChanVpnLog.
-func (mr *MockUiInteractorMockRecorder) CloseChanVpnLog() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseChanVpnLog", reflect.TypeOf((*MockUiInteractor)(nil).CloseChanVpnLog))
-}
-
-// DisableComboBox mocks base method.
-func (m *MockUiInteractor) DisableComboBox() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DisableComboBox")
-}
-
-// DisableComboBox indicates an expected call of DisableComboBox.
-func (mr *MockUiInteractorMockRecorder) DisableComboBox() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableComboBox", reflect.TypeOf((*MockUiInteractor)(nil).DisableComboBox))
-}
-
-// EnableComboBox mocks base method.
-func (m *MockUiInteractor) EnableComboBox() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "EnableComboBox")
-}
-
-// EnableComboBox indicates an expected call of EnableComboBox.
-func (mr *MockUiInteractorMockRecorder) EnableComboBox() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableComboBox", reflect.TypeOf((*MockUiInteractor)(nil).EnableComboBox))
-}
-
-// GetTextFromTextEdit mocks base method.
-func (m *MockUiInteractor) GetTextFromTextEdit() string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTextFromTextEdit")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// GetTextFromTextEdit indicates an expected call of GetTextFromTextEdit.
-func (mr *MockUiInteractorMockRecorder) GetTextFromTextEdit() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTextFromTextEdit", reflect.TypeOf((*MockUiInteractor)(nil).GetTextFromTextEdit))
-}
-
-// Log mocks base method.
-func (m *MockUiInteractor) Log(text string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Log", text)
-}
-
-// Log indicates an expected call of Log.
-func (mr *MockUiInteractorMockRecorder) Log(text interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Log", reflect.TypeOf((*MockUiInteractor)(nil).Log), text)
-}
-
-// SelectedFromComboBox mocks base method.
-func (m *MockUiInteractor) SelectedFromComboBox() *string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SelectedFromComboBox")
-	ret0, _ := ret[0].(*string)
-	return ret0
-}
-
-// SelectedFromComboBox indicates an expected call of SelectedFromComboBox.
-func (mr *MockUiInteractorMockRecorder) SelectedFromComboBox() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectedFromComboBox", reflect.TypeOf((*MockUiInteractor)(nil).SelectedFromComboBox))
-}
-
-// SetTextInTextEdit mocks base method.
-func (m *MockUiInteractor) SetTextInTextEdit(text string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetTextInTextEdit", text)
-}
-
-// SetTextInTextEdit indicates an expected call of SetTextInTextEdit.
-func (mr *MockUiInteractorMockRecorder) SetTextInTextEdit(text interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTextInTextEdit", reflect.TypeOf((*MockUiInteractor)(nil).SetTextInTextEdit), text)
-}
-
-// MockSysTrayInteractor is a mock of SysTrayInteractor interface.
-type MockSysTrayInteractor struct {
+// MockUiLogFormManager is a mock of UiLogFormManager interface.
+type MockUiLogFormManager struct {
 	ctrl     *gomock.Controller
-	recorder *MockSysTrayInteractorMockRecorder
+	recorder *MockUiLogFormManagerMockRecorder
 }
 
-// MockSysTrayInteractorMockRecorder is the mock recorder for MockSysTrayInteractor.
-type MockSysTrayInteractorMockRecorder struct {
-	mock *MockSysTrayInteractor
+// MockUiLogFormManagerMockRecorder is the mock recorder for MockUiLogFormManager.
+type MockUiLogFormManagerMockRecorder struct {
+	mock *MockUiLogFormManager
 }
 
-// NewMockSysTrayInteractor creates a new mock instance.
-func NewMockSysTrayInteractor(ctrl *gomock.Controller) *MockSysTrayInteractor {
-	mock := &MockSysTrayInteractor{ctrl: ctrl}
-	mock.recorder = &MockSysTrayInteractorMockRecorder{mock}
+// NewMockUiLogFormManager creates a new mock instance.
+func NewMockUiLogFormManager(ctrl *gomock.Controller) *MockUiLogFormManager {
+	mock := &MockUiLogFormManager{ctrl: ctrl}
+	mock.recorder = &MockUiLogFormManagerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSysTrayInteractor) EXPECT() *MockSysTrayInteractorMockRecorder {
+func (m *MockUiLogFormManager) EXPECT() *MockUiLogFormManagerMockRecorder {
+	return m.recorder
+}
+
+// ClearLogForm mocks base method.
+func (m *MockUiLogFormManager) ClearLogForm() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "ClearLogForm")
+}
+
+// ClearLogForm indicates an expected call of ClearLogForm.
+func (mr *MockUiLogFormManagerMockRecorder) ClearLogForm() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearLogForm", reflect.TypeOf((*MockUiLogFormManager)(nil).ClearLogForm))
+}
+
+// GetTextFromLogForm mocks base method.
+func (m *MockUiLogFormManager) GetTextFromLogForm() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTextFromLogForm")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetTextFromLogForm indicates an expected call of GetTextFromLogForm.
+func (mr *MockUiLogFormManagerMockRecorder) GetTextFromLogForm() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTextFromLogForm", reflect.TypeOf((*MockUiLogFormManager)(nil).GetTextFromLogForm))
+}
+
+// SetTextInLogForm mocks base method.
+func (m *MockUiLogFormManager) SetTextInLogForm(text string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetTextInLogForm", text)
+}
+
+// SetTextInLogForm indicates an expected call of SetTextInLogForm.
+func (mr *MockUiLogFormManagerMockRecorder) SetTextInLogForm(text interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTextInLogForm", reflect.TypeOf((*MockUiLogFormManager)(nil).SetTextInLogForm), text)
+}
+
+// MockUiButtonsManager is a mock of UiButtonsManager interface.
+type MockUiButtonsManager struct {
+	ctrl     *gomock.Controller
+	recorder *MockUiButtonsManagerMockRecorder
+}
+
+// MockUiButtonsManagerMockRecorder is the mock recorder for MockUiButtonsManager.
+type MockUiButtonsManagerMockRecorder struct {
+	mock *MockUiButtonsManager
+}
+
+// NewMockUiButtonsManager creates a new mock instance.
+func NewMockUiButtonsManager(ctrl *gomock.Controller) *MockUiButtonsManager {
+	mock := &MockUiButtonsManager{ctrl: ctrl}
+	mock.recorder = &MockUiButtonsManagerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUiButtonsManager) EXPECT() *MockUiButtonsManagerMockRecorder {
+	return m.recorder
+}
+
+// ButtonConnectDisable mocks base method.
+func (m *MockUiButtonsManager) ButtonConnectDisable() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "ButtonConnectDisable")
+}
+
+// ButtonConnectDisable indicates an expected call of ButtonConnectDisable.
+func (mr *MockUiButtonsManagerMockRecorder) ButtonConnectDisable() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonConnectDisable", reflect.TypeOf((*MockUiButtonsManager)(nil).ButtonConnectDisable))
+}
+
+// ButtonConnectEnable mocks base method.
+func (m *MockUiButtonsManager) ButtonConnectEnable() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "ButtonConnectEnable")
+}
+
+// ButtonConnectEnable indicates an expected call of ButtonConnectEnable.
+func (mr *MockUiButtonsManagerMockRecorder) ButtonConnectEnable() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonConnectEnable", reflect.TypeOf((*MockUiButtonsManager)(nil).ButtonConnectEnable))
+}
+
+// ButtonDisconnectDisable mocks base method.
+func (m *MockUiButtonsManager) ButtonDisconnectDisable() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "ButtonDisconnectDisable")
+}
+
+// ButtonDisconnectDisable indicates an expected call of ButtonDisconnectDisable.
+func (mr *MockUiButtonsManagerMockRecorder) ButtonDisconnectDisable() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonDisconnectDisable", reflect.TypeOf((*MockUiButtonsManager)(nil).ButtonDisconnectDisable))
+}
+
+// ButtonDisconnectEnable mocks base method.
+func (m *MockUiButtonsManager) ButtonDisconnectEnable() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "ButtonDisconnectEnable")
+}
+
+// ButtonDisconnectEnable indicates an expected call of ButtonDisconnectEnable.
+func (mr *MockUiButtonsManagerMockRecorder) ButtonDisconnectEnable() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ButtonDisconnectEnable", reflect.TypeOf((*MockUiButtonsManager)(nil).ButtonDisconnectEnable))
+}
+
+// MockUiListConfigsManager is a mock of UiListConfigsManager interface.
+type MockUiListConfigsManager struct {
+	ctrl     *gomock.Controller
+	recorder *MockUiListConfigsManagerMockRecorder
+}
+
+// MockUiListConfigsManagerMockRecorder is the mock recorder for MockUiListConfigsManager.
+type MockUiListConfigsManagerMockRecorder struct {
+	mock *MockUiListConfigsManager
+}
+
+// NewMockUiListConfigsManager creates a new mock instance.
+func NewMockUiListConfigsManager(ctrl *gomock.Controller) *MockUiListConfigsManager {
+	mock := &MockUiListConfigsManager{ctrl: ctrl}
+	mock.recorder = &MockUiListConfigsManagerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUiListConfigsManager) EXPECT() *MockUiListConfigsManagerMockRecorder {
+	return m.recorder
+}
+
+// DisableListConfigsBox mocks base method.
+func (m *MockUiListConfigsManager) DisableListConfigsBox() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DisableListConfigsBox")
+}
+
+// DisableListConfigsBox indicates an expected call of DisableListConfigsBox.
+func (mr *MockUiListConfigsManagerMockRecorder) DisableListConfigsBox() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableListConfigsBox", reflect.TypeOf((*MockUiListConfigsManager)(nil).DisableListConfigsBox))
+}
+
+// EnableListConfigsBox mocks base method.
+func (m *MockUiListConfigsManager) EnableListConfigsBox() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "EnableListConfigsBox")
+}
+
+// EnableListConfigsBox indicates an expected call of EnableListConfigsBox.
+func (mr *MockUiListConfigsManagerMockRecorder) EnableListConfigsBox() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableListConfigsBox", reflect.TypeOf((*MockUiListConfigsManager)(nil).EnableListConfigsBox))
+}
+
+// SelectedCfgFromListConfigs mocks base method.
+func (m *MockUiListConfigsManager) SelectedCfgFromListConfigs() *string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SelectedCfgFromListConfigs")
+	ret0, _ := ret[0].(*string)
+	return ret0
+}
+
+// SelectedCfgFromListConfigs indicates an expected call of SelectedCfgFromListConfigs.
+func (mr *MockUiListConfigsManagerMockRecorder) SelectedCfgFromListConfigs() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelectedCfgFromListConfigs", reflect.TypeOf((*MockUiListConfigsManager)(nil).SelectedCfgFromListConfigs))
+}
+
+// MockSysTrayIconsManager is a mock of SysTrayIconsManager interface.
+type MockSysTrayIconsManager struct {
+	ctrl     *gomock.Controller
+	recorder *MockSysTrayIconsManagerMockRecorder
+}
+
+// MockSysTrayIconsManagerMockRecorder is the mock recorder for MockSysTrayIconsManager.
+type MockSysTrayIconsManagerMockRecorder struct {
+	mock *MockSysTrayIconsManager
+}
+
+// NewMockSysTrayIconsManager creates a new mock instance.
+func NewMockSysTrayIconsManager(ctrl *gomock.Controller) *MockSysTrayIconsManager {
+	mock := &MockSysTrayIconsManager{ctrl: ctrl}
+	mock.recorder = &MockSysTrayIconsManagerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSysTrayIconsManager) EXPECT() *MockSysTrayIconsManagerMockRecorder {
+	return m.recorder
+}
+
+// SetBlinkIcon mocks base method.
+func (m *MockSysTrayIconsManager) SetBlinkIcon() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetBlinkIcon")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetBlinkIcon indicates an expected call of SetBlinkIcon.
+func (mr *MockSysTrayIconsManagerMockRecorder) SetBlinkIcon() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBlinkIcon", reflect.TypeOf((*MockSysTrayIconsManager)(nil).SetBlinkIcon))
+}
+
+// SetConnectIcon mocks base method.
+func (m *MockSysTrayIconsManager) SetConnectIcon() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetConnectIcon")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetConnectIcon indicates an expected call of SetConnectIcon.
+func (mr *MockSysTrayIconsManagerMockRecorder) SetConnectIcon() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetConnectIcon", reflect.TypeOf((*MockSysTrayIconsManager)(nil).SetConnectIcon))
+}
+
+// SetDisconnectIcon mocks base method.
+func (m *MockSysTrayIconsManager) SetDisconnectIcon() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetDisconnectIcon")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetDisconnectIcon indicates an expected call of SetDisconnectIcon.
+func (mr *MockSysTrayIconsManagerMockRecorder) SetDisconnectIcon() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDisconnectIcon", reflect.TypeOf((*MockSysTrayIconsManager)(nil).SetDisconnectIcon))
+}
+
+// SetIcon mocks base method.
+func (m *MockSysTrayIconsManager) SetIcon(path string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetIcon", path)
+}
+
+// SetIcon indicates an expected call of SetIcon.
+func (mr *MockSysTrayIconsManagerMockRecorder) SetIcon(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIcon", reflect.TypeOf((*MockSysTrayIconsManager)(nil).SetIcon), path)
+}
+
+// SetOpenIcon mocks base method.
+func (m *MockSysTrayIconsManager) SetOpenIcon() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetOpenIcon")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetOpenIcon indicates an expected call of SetOpenIcon.
+func (mr *MockSysTrayIconsManagerMockRecorder) SetOpenIcon() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOpenIcon", reflect.TypeOf((*MockSysTrayIconsManager)(nil).SetOpenIcon))
+}
+
+// MockSysTrayImagesManager is a mock of SysTrayImagesManager interface.
+type MockSysTrayImagesManager struct {
+	ctrl     *gomock.Controller
+	recorder *MockSysTrayImagesManagerMockRecorder
+}
+
+// MockSysTrayImagesManagerMockRecorder is the mock recorder for MockSysTrayImagesManager.
+type MockSysTrayImagesManagerMockRecorder struct {
+	mock *MockSysTrayImagesManager
+}
+
+// NewMockSysTrayImagesManager creates a new mock instance.
+func NewMockSysTrayImagesManager(ctrl *gomock.Controller) *MockSysTrayImagesManager {
+	mock := &MockSysTrayImagesManager{ctrl: ctrl}
+	mock.recorder = &MockSysTrayImagesManagerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSysTrayImagesManager) EXPECT() *MockSysTrayImagesManagerMockRecorder {
 	return m.recorder
 }
 
 // Image mocks base method.
-func (m *MockSysTrayInteractor) Image() map[string][]byte {
+func (m *MockSysTrayImagesManager) Image() map[string][]byte {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Image")
 	ret0, _ := ret[0].(map[string][]byte)
@@ -705,13 +808,13 @@ func (m *MockSysTrayInteractor) Image() map[string][]byte {
 }
 
 // Image indicates an expected call of Image.
-func (mr *MockSysTrayInteractorMockRecorder) Image() *gomock.Call {
+func (mr *MockSysTrayImagesManagerMockRecorder) Image() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Image", reflect.TypeOf((*MockSysTrayInteractor)(nil).Image))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Image", reflect.TypeOf((*MockSysTrayImagesManager)(nil).Image))
 }
 
 // SearchKeyInMap mocks base method.
-func (m *MockSysTrayInteractor) SearchKeyInMap(s string) (*string, error) {
+func (m *MockSysTrayImagesManager) SearchKeyInMap(s string) (*string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchKeyInMap", s)
 	ret0, _ := ret[0].(*string)
@@ -720,119 +823,95 @@ func (m *MockSysTrayInteractor) SearchKeyInMap(s string) (*string, error) {
 }
 
 // SearchKeyInMap indicates an expected call of SearchKeyInMap.
-func (mr *MockSysTrayInteractorMockRecorder) SearchKeyInMap(s interface{}) *gomock.Call {
+func (mr *MockSysTrayImagesManagerMockRecorder) SearchKeyInMap(s interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchKeyInMap", reflect.TypeOf((*MockSysTrayInteractor)(nil).SearchKeyInMap), s)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchKeyInMap", reflect.TypeOf((*MockSysTrayImagesManager)(nil).SearchKeyInMap), s)
 }
 
-// SetBlinkIcon mocks base method.
-func (m *MockSysTrayInteractor) SetBlinkIcon() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetBlinkIcon")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SetBlinkIcon indicates an expected call of SetBlinkIcon.
-func (mr *MockSysTrayInteractorMockRecorder) SetBlinkIcon() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBlinkIcon", reflect.TypeOf((*MockSysTrayInteractor)(nil).SetBlinkIcon))
-}
-
-// SetConnectIcon mocks base method.
-func (m *MockSysTrayInteractor) SetConnectIcon() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetConnectIcon")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SetConnectIcon indicates an expected call of SetConnectIcon.
-func (mr *MockSysTrayInteractorMockRecorder) SetConnectIcon() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetConnectIcon", reflect.TypeOf((*MockSysTrayInteractor)(nil).SetConnectIcon))
-}
-
-// SetDisconnectIcon mocks base method.
-func (m *MockSysTrayInteractor) SetDisconnectIcon() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDisconnectIcon")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SetDisconnectIcon indicates an expected call of SetDisconnectIcon.
-func (mr *MockSysTrayInteractorMockRecorder) SetDisconnectIcon() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDisconnectIcon", reflect.TypeOf((*MockSysTrayInteractor)(nil).SetDisconnectIcon))
-}
-
-// SetIcon mocks base method.
-func (m *MockSysTrayInteractor) SetIcon(path string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetIcon", path)
-}
-
-// SetIcon indicates an expected call of SetIcon.
-func (mr *MockSysTrayInteractorMockRecorder) SetIcon(path interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIcon", reflect.TypeOf((*MockSysTrayInteractor)(nil).SetIcon), path)
-}
-
-// SetOpenIcon mocks base method.
-func (m *MockSysTrayInteractor) SetOpenIcon() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetOpenIcon")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// SetOpenIcon indicates an expected call of SetOpenIcon.
-func (mr *MockSysTrayInteractorMockRecorder) SetOpenIcon() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetOpenIcon", reflect.TypeOf((*MockSysTrayInteractor)(nil).SetOpenIcon))
-}
-
-// MockFileInteractor is a mock of FileInteractor interface.
-type MockFileInteractor struct {
+// MockFileSetters is a mock of FileSetters interface.
+type MockFileSetters struct {
 	ctrl     *gomock.Controller
-	recorder *MockFileInteractorMockRecorder
+	recorder *MockFileSettersMockRecorder
 }
 
-// MockFileInteractorMockRecorder is the mock recorder for MockFileInteractor.
-type MockFileInteractorMockRecorder struct {
-	mock *MockFileInteractor
+// MockFileSettersMockRecorder is the mock recorder for MockFileSetters.
+type MockFileSettersMockRecorder struct {
+	mock *MockFileSetters
 }
 
-// NewMockFileInteractor creates a new mock instance.
-func NewMockFileInteractor(ctrl *gomock.Controller) *MockFileInteractor {
-	mock := &MockFileInteractor{ctrl: ctrl}
-	mock.recorder = &MockFileInteractorMockRecorder{mock}
+// NewMockFileSetters creates a new mock instance.
+func NewMockFileSetters(ctrl *gomock.Controller) *MockFileSetters {
+	mock := &MockFileSetters{ctrl: ctrl}
+	mock.recorder = &MockFileSettersMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockFileInteractor) EXPECT() *MockFileInteractorMockRecorder {
+func (m *MockFileSetters) EXPECT() *MockFileSettersMockRecorder {
 	return m.recorder
 }
 
-// AbsolutePath mocks base method.
-func (m *MockFileInteractor) AbsolutePath() (*string, error) {
+// SetBody mocks base method.
+func (m *MockFileSetters) SetBody(arg0 []byte) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AbsolutePath")
-	ret0, _ := ret[0].(*string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	m.ctrl.Call(m, "SetBody", arg0)
 }
 
-// AbsolutePath indicates an expected call of AbsolutePath.
-func (mr *MockFileInteractorMockRecorder) AbsolutePath() *gomock.Call {
+// SetBody indicates an expected call of SetBody.
+func (mr *MockFileSettersMockRecorder) SetBody(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AbsolutePath", reflect.TypeOf((*MockFileInteractor)(nil).AbsolutePath))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBody", reflect.TypeOf((*MockFileSetters)(nil).SetBody), arg0)
+}
+
+// SetDestPath mocks base method.
+func (m *MockFileSetters) SetDestPath(destPath string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetDestPath", destPath)
+}
+
+// SetDestPath indicates an expected call of SetDestPath.
+func (mr *MockFileSettersMockRecorder) SetDestPath(destPath interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDestPath", reflect.TypeOf((*MockFileSetters)(nil).SetDestPath), destPath)
+}
+
+// SetPath mocks base method.
+func (m *MockFileSetters) SetPath(path string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetPath", path)
+}
+
+// SetPath indicates an expected call of SetPath.
+func (mr *MockFileSettersMockRecorder) SetPath(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPath", reflect.TypeOf((*MockFileSetters)(nil).SetPath), path)
+}
+
+// MockFileGetters is a mock of FileGetters interface.
+type MockFileGetters struct {
+	ctrl     *gomock.Controller
+	recorder *MockFileGettersMockRecorder
+}
+
+// MockFileGettersMockRecorder is the mock recorder for MockFileGetters.
+type MockFileGettersMockRecorder struct {
+	mock *MockFileGetters
+}
+
+// NewMockFileGetters creates a new mock instance.
+func NewMockFileGetters(ctrl *gomock.Controller) *MockFileGetters {
+	mock := &MockFileGetters{ctrl: ctrl}
+	mock.recorder = &MockFileGettersMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockFileGetters) EXPECT() *MockFileGettersMockRecorder {
+	return m.recorder
 }
 
 // Body mocks base method.
-func (m *MockFileInteractor) Body() []byte {
+func (m *MockFileGetters) Body() []byte {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Body")
 	ret0, _ := ret[0].([]byte)
@@ -840,85 +919,13 @@ func (m *MockFileInteractor) Body() []byte {
 }
 
 // Body indicates an expected call of Body.
-func (mr *MockFileInteractorMockRecorder) Body() *gomock.Call {
+func (mr *MockFileGettersMockRecorder) Body() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Body", reflect.TypeOf((*MockFileInteractor)(nil).Body))
-}
-
-// CheckFileExists mocks base method.
-func (m *MockFileInteractor) CheckFileExists() bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckFileExists")
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// CheckFileExists indicates an expected call of CheckFileExists.
-func (mr *MockFileInteractorMockRecorder) CheckFileExists() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckFileExists", reflect.TypeOf((*MockFileInteractor)(nil).CheckFileExists))
-}
-
-// CopyFile mocks base method.
-func (m *MockFileInteractor) CopyFile() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CopyFile")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CopyFile indicates an expected call of CopyFile.
-func (mr *MockFileInteractorMockRecorder) CopyFile() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CopyFile", reflect.TypeOf((*MockFileInteractor)(nil).CopyFile))
-}
-
-// CreateFile mocks base method.
-func (m *MockFileInteractor) CreateFile() (*os.File, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateFile")
-	ret0, _ := ret[0].(*os.File)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateFile indicates an expected call of CreateFile.
-func (mr *MockFileInteractorMockRecorder) CreateFile() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFile", reflect.TypeOf((*MockFileInteractor)(nil).CreateFile))
-}
-
-// FileNameWithoutExtension mocks base method.
-func (m *MockFileInteractor) FileNameWithoutExtension() *string {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FileNameWithoutExtension")
-	ret0, _ := ret[0].(*string)
-	return ret0
-}
-
-// FileNameWithoutExtension indicates an expected call of FileNameWithoutExtension.
-func (mr *MockFileInteractorMockRecorder) FileNameWithoutExtension() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FileNameWithoutExtension", reflect.TypeOf((*MockFileInteractor)(nil).FileNameWithoutExtension))
-}
-
-// FileOpen mocks base method.
-func (m *MockFileInteractor) FileOpen() (*os.File, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FileOpen")
-	ret0, _ := ret[0].(*os.File)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FileOpen indicates an expected call of FileOpen.
-func (mr *MockFileInteractorMockRecorder) FileOpen() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FileOpen", reflect.TypeOf((*MockFileInteractor)(nil).FileOpen))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Body", reflect.TypeOf((*MockFileGetters)(nil).Body))
 }
 
 // Path mocks base method.
-func (m *MockFileInteractor) Path() string {
+func (m *MockFileGetters) Path() string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Path")
 	ret0, _ := ret[0].(string)
@@ -926,13 +933,36 @@ func (m *MockFileInteractor) Path() string {
 }
 
 // Path indicates an expected call of Path.
-func (mr *MockFileInteractorMockRecorder) Path() *gomock.Call {
+func (mr *MockFileGettersMockRecorder) Path() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Path", reflect.TypeOf((*MockFileInteractor)(nil).Path))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Path", reflect.TypeOf((*MockFileGetters)(nil).Path))
+}
+
+// MockFileReader is a mock of FileReader interface.
+type MockFileReader struct {
+	ctrl     *gomock.Controller
+	recorder *MockFileReaderMockRecorder
+}
+
+// MockFileReaderMockRecorder is the mock recorder for MockFileReader.
+type MockFileReaderMockRecorder struct {
+	mock *MockFileReader
+}
+
+// NewMockFileReader creates a new mock instance.
+func NewMockFileReader(ctrl *gomock.Controller) *MockFileReader {
+	mock := &MockFileReader{ctrl: ctrl}
+	mock.recorder = &MockFileReaderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockFileReader) EXPECT() *MockFileReaderMockRecorder {
+	return m.recorder
 }
 
 // ReadFileAsByte mocks base method.
-func (m *MockFileInteractor) ReadFileAsByte() ([]byte, error) {
+func (m *MockFileReader) ReadFileAsByte() ([]byte, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadFileAsByte")
 	ret0, _ := ret[0].([]byte)
@@ -941,13 +971,13 @@ func (m *MockFileInteractor) ReadFileAsByte() ([]byte, error) {
 }
 
 // ReadFileAsByte indicates an expected call of ReadFileAsByte.
-func (mr *MockFileInteractorMockRecorder) ReadFileAsByte() *gomock.Call {
+func (mr *MockFileReaderMockRecorder) ReadFileAsByte() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFileAsByte", reflect.TypeOf((*MockFileInteractor)(nil).ReadFileAsByte))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFileAsByte", reflect.TypeOf((*MockFileReader)(nil).ReadFileAsByte))
 }
 
 // ReadFileAsString mocks base method.
-func (m *MockFileInteractor) ReadFileAsString() (*string, error) {
+func (m *MockFileReader) ReadFileAsString() (*string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadFileAsString")
 	ret0, _ := ret[0].(*string)
@@ -956,61 +986,36 @@ func (m *MockFileInteractor) ReadFileAsString() (*string, error) {
 }
 
 // ReadFileAsString indicates an expected call of ReadFileAsString.
-func (mr *MockFileInteractorMockRecorder) ReadFileAsString() *gomock.Call {
+func (mr *MockFileReaderMockRecorder) ReadFileAsString() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFileAsString", reflect.TypeOf((*MockFileInteractor)(nil).ReadFileAsString))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFileAsString", reflect.TypeOf((*MockFileReader)(nil).ReadFileAsString))
 }
 
-// SetBody mocks base method.
-func (m *MockFileInteractor) SetBody(arg0 []byte) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetBody", arg0)
+// MockFileWriter is a mock of FileWriter interface.
+type MockFileWriter struct {
+	ctrl     *gomock.Controller
+	recorder *MockFileWriterMockRecorder
 }
 
-// SetBody indicates an expected call of SetBody.
-func (mr *MockFileInteractorMockRecorder) SetBody(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBody", reflect.TypeOf((*MockFileInteractor)(nil).SetBody), arg0)
+// MockFileWriterMockRecorder is the mock recorder for MockFileWriter.
+type MockFileWriterMockRecorder struct {
+	mock *MockFileWriter
 }
 
-// SetDestPath mocks base method.
-func (m *MockFileInteractor) SetDestPath(destPath string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetDestPath", destPath)
+// NewMockFileWriter creates a new mock instance.
+func NewMockFileWriter(ctrl *gomock.Controller) *MockFileWriter {
+	mock := &MockFileWriter{ctrl: ctrl}
+	mock.recorder = &MockFileWriterMockRecorder{mock}
+	return mock
 }
 
-// SetDestPath indicates an expected call of SetDestPath.
-func (mr *MockFileInteractorMockRecorder) SetDestPath(destPath interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDestPath", reflect.TypeOf((*MockFileInteractor)(nil).SetDestPath), destPath)
-}
-
-// SetPath mocks base method.
-func (m *MockFileInteractor) SetPath(path string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetPath", path)
-}
-
-// SetPath indicates an expected call of SetPath.
-func (mr *MockFileInteractorMockRecorder) SetPath(path interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPath", reflect.TypeOf((*MockFileInteractor)(nil).SetPath), path)
-}
-
-// SetPermissonFile mocks base method.
-func (m *MockFileInteractor) SetPermissonFile(arg0 fs.FileMode) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetPermissonFile", arg0)
-}
-
-// SetPermissonFile indicates an expected call of SetPermissonFile.
-func (mr *MockFileInteractorMockRecorder) SetPermissonFile(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPermissonFile", reflect.TypeOf((*MockFileInteractor)(nil).SetPermissonFile), arg0)
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockFileWriter) EXPECT() *MockFileWriterMockRecorder {
+	return m.recorder
 }
 
 // WriteByteFile mocks base method.
-func (m *MockFileInteractor) WriteByteFile() error {
+func (m *MockFileWriter) WriteByteFile() error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WriteByteFile")
 	ret0, _ := ret[0].(error)
@@ -1018,13 +1023,13 @@ func (m *MockFileInteractor) WriteByteFile() error {
 }
 
 // WriteByteFile indicates an expected call of WriteByteFile.
-func (mr *MockFileInteractorMockRecorder) WriteByteFile() *gomock.Call {
+func (mr *MockFileWriterMockRecorder) WriteByteFile() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteByteFile", reflect.TypeOf((*MockFileInteractor)(nil).WriteByteFile))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteByteFile", reflect.TypeOf((*MockFileWriter)(nil).WriteByteFile))
 }
 
 // WriteStringToFile mocks base method.
-func (m *MockFileInteractor) WriteStringToFile(file *os.File, data string) error {
+func (m *MockFileWriter) WriteStringToFile(file *os.File, data string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WriteStringToFile", file, data)
 	ret0, _ := ret[0].(error)
@@ -1032,267 +1037,213 @@ func (m *MockFileInteractor) WriteStringToFile(file *os.File, data string) error
 }
 
 // WriteStringToFile indicates an expected call of WriteStringToFile.
-func (mr *MockFileInteractorMockRecorder) WriteStringToFile(file, data interface{}) *gomock.Call {
+func (mr *MockFileWriterMockRecorder) WriteStringToFile(file, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteStringToFile", reflect.TypeOf((*MockFileInteractor)(nil).WriteStringToFile), file, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteStringToFile", reflect.TypeOf((*MockFileWriter)(nil).WriteStringToFile), file, data)
 }
 
-// MockDnsInteractor is a mock of DnsInteractor interface.
-type MockDnsInteractor struct {
+// MockFileToolsManager is a mock of FileToolsManager interface.
+type MockFileToolsManager struct {
 	ctrl     *gomock.Controller
-	recorder *MockDnsInteractorMockRecorder
+	recorder *MockFileToolsManagerMockRecorder
 }
 
-// MockDnsInteractorMockRecorder is the mock recorder for MockDnsInteractor.
-type MockDnsInteractorMockRecorder struct {
-	mock *MockDnsInteractor
+// MockFileToolsManagerMockRecorder is the mock recorder for MockFileToolsManager.
+type MockFileToolsManagerMockRecorder struct {
+	mock *MockFileToolsManager
 }
 
-// NewMockDnsInteractor creates a new mock instance.
-func NewMockDnsInteractor(ctrl *gomock.Controller) *MockDnsInteractor {
-	mock := &MockDnsInteractor{ctrl: ctrl}
-	mock.recorder = &MockDnsInteractorMockRecorder{mock}
+// NewMockFileToolsManager creates a new mock instance.
+func NewMockFileToolsManager(ctrl *gomock.Controller) *MockFileToolsManager {
+	mock := &MockFileToolsManager{ctrl: ctrl}
+	mock.recorder = &MockFileToolsManagerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockDnsInteractor) EXPECT() *MockDnsInteractorMockRecorder {
+func (m *MockFileToolsManager) EXPECT() *MockFileToolsManagerMockRecorder {
 	return m.recorder
 }
 
-// CmdDownResolvConf mocks base method.
-func (m *MockDnsInteractor) CmdDownResolvConf() (*string, error) {
+// AbsolutePath mocks base method.
+func (m *MockFileToolsManager) AbsolutePath() (*string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdDownResolvConf")
+	ret := m.ctrl.Call(m, "AbsolutePath")
 	ret0, _ := ret[0].(*string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CmdDownResolvConf indicates an expected call of CmdDownResolvConf.
-func (mr *MockDnsInteractorMockRecorder) CmdDownResolvConf() *gomock.Call {
+// AbsolutePath indicates an expected call of AbsolutePath.
+func (mr *MockFileToolsManagerMockRecorder) AbsolutePath() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdDownResolvConf", reflect.TypeOf((*MockDnsInteractor)(nil).CmdDownResolvConf))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AbsolutePath", reflect.TypeOf((*MockFileToolsManager)(nil).AbsolutePath))
 }
 
-// CmdResolvConf mocks base method.
-func (m *MockDnsInteractor) CmdResolvConf() (*string, *string, error) {
+// CheckFileExists mocks base method.
+func (m *MockFileToolsManager) CheckFileExists() bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdResolvConf")
-	ret0, _ := ret[0].(*string)
-	ret1, _ := ret[1].(*string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret := m.ctrl.Call(m, "CheckFileExists")
+	ret0, _ := ret[0].(bool)
+	return ret0
 }
 
-// CmdResolvConf indicates an expected call of CmdResolvConf.
-func (mr *MockDnsInteractorMockRecorder) CmdResolvConf() *gomock.Call {
+// CheckFileExists indicates an expected call of CheckFileExists.
+func (mr *MockFileToolsManagerMockRecorder) CheckFileExists() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdResolvConf", reflect.TypeOf((*MockDnsInteractor)(nil).CmdResolvConf))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckFileExists", reflect.TypeOf((*MockFileToolsManager)(nil).CheckFileExists))
 }
 
-// CmdSystemdResolv mocks base method.
-func (m *MockDnsInteractor) CmdSystemdResolv() (*string, error) {
+// CopyFile mocks base method.
+func (m *MockFileToolsManager) CopyFile() error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CmdSystemdResolv")
-	ret0, _ := ret[0].(*string)
+	ret := m.ctrl.Call(m, "CopyFile")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CopyFile indicates an expected call of CopyFile.
+func (mr *MockFileToolsManagerMockRecorder) CopyFile() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CopyFile", reflect.TypeOf((*MockFileToolsManager)(nil).CopyFile))
+}
+
+// CreateFile mocks base method.
+func (m *MockFileToolsManager) CreateFile() (*os.File, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFile")
+	ret0, _ := ret[0].(*os.File)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CmdSystemdResolv indicates an expected call of CmdSystemdResolv.
-func (mr *MockDnsInteractorMockRecorder) CmdSystemdResolv() *gomock.Call {
+// CreateFile indicates an expected call of CreateFile.
+func (mr *MockFileToolsManagerMockRecorder) CreateFile() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CmdSystemdResolv", reflect.TypeOf((*MockDnsInteractor)(nil).CmdSystemdResolv))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFile", reflect.TypeOf((*MockFileToolsManager)(nil).CreateFile))
 }
 
-// SetAddress mocks base method.
-func (m *MockDnsInteractor) SetAddress(addr []string) {
+// FileNameWithoutExtension mocks base method.
+func (m *MockFileToolsManager) FileNameWithoutExtension() *string {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetAddress", addr)
+	ret := m.ctrl.Call(m, "FileNameWithoutExtension")
+	ret0, _ := ret[0].(*string)
+	return ret0
 }
 
-// SetAddress indicates an expected call of SetAddress.
-func (mr *MockDnsInteractorMockRecorder) SetAddress(addr interface{}) *gomock.Call {
+// FileNameWithoutExtension indicates an expected call of FileNameWithoutExtension.
+func (mr *MockFileToolsManagerMockRecorder) FileNameWithoutExtension() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAddress", reflect.TypeOf((*MockDnsInteractor)(nil).SetAddress), addr)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FileNameWithoutExtension", reflect.TypeOf((*MockFileToolsManager)(nil).FileNameWithoutExtension))
+}
+
+// FileOpen mocks base method.
+func (m *MockFileToolsManager) FileOpen() (*os.File, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FileOpen")
+	ret0, _ := ret[0].(*os.File)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FileOpen indicates an expected call of FileOpen.
+func (mr *MockFileToolsManagerMockRecorder) FileOpen() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FileOpen", reflect.TypeOf((*MockFileToolsManager)(nil).FileOpen))
+}
+
+// SetPermissonFile mocks base method.
+func (m *MockFileToolsManager) SetPermissonFile(arg0 fs.FileMode) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "SetPermissonFile", arg0)
+}
+
+// SetPermissonFile indicates an expected call of SetPermissonFile.
+func (mr *MockFileToolsManagerMockRecorder) SetPermissonFile(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPermissonFile", reflect.TypeOf((*MockFileToolsManager)(nil).SetPermissonFile), arg0)
+}
+
+// MockDnsSetters is a mock of DnsSetters interface.
+type MockDnsSetters struct {
+	ctrl     *gomock.Controller
+	recorder *MockDnsSettersMockRecorder
+}
+
+// MockDnsSettersMockRecorder is the mock recorder for MockDnsSetters.
+type MockDnsSettersMockRecorder struct {
+	mock *MockDnsSetters
+}
+
+// NewMockDnsSetters creates a new mock instance.
+func NewMockDnsSetters(ctrl *gomock.Controller) *MockDnsSetters {
+	mock := &MockDnsSetters{ctrl: ctrl}
+	mock.recorder = &MockDnsSettersMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDnsSetters) EXPECT() *MockDnsSettersMockRecorder {
+	return m.recorder
 }
 
 // SetInterface mocks base method.
-func (m *MockDnsInteractor) SetInterface(iface string) {
+func (m *MockDnsSetters) SetInterface(iface string) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "SetInterface", iface)
 }
 
 // SetInterface indicates an expected call of SetInterface.
-func (mr *MockDnsInteractorMockRecorder) SetInterface(iface interface{}) *gomock.Call {
+func (mr *MockDnsSettersMockRecorder) SetInterface(iface interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInterface", reflect.TypeOf((*MockDnsInteractor)(nil).SetInterface), iface)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetInterface", reflect.TypeOf((*MockDnsSetters)(nil).SetInterface), iface)
 }
 
-// MockCommandInteractor is a mock of CommandInteractor interface.
-type MockCommandInteractor struct {
+// MockProfileRepository is a mock of ProfileRepository interface.
+type MockProfileRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockCommandInteractorMockRecorder
+	recorder *MockProfileRepositoryMockRecorder
 }
 
-// MockCommandInteractorMockRecorder is the mock recorder for MockCommandInteractor.
-type MockCommandInteractorMockRecorder struct {
-	mock *MockCommandInteractor
+// MockProfileRepositoryMockRecorder is the mock recorder for MockProfileRepository.
+type MockProfileRepositoryMockRecorder struct {
+	mock *MockProfileRepository
 }
 
-// NewMockCommandInteractor creates a new mock instance.
-func NewMockCommandInteractor(ctrl *gomock.Controller) *MockCommandInteractor {
-	mock := &MockCommandInteractor{ctrl: ctrl}
-	mock.recorder = &MockCommandInteractorMockRecorder{mock}
+// NewMockProfileRepository creates a new mock instance.
+func NewMockProfileRepository(ctrl *gomock.Controller) *MockProfileRepository {
+	mock := &MockProfileRepository{ctrl: ctrl}
+	mock.recorder = &MockProfileRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommandInteractor) EXPECT() *MockCommandInteractorMockRecorder {
+func (m *MockProfileRepository) EXPECT() *MockProfileRepositoryMockRecorder {
 	return m.recorder
 }
 
-// PassArgumentsToExec mocks base method.
-func (m *MockCommandInteractor) PassArgumentsToExec(arg0 []string) *exec.Cmd {
+// Find mocks base method.
+func (m *MockProfileRepository) Find(key string) entity.Profile {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PassArgumentsToExec", arg0)
-	ret0, _ := ret[0].(*exec.Cmd)
-	return ret0
-}
-
-// PassArgumentsToExec indicates an expected call of PassArgumentsToExec.
-func (mr *MockCommandInteractorMockRecorder) PassArgumentsToExec(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PassArgumentsToExec", reflect.TypeOf((*MockCommandInteractor)(nil).PassArgumentsToExec), arg0)
-}
-
-// Proc mocks base method.
-func (m *MockCommandInteractor) Proc() *exec.Cmd {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Proc")
-	ret0, _ := ret[0].(*exec.Cmd)
-	return ret0
-}
-
-// Proc indicates an expected call of Proc.
-func (mr *MockCommandInteractorMockRecorder) Proc() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Proc", reflect.TypeOf((*MockCommandInteractor)(nil).Proc))
-}
-
-// RunCmdWithPipe mocks base method.
-func (m *MockCommandInteractor) RunCmdWithPipe(args1, args2 []string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RunCmdWithPipe", args1, args2)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RunCmdWithPipe indicates an expected call of RunCmdWithPipe.
-func (mr *MockCommandInteractorMockRecorder) RunCmdWithPipe(args1, args2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunCmdWithPipe", reflect.TypeOf((*MockCommandInteractor)(nil).RunCmdWithPipe), args1, args2)
-}
-
-// SetCommand mocks base method.
-func (m *MockCommandInteractor) SetCommand(command string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetCommand", command)
-}
-
-// SetCommand indicates an expected call of SetCommand.
-func (mr *MockCommandInteractorMockRecorder) SetCommand(command interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCommand", reflect.TypeOf((*MockCommandInteractor)(nil).SetCommand), command)
-}
-
-// SetToProc mocks base method.
-func (m *MockCommandInteractor) SetToProc(arg0 *exec.Cmd) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetToProc", arg0)
-}
-
-// SetToProc indicates an expected call of SetToProc.
-func (mr *MockCommandInteractorMockRecorder) SetToProc(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetToProc", reflect.TypeOf((*MockCommandInteractor)(nil).SetToProc), arg0)
-}
-
-// SplitCmd mocks base method.
-func (m *MockCommandInteractor) SplitCmd() ([]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SplitCmd")
-	ret0, _ := ret[0].([]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SplitCmd indicates an expected call of SplitCmd.
-func (mr *MockCommandInteractorMockRecorder) SplitCmd() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SplitCmd", reflect.TypeOf((*MockCommandInteractor)(nil).SplitCmd))
-}
-
-// StartProc mocks base method.
-func (m *MockCommandInteractor) StartProc() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StartProc")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// StartProc indicates an expected call of StartProc.
-func (mr *MockCommandInteractorMockRecorder) StartProc() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartProc", reflect.TypeOf((*MockCommandInteractor)(nil).StartProc))
-}
-
-// MockMemoryInteractor is a mock of MemoryInteractor interface.
-type MockMemoryInteractor struct {
-	ctrl     *gomock.Controller
-	recorder *MockMemoryInteractorMockRecorder
-}
-
-// MockMemoryInteractorMockRecorder is the mock recorder for MockMemoryInteractor.
-type MockMemoryInteractorMockRecorder struct {
-	mock *MockMemoryInteractor
-}
-
-// NewMockMemoryInteractor creates a new mock instance.
-func NewMockMemoryInteractor(ctrl *gomock.Controller) *MockMemoryInteractor {
-	mock := &MockMemoryInteractor{ctrl: ctrl}
-	mock.recorder = &MockMemoryInteractorMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockMemoryInteractor) EXPECT() *MockMemoryInteractorMockRecorder {
-	return m.recorder
-}
-
-// GetProfile mocks base method.
-func (m *MockMemoryInteractor) GetProfile(cfgPath string) entity.Profile {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProfile", cfgPath)
+	ret := m.ctrl.Call(m, "Find", key)
 	ret0, _ := ret[0].(entity.Profile)
 	return ret0
 }
 
-// GetProfile indicates an expected call of GetProfile.
-func (mr *MockMemoryInteractorMockRecorder) GetProfile(cfgPath interface{}) *gomock.Call {
+// Find indicates an expected call of Find.
+func (mr *MockProfileRepositoryMockRecorder) Find(key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProfile", reflect.TypeOf((*MockMemoryInteractor)(nil).GetProfile), cfgPath)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*MockProfileRepository)(nil).Find), key)
 }
 
-// Save mocks base method.
-func (m *MockMemoryInteractor) Save(cfgPath, body string) {
+// Store mocks base method.
+func (m *MockProfileRepository) Store(p entity.Profile) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Save", cfgPath, body)
+	m.ctrl.Call(m, "Store", p)
 }
 
-// Save indicates an expected call of Save.
-func (mr *MockMemoryInteractorMockRecorder) Save(cfgPath, body interface{}) *gomock.Call {
+// Store indicates an expected call of Store.
+func (mr *MockProfileRepositoryMockRecorder) Store(p interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockMemoryInteractor)(nil).Save), cfgPath, body)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockProfileRepository)(nil).Store), p)
 }

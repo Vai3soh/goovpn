@@ -19,6 +19,7 @@ app:
   disable_cert: false
   mode: 'yes' #yes no 
   conn_timeout: 30
+  count_reconnection_attempt: 7
 
 logger:
   log_level: 'debug' #info

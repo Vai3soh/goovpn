@@ -26,8 +26,6 @@ type uiMainWindow struct {
 	verticalLayout        *widgets.QVBoxLayout
 	textEditReadOnly      *widgets.QTextEdit
 	comboBox              *widgets.QComboBox
-
-	vpnLog chan string
 }
 
 type Option func(*uiMainWindow)
@@ -103,12 +101,6 @@ func WithTextEditReadOnly(textEditReadOnly *widgets.QTextEdit) Option {
 func WithComboBox(comboBox *widgets.QComboBox) Option {
 	return func(ui *uiMainWindow) {
 		ui.comboBox = comboBox
-	}
-}
-
-func WithChanVpnLog(vpnLog *chan string) Option {
-	return func(g *uiMainWindow) {
-		g.vpnLog = *vpnLog
 	}
 }
 
@@ -237,20 +229,6 @@ func (s *sysTray) SearchKeyInMap(st string) (*string, error) {
 		}
 	}
 	return nil, fmt.Errorf("key in map not found")
-}
-
-func (g *uiMainWindow) ChanVpnLog() chan string {
-	return g.vpnLog
-}
-
-func (g *uiMainWindow) CloseChanVpnLog() {
-	close(g.vpnLog)
-}
-
-func (g *uiMainWindow) Log(text string) {
-	if text != "" {
-		g.vpnLog <- text
-	}
 }
 
 func (s *sysTray) SetIcon(path string) {

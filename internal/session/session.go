@@ -2,109 +2,111 @@ package session
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Vai3soh/goovpn/pkg/openvpn3"
+	"github.com/Vai3soh/ovpncli"
 )
 
 type OpenvpnClient struct {
-	cread *Cread
-	*openvpn3.Config
-	*openvpn3.Session
-	ui interface{}
+	ovpncli.Client
+	ovpncli.ClientAPI_Config
+	OverwriteClient
 }
 
-type Cread struct {
-	Username string
-	Password string
+type OpenvpnClientCred struct {
+	ovpncli.ClientAPI_ProvideCreds
+}
+
+type OverwriteClient struct {
+	ovpncli.ClientAPI_OpenVPNClient
+	vpnLog chan string
+}
+
+func NewOverwriteClient() *OverwriteClient {
+	return &OverwriteClient{
+		vpnLog: make(chan string),
+	}
+}
+
+func (ocl *OverwriteClient) Log(li ovpncli.ClientAPI_LogInfo) {
+	ocl.vpnLog <- li.GetText()
+
+}
+
+func (ocl *OverwriteClient) ChanVpnLog() chan string {
+	return ocl.vpnLog
+}
+
+func (ocl *OverwriteClient) CloseChanVpnLog() {
+	close(ocl.vpnLog)
+}
+
+func (ocl *OverwriteClient) Event(ev ovpncli.ClientAPI_Event) {
+	ocl.vpnLog <- fmt.Sprintf("event name: %s", ev.GetName())
+	ocl.vpnLog <- fmt.Sprintf("event info: %s", ev.GetInfo())
+}
+
+func (ocl *OverwriteClient) Remote_override_enabled() {
+
+}
+
+func (ocl *OverwriteClient) Socket_protect() {
+
 }
 
 type Option func(*OpenvpnClient)
 
-func NewOpenvpnClient(opts ...Option) *OpenvpnClient {
-	op := &OpenvpnClient{
-		cread:   &Cread{},
-		Config:  &openvpn3.Config{},
-		Session: &openvpn3.Session{},
-	}
-	for _, opt := range opts {
-		opt(op)
+func NewOpenvpnClientCred(optsCred ...ovpncli.OptionCred) *OpenvpnClientCred {
+	op := &OpenvpnClientCred{
+		ClientAPI_ProvideCreds: ovpncli.NewClientCreds(optsCred...),
 	}
 	return op
 }
 
-func WithConfig(config string) Option {
-	return func(op *OpenvpnClient) {
-		op.ProfileContent = config
+func NewOpenvpnClient(opts ...ovpncli.Option) *OpenvpnClient {
+	ocl := &OverwriteClient{vpnLog: make(chan string)}
+	op := &OpenvpnClient{
+		Client:           ovpncli.NewClient(ocl),
+		ClientAPI_Config: ovpncli.NewClientConfig(opts...),
+		OverwriteClient:  *ocl,
 	}
+	return op
 }
 
-func WithCompressionMode(mode string) Option {
-	return func(op *OpenvpnClient) {
-		op.CompressionMode = mode
+func (op *OpenvpnClient) SetClient(c ovpncli.Client) {
+	op.Client = c
+}
+
+func (op *OpenvpnClient) DestroyClient() {
+	ovpncli.DeleteClient(op.Client)
+}
+
+func (op *OpenvpnClient) GetOverwriteClient() *OverwriteClient {
+	return &op.OverwriteClient
+}
+
+func (op *OpenvpnClient) StartSession(ctx context.Context) error {
+	ev := op.Eval_config(op.ClientAPI_Config)
+	if ev.GetError() {
+		return fmt.Errorf("config eval failed [%s]", ev.GetMessage())
 	}
-}
-
-func WithTunPersist(enable bool) Option {
-	return func(op *OpenvpnClient) {
-		op.TunPersist = enable
-	}
-}
-
-func WithClockTicks(i int) Option {
-	return func(op *OpenvpnClient) {
-		op.ClockTickMS = i
-	}
-}
-
-func WithVerboseLog(enable bool) Option {
-	return func(op *OpenvpnClient) {
-		op.Info = enable
-	}
-}
-
-func WithTimeout(timeout int) Option {
-	return func(op *OpenvpnClient) {
-		op.ConnTimeout = timeout
-	}
-}
-
-func WithDisableClientCert(b bool) Option {
-	return func(op *OpenvpnClient) {
-		op.DisableClientCert = b
-	}
-}
-
-func WithUi(callbacks interface{}) Option {
-	return func(op *OpenvpnClient) {
-		op.ui = callbacks
-	}
-}
-
-func (op *OpenvpnClient) SetConfig(config string) {
-	op.ProfileContent = config
-}
-
-func (op *OpenvpnClient) SetCread(user, pwd string) {
-	op.cread = &Cread{Username: user, Password: pwd}
-}
-
-func (op *OpenvpnClient) SetSession() {
-
-	op.Session = openvpn3.NewSession(
-		*op.Config,
-		openvpn3.UserCredentials{
-			Username: op.cread.Username,
-			Password: op.cread.Password,
-		},
-		op.ui,
-	)
-}
-
-func (op *OpenvpnClient) StartSession(ctx context.Context) {
-	op.Session.Start(ctx)
-
+	op.StartConnection(ctx)
+	return nil
 }
 
 func (op *OpenvpnClient) StopSession() {
-	op.Session.Stop()
+	op.StopConnection()
+}
+
+func (op *OpenvpnClient) SetConfig(config string) {
+	op.ClientAPI_Config.SetContent(config)
+}
+
+func (op *OpenvpnClient) SetCread(u, p string) error {
+	creds := NewOpenvpnClientCred(ovpncli.WithPassword(p), ovpncli.WithUsername(u))
+	status := op.Provide_creds(creds)
+	if status.GetError() {
+		return fmt.Errorf("provide cred failed [%s]", status.GetMessage())
+	}
+	return nil
 }

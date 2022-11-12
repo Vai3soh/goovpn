@@ -3,15 +3,15 @@ module github.com/Vai3soh/goovpn
 go 1.19
 
 require (
+	github.com/Vai3soh/ovpncli v1.0.0
 	github.com/fangdingjun/go-log/v5 v5.0.0
 	github.com/golang/mock v1.6.0
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
-	github.com/ilyakaznacheev/cleanenv v1.3.0
+	github.com/ilyakaznacheev/cleanenv v1.4.0
 	github.com/rainu/go-command-chain v0.1.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/therecipe/qt v0.0.0-20200904063919-c0c124a5770d
-	github.com/xlab/closer v1.0.0
-	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
+	github.com/xlab/closer v1.1.0
 )
 
 require (
@@ -26,6 +26,7 @@ require (
 	github.com/therecipe/qt/internal/binding/files/docs/5.13.0 v0.0.0-20200904063919-c0c124a5770d // indirect
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect
 	golang.org/x/mod v0.4.2 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
 	golang.org/x/tools v0.1.1 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect

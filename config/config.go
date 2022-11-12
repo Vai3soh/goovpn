@@ -23,6 +23,7 @@ type (
 		UseSystemd               bool    `yaml:"use_systemd" env:"USE_SYSTEMD"`
 		TunPersist               bool    `yaml:"tun_persist" env:"TUN_PERSIST"`
 		ClockTicks               int     `env-required:"true" yaml:"clock_ticks_time_ms" env:"CLOCK_TICKS_TIME_MS"`
+		CountReconn              int     `env-required:"true" yaml:"count_reconnection_attempt" env:"COUNT_RECCONECTION_ATTEMPT"`
 		VerbLogs                 bool    `yaml:"verbose_logs" env:"VERB_LOGS"`
 		ConnectTimeout           int     `env-required:"true" yaml:"conn_timeout" env:"CONN_TIMEOUT"`
 		CompressionMode          string  `env-required:"true" yaml:"mode" env:"MODE"`

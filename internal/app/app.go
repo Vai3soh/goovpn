@@ -27,6 +27,8 @@ import (
 
 	"github.com/therecipe/qt/core"
 	"github.com/therecipe/qt/widgets"
+
+	"github.com/Vai3soh/ovpncli"
 )
 
 type fileEmbbed interface {
@@ -103,7 +105,6 @@ func Run(cfg *config.Config) {
 	command := cli.NewCmd()
 	cmdResolver := cli.NewResolver(cli.WithCliResolver(command))
 
-	logVpn := make(chan string)
 	app := widgets.NewQApplication(len(os.Args), os.Args)
 	mainWindown := widgets.NewQMainWindow(nil, 0)
 	centralwidget := widgets.NewQWidget(mainWindown, core.Qt__Widget)
@@ -130,7 +131,6 @@ func Run(cfg *config.Config) {
 		gui.WithPushButtonExit(pushButtonExit),
 		gui.WithTextEditReadOnly(textEditReadOnly),
 		gui.WithVerticalLayout(verticalLayout),
-		gui.WithChanVpnLog(&logVpn),
 	)
 	trayIcon := widgets.NewQSystemTrayIcon(nil)
 	menu := widgets.NewQMenu(nil)
@@ -145,14 +145,15 @@ func Run(cfg *config.Config) {
 	cl := &close.ShutdownApp{}
 
 	sessOvpn := session.NewOpenvpnClient(
-		session.WithCompressionMode(cfg.App.CompressionMode),
-		session.WithDisableClientCert(cfg.App.CheckDisableClientCert),
-		session.WithTimeout(cfg.App.ConnectTimeout),
-		session.WithVerboseLog(cfg.App.VerbLogs),
-		session.WithClockTicks(cfg.App.ClockTicks),
-		session.WithTunPersist(cfg.App.TunPersist),
-		session.WithUi(mainUiWindow),
+		ovpncli.WithCompressionMode(cfg.App.CompressionMode),
+		ovpncli.WithDisableClientCert(cfg.App.CheckDisableClientCert),
+		ovpncli.WithTunPersist(cfg.App.TunPersist),
+		ovpncli.WithLegacyAlgorithms(true),
+		ovpncli.WithNonPreferredDCAlgorithms(true),
 	)
+
+	ocl := sessOvpn.GetOverwriteClient()
+	ocl.ClientAPI_OpenVPNClient = sessOvpn.Client
 
 	memory := memory.NewDb(memory.WithMapMemory(
 		make(map[string]entity.Profile)),
@@ -174,7 +175,7 @@ func Run(cfg *config.Config) {
 
 	vpnUseCase, _ := usecase.NewVpnUseCase(
 		sessOvpn, sessOvpn, gl, gl, gl, gl, gl, gl,
-		mainUiWindow, mainUiWindow, mainUiWindow, mainUiWindow,
+		sessOvpn.GetOverwriteClient(), mainUiWindow, mainUiWindow, mainUiWindow,
 		stray, file, file, cmdResolver,
 	)
 
@@ -193,13 +194,13 @@ func Run(cfg *config.Config) {
 	if runtime.GOOS != "windows" {
 		tr = transport.New(
 			cfg.App.ConfigsPath, cfg.StopTimeout,
-			vpnUseCase, profileUseCase, names,
+			vpnUseCase, profileUseCase, names, l,
 		)
 	} else {
 		path := os.Getenv(`USERPROFILE`)
 		tr = transport.New(
-			path+"\\"+cfg.ConfigsPath, cfg.StopTimeout,
-			vpnUseCase, profileUseCase, names,
+			path+`\\`+cfg.ConfigsPath, cfg.StopTimeout,
+			vpnUseCase, profileUseCase, names, l,
 		)
 	}
 
@@ -250,21 +251,37 @@ func Run(cfg *config.Config) {
 		mainUiWindow.ClearLogForm()
 	})
 
+	flag := false
 	mainUiWindow.PushButtonConnect.ConnectClicked(func(_ bool) {
+
+		if flag {
+			ocl := session.NewOverwriteClient()
+			sessOvpn.OverwriteClient = *ocl
+			ocl.ClientAPI_OpenVPNClient = sessOvpn.Client
+			sessOvpn.SetClient(ovpncli.NewClient(ocl))
+		}
 
 		ctx, cancel := context.WithCancel(context.Background())
 
 		cl.SetBind(tr.Disconnect(cancel))
 		cl.Binder()
 
-		err := tr.Connect(ctx)()
+		go func() {
+			err = sessOvpn.CallbackError()
+			if err != nil {
+				l.Fatalf("session failed: [%w]\n", err)
+			}
+		}()
+
+		err := tr.Connect(ctx, cfg.CountReconn)()
 		if err != nil {
 			l.Fatalf("connect failed: [%w]\n", err)
 		}
+		flag = true
 
 		mainUiWindow.PushButtonDiscconnect.ConnectClicked(func(_ bool) {
 			mainUiWindow.ButtonDisconnectDisable()
-			cancel()
+			tr.Disconnect(cancel)()
 		})
 
 		exit.ConnectTriggered(func(bool) {
@@ -276,7 +293,6 @@ func Run(cfg *config.Config) {
 			tr.Disconnect(cancel)()
 			app.Exit(0)
 		})
-
 	})
 
 	exit.ConnectTriggered(func(bool) {
