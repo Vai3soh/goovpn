@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Goovpn
-Exec=goovpn -config /etc/goovpn/config.yml %f
+Exec=goovpn %f
 Icon=/usr/share/icons/hicolor/128x128/apps/goovpn.png
 Terminal=false
 Type=Application
-Categories=Network;Qt;
+Categories=Network;Wails;

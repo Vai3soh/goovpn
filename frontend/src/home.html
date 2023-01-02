@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=10">
+    <title>goovpn</title> 
+    <script src="/wails/ipc.js"></script>
+    <script src="/wails/runtime.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/home.css"> 
+	<link rel="stylesheet" type="text/css" href="/static/css/itc-custom-select.css"> 
+	<script src="/static/js/itc-custom-select.js"></script>
+</head>
+<link rel="shortcut icon" href="/static/icons/favicon.png">
+<body>
+    <div class="href-container">
+        <ul>
+            <li class="option"><a href="/index.html">Settings</a></li>
+        </ul>
+    </div>
+    <div class="content-wrapper">
+        <div class="container-clearfix">
+            <main class="content">
+                <div id="inputGroupSelect01"></div>
+                <textarea class="form-control" name="inputForm" id="FormControlTextarea1"></textarea>
+
+                <div class="flex-container">
+                    <div class="item1">
+                        <button type="button" id = "btnClear" onclick="ClearLog();" class="myButton">Clear logs</button> 
+                    </div>
+                    <div class="item2">
+                        <button type="button" id = "btnDisconnect" onclick="Destroy();" class="myButton" disabled>Disconnect</button>
+                    </div>
+                    <div class="item3">
+                        <button type="button" id = "btnConnect" onclick="Runners();" class="myButton">Connect</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>  
+<script src="/static/js/home.js"></script>
+</body>
+</html>
+

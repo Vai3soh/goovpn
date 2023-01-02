@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"runtime"
 
 	"github.com/google/shlex"
 	cmdchain "github.com/rainu/go-command-chain"
@@ -129,7 +130,9 @@ func (c *cmd) RunCmdWithPipe(args1, args2 []string) error {
 }
 
 func (c *cmd) getBinaryPath() (*string, error) {
-	os.Setenv("PATH", "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin")
+	if runtime.GOOS == `linux` {
+		os.Setenv("PATH", "/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin")
+	}
 	full, err := exec.LookPath(c.command)
 	if err != nil {
 		return nil, fmt.Errorf("%s path not found: [%w]", c.command, err)

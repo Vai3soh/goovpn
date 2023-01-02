@@ -1,0 +1,256 @@
+- semver: 1.0.2
+  date: 2022-08-10T12:45:29+10:00
+  packager: GitHub <noreply@github.com>
+  changes:
+    - commit: 8f915f953033761084c498d49a19176a7c641a72
+      note: Add menu `update configs`, refresh combobox without restart soft
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 27ae2241dcef1d7c211adf32d01fbfaf7b18a159
+      note: |-
+        Add submodule 'github.com/Vai3soh/go-openvpn/'
+        Correct build app with update library libopenvpn3
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 284a43b25067b878ccd67442cf1f3fa5b37628f1
+      note: Update readme
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 88888625aa427e45cac1a7f29537fea393f1f8e5
+      note: Prepare for v1.0.1 release
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+- semver: 1.0.1
+  date: 2022-04-15T16:27:35+10:00
+  packager: GitHub <noreply@github.com>
+  changes:
+    - commit: 272e23162a060e494a2e0008e57c7239301723e6
+      note: Fix bug crash app if use systemd true
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 89e374690dee12343301cf036281ee65623fca11
+      note: Update Readme.md
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: GitHub
+        email: noreply@github.com
+    - commit: d714ef0fc768a19b2d666ce3b249a240b4a6881f
+      note: Update Readme.md
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: GitHub
+        email: noreply@github.com
+    - commit: b4e1167b517f3f9211af20ded8f53e40c6d706a9
+      note: Update Readme.md
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: GitHub
+        email: noreply@github.com
+- semver: 1.0.0
+  date: 2022-03-08T18:30:44+10:00
+  packager: GitHub <noreply@github.com>
+  changes:
+    - commit: ff56985782ca2fced5b9a775dea1cdd136c828f3
+      note: Update Readme.md
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: GitHub
+        email: noreply@github.com
+    - commit: 9d3bde71c41e1e54d9af75617ddbc552149186fd
+      note: Update Readme.md
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: GitHub
+        email: noreply@github.com
+    - commit: 99a61d51027563b3c6dae39aa6ced8e5237444ea
+      note: Add instruction to run appimage
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 2f0d6cb1965acbc41b7fe67dfb770a4a76cc17bc
+      note: Add make directives, add build packages with nfpm
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 39799eaf00e82cf82922089257b35cb7f44d692a
+      note: Generate mock test
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 920e586e593ac1db70eadd3c7ced94cbb22a9fa5
+      note: Add files,script to appimage build
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: f63851467990a94aef4091e129adfcf0a0c6e76a
+      note: Add dockerfile, license, how to in readme, and more
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 7b37d7dc1122cb41baa10856589dd08b492e72cb
+      note: Minor changes
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: cda909caf0f9c611d6b96f065b047b5449d85c4b
+      note: Fix panic negative WaitGroup counter, remove stop sync.WaitGroup
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 188cc8714050d4028183a85f7c642b982b432f14
+      note: Add package openvpn3 from https://github.com/mysteriumnetwork/go-openvpn/tree/master/openvpn3
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: cf888562d2ec379883d03b853621e8d21e8d5df7
+      note: Add package for logging
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 8d27bb5b40ca44b31aa3befbab9bf13c355bc63c
+      note: Move cmd/goovpn to cmd/app
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 4b18ba57b9afa763907595959d1b77b73cb02039
+      note: Add usecase logics, interfaces, and logics start stop openvpn
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 31305ee3b00cdd02a7776c0a36e252509b1c51ca
+      note: Add package, session start disconnect from openvpn server
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 80cc38660f7e22616d9f8fc05a8da2cc84b74d58
+      note: Add logics QT view application
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 556df8bb02042a3ef6fb3cd2b99181173efe2c39
+      note: Add package for correctly stopping the application
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 13657106fa71455a61774c24c89804a32c6c64a6
+      note: |-
+        Add package - storing profiles in memory.
+        Add package - openvpn dns control over (systemd-resolve/resolvconf).
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 13889e522f95fc691734ef6e806f9ec10167109e
+      note: Add package necessary for config changes(openvpn config). And create test for package.
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 5715ca08263af0d08fc597078ad564d383fce612
+      note: Сreating extended versions of modules cmd and file.
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: da8bcb1b4c74d7bae7d5fedc23c4326ae41e96e7
+      note: Create entry point, main() app.
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 0cfdceb8316a22085662afdcd0b3f433eb60c798
+      note: Add variable icons to application.
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+    - commit: 4ef20cd7890b618b472a724cb11f6042007ac8c8
+      note: Add entity and create config application.
+      author:
+        name: Vai3soh
+        email: he9tei7@protonmail.com
+      committer:
+        name: Vai3soh
+        email: he9tei7@protonmail.com

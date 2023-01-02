@@ -1,0 +1,11 @@
+{
+  "name": "goovpn",
+  "outputfilename": "goovpn",
+  "assetdir": "../../frontend",
+  "frontend:dir": "../../frontend",  
+  "build:dir":  "../../build/",
+  "author": {
+    "name": "Vai3soh",
+    "email": "work.rwx.seven@gmail.com"
+  }
+}

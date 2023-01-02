@@ -30,7 +30,6 @@ func NewOverwriteClient() *OverwriteClient {
 
 func (ocl *OverwriteClient) Log(li ovpncli.ClientAPI_LogInfo) {
 	ocl.vpnLog <- li.GetText()
-
 }
 
 func (ocl *OverwriteClient) ChanVpnLog() chan string {
@@ -63,14 +62,18 @@ func NewOpenvpnClientCred(optsCred ...ovpncli.OptionCred) *OpenvpnClientCred {
 	return op
 }
 
-func NewOpenvpnClient(opts ...ovpncli.Option) *OpenvpnClient {
+func NewOpenvpnClient(ctx context.Context, opts ...ovpncli.Option) *OpenvpnClient {
 	ocl := &OverwriteClient{vpnLog: make(chan string)}
 	op := &OpenvpnClient{
-		Client:           ovpncli.NewClient(ocl),
+		Client:           ovpncli.NewClient(ocl, ctx),
 		ClientAPI_Config: ovpncli.NewClientConfig(opts...),
 		OverwriteClient:  *ocl,
 	}
 	return op
+}
+
+func (op *OpenvpnClient) GetClient() ovpncli.Client {
+	return op.Client
 }
 
 func (op *OpenvpnClient) SetClient(c ovpncli.Client) {
@@ -85,12 +88,15 @@ func (op *OpenvpnClient) GetOverwriteClient() *OverwriteClient {
 	return &op.OverwriteClient
 }
 
-func (op *OpenvpnClient) StartSession(ctx context.Context) error {
+func (op *OpenvpnClient) StartSession() error {
 	ev := op.Eval_config(op.ClientAPI_Config)
 	if ev.GetError() {
 		return fmt.Errorf("config eval failed [%s]", ev.GetMessage())
 	}
-	op.StartConnection(ctx)
+	err := op.StartConnection()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -109,4 +115,10 @@ func (op *OpenvpnClient) SetCread(u, p string) error {
 		return fmt.Errorf("provide cred failed [%s]", status.GetMessage())
 	}
 	return nil
+}
+
+func (op *OpenvpnClient) ReloadClient(ctx context.Context) {
+	ocl_ := NewOverwriteClient()
+	op.OverwriteClient = *ocl_
+	op.SetClient(ovpncli.NewClient(ocl_, ctx))
 }

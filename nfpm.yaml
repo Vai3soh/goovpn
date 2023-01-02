@@ -1,19 +1,19 @@
 name: "goovpn"
 arch: "amd64"
 platform: "linux"
-version: "v1.0.2"
+version: "v1.0.3"
 section: "default"
 priority: "extra"
 
-maintainer: "Vai3soh <he9tei7@protonmail.com>"
+maintainer: "Vai3soh <work.rwx.seven@gmail.com>"
 description: |
-  Goovpn openvpn client gui(use qt) for linux.
+  Goovpn openvpn client gui(use wails) for linux.
     
-license: "MIT"
-changelog: "changelog.yaml"
+license: "GNU AGPL"
+changelog: "changelog.yml"
 
 contents:
-- src: ./cmd/app/goovpn
+- src: ./build/bin/goovpn
   dst: /usr/sbin/goovpn
   file_info:
     mode: 0755
@@ -25,43 +25,139 @@ contents:
 
 - src: ./scripts/goovpn.desktop
   dst: /usr/share/applications/goovpn.desktop
+
+- dst: /etc/goovpn/
+  type: dir
+  file_info:
+      mode: 0700
       
-- src: ./config/config.yml
-  dst: /etc/goovpn/config.yml
-  type: config
+- dst: /etc/goovpn/goovpn.db
+  type: ghost
 
 - src: ./embedfile/assets/app.png
   dst: /usr/share/icons/hicolor/128x128/apps/goovpn.png
 
 overrides:
   deb:
-    depends:
-      - iproute2
-      - libfontconfig1
-      - libfreetype6
-      - libxcb-glx0
-      - libx11-xcb1
-      - libxcb1
-      - libxrender1
-      - libx11-6
-      - libc6
-      - libxkbcommon0
-      - libglib2.0-0
-      - libgl1
-      - libstdc++6
-      - libgcc-s1
-      - libexpat1
-      - libuuid1
-      - libpng16-16
-      - zlib1g
-      - libbrotli1
-      - libxau6
-      - libxdmcp6
-      - libpcre3
-      - libglvnd0
-      - libglx0
-      - libbsd0
-      - libmd0
+   depends:
+    - iproute2
+    - libc6
+    - libwebkit2gtk-4.0-37
+    - libgtk-3-0
+    - libgdk-pixbuf-2.0-0
+    - libglib2.0-0
+    - libjavascriptcoregtk-4.0-18
+    - libstdc++6
+    - libgcc-s1
+    - libwpe-1.0-1
+    - libwpebackend-fdo-1.0-1
+    - libegl1
+    - libatomic1
+    - libnotify4
+    - libicu67
+    - libelogind0
+    - libpangocairo-1.0-0
+    - libpango-1.0-0
+    - libharfbuzz0b
+    - libcairo-gobject2
+    - libcairo2
+    - libxml2
+    - libsqlite3-0
+    - libxslt1.1
+    - libopengl0
+    - libglx0
+    - liblcms2-2
+    - libwoff1
+    - libfontconfig1
+    - libfreetype6
+    - libharfbuzz-icu0
+    - libgcrypt20
+    - libgpg-error0
+    - libgstreamer-plugins-base1.0-0
+    - libgstreamer1.0-0
+    - libgstreamer-gl1.0-0
+    - libjpeg62-turbo
+    - libpng16-16
+    - zlib1g
+    - libopenjp2-7
+    - libwebpdemux2
+    - libwebp6
+    - libsoup2.4-1
+    - libatk1.0-0
+    - libenchant-2-2
+    - libsecret-1-0
+    - libtasn1-6
+    - libhyphen0
+    - libx11-6
+    - libxcomposite1
+    - libxdamage1
+    - libxrender1
+    - libxt6
+    - libwayland-server0
+    - libwayland-egl1
+    - libwayland-client0
+    - libmanette-0.2-0
+    - libseccomp2
+    - libxi6
+    - libxfixes3
+    - libatk-bridge2.0-0
+    - libepoxy0
+    - libfribidi0
+    - libpangoft2-1.0-0
+    - libxinerama1
+    - libxrandr2
+    - libxcursor1
+    - libxkbcommon0
+    - libwayland-cursor0
+    - libxext6
+    - libmount1
+    - libselinux1
+    - libffi7
+    - libpcre3
+    - libglvnd0
+    - libcap2
+    - libthai0
+    - libgraphite2-3
+    - libpixman-1-0
+    - libxcb-shm0
+    - libxcb1
+    - libxcb-render0
+    - liblzma5
+    - libbrotli1
+    - libexpat1
+    - libuuid1
+    - libunwind8
+    - libdw1
+    - liborc-0.4-0
+    - libgl1
+    - libx11-xcb1
+    - libgudev-1.0-0
+    - libdrm2
+    - libgbm1
+    - libgssapi-krb5-2
+    - libpsl5
+    - libsm6
+    - libice6
+    - libevdev2
+    - libdbus-1-3
+    - libatspi2.0-0
+    - libblkid1
+    - libpcre2-8-0
+    - libdatrie1
+    - libxau6
+    - libxdmcp6
+    - libelf1
+    - libbz2-1.0
+    - libeudev1
+    - libkrb5-3
+    - libk5crypto3
+    - libcom-err2
+    - libkrb5support0
+    - libunistring2
+    - libidn2-0
+    - libbsd0
+    - libkeyutils1
+    - libmd0
 
   rpm:
     depends:

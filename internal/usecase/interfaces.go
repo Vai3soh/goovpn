@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"context"
 	"io/fs"
 	"os"
 
@@ -19,7 +18,7 @@ type (
 	}
 
 	SessionManager interface {
-		StartSession(ctx context.Context) error
+		StartSession() error
 		StopSession()
 		DestroyClient()
 	}
@@ -57,37 +56,37 @@ type (
 		GetUserAndPass() (string, string)
 	}
 
-	UiLogFormManager interface {
-		GetTextFromLogForm() string
-		SetTextInLogForm(text string)
-		ClearLogForm()
-	}
+	/* 	UiLogFormManager interface {
+	   		GetTextFromLogForm() string
+	   		SetTextInLogForm(text string)
+	   		ClearLogForm()
+	   	}
 
-	UiButtonsManager interface {
-		ButtonConnectEnable()
-		ButtonConnectDisable()
-		ButtonDisconnectEnable()
-		ButtonDisconnectDisable()
-	}
+	   	UiButtonsManager interface {
+	   		ButtonConnectEnable()
+	   		ButtonConnectDisable()
+	   		ButtonDisconnectEnable()
+	   		ButtonDisconnectDisable()
+	   	}
 
-	UiListConfigsManager interface {
-		DisableListConfigsBox()
-		EnableListConfigsBox()
-		SelectedCfgFromListConfigs() *string
-	}
+	   	UiListConfigsManager interface {
+	   		DisableListConfigsBox()
+	   		EnableListConfigsBox()
+	   		SelectedCfgFromListConfigs() *string
+	   	}
 
-	SysTrayIconsManager interface {
-		SetIcon(path string)
-		SetDisconnectIcon() error
-		SetConnectIcon() error
-		SetOpenIcon() error
-		SetBlinkIcon() error
-	}
+	   	SysTrayIconsManager interface {
+	   		SetIcon(path string)
+	   		SetDisconnectIcon() error
+	   		SetConnectIcon() error
+	   		SetOpenIcon() error
+	   		SetBlinkIcon() error
+	   	}
 
-	SysTrayImagesManager interface {
-		SearchKeyInMap(s string) (*string, error)
-		Image() map[string][]byte
-	}
+	   	SysTrayImagesManager interface {
+	   		SearchKeyInMap(s string) (*string, error)
+	   		Image() map[string][]byte
+	   	} */
 
 	FileSetters interface {
 		SetBody([]byte)

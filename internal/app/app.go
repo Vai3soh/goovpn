@@ -2,15 +2,14 @@ package app
 
 import (
 	"context"
+	"embed"
+	"os"
 	"runtime"
 
-	"github.com/Vai3soh/goovpn/config"
-	"github.com/Vai3soh/goovpn/embedfile"
 	"github.com/Vai3soh/goovpn/entity"
 	"github.com/Vai3soh/goovpn/internal/adapters/db/memory"
 	"github.com/Vai3soh/goovpn/internal/cli"
-	"github.com/Vai3soh/goovpn/internal/close"
-
+	"github.com/Vai3soh/goovpn/internal/config"
 	"github.com/Vai3soh/goovpn/internal/dns"
 	"github.com/Vai3soh/goovpn/internal/fileextended"
 	"github.com/Vai3soh/goovpn/internal/gui"
@@ -20,137 +19,124 @@ import (
 	"github.com/Vai3soh/goovpn/internal/usecase"
 	"github.com/Vai3soh/goovpn/internal/usecase/usecasedns"
 	"github.com/Vai3soh/goovpn/internal/usecase/usecaseprofile"
+	"github.com/Vai3soh/goovpn/pkg/boltdb"
 	"github.com/Vai3soh/goovpn/pkg/logger"
-
-	"os"
-	"strings"
-
-	"github.com/therecipe/qt/core"
-	"github.com/therecipe/qt/widgets"
-
 	"github.com/Vai3soh/ovpncli"
+	"github.com/wailsapp/wails/v2"
+	lg "github.com/wailsapp/wails/v2/pkg/logger"
+	"github.com/wailsapp/wails/v2/pkg/options"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
+	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
-type fileEmbbed interface {
-	usecase.FileSetters
-	usecase.FileGetters
-	usecase.FileToolsManager
-	usecase.FileWriter
-}
-
-func CreateDir(path string, file fileEmbbed) {
-	file.SetPath(path)
-	if _, err := os.Stat(file.Path()); os.IsNotExist(err) {
-		os.MkdirAll(file.Path(), 0755)
-	}
-}
-
-func getFiles(l *logger.Logger, file *fileextended.File, path string) []string {
-	files, err := file.FilesInDir(path)
+func SaveHardCodedParams(
+	bdb *boltdb.BoltDB, l *logger.Logger,
+	bucketName string, values []entity.Message,
+) {
+	mustOpen(bdb, l)
+	err := bdb.CreateBucket(bucketName)
 	if err != nil {
-		l.Fatalf("don't read dir: %s\n", err)
+		l.Fatalf("don't create storage [%s]\n", err)
 	}
-	return files
-}
 
-func CopyImages(file fileEmbbed, stray usecase.SysTrayImagesManager) {
-
-	mode := os.FileMode(int(0644))
-	for key, value := range stray.Image() {
-		file.SetPath(key)
-		file.SetBody(value)
-		file.SetPermissonFile(mode)
-		file.WriteByteFile()
-	}
-}
-
-func readEmbed(path string, l *logger.Logger) []byte {
-	dataImage, err := embedfile.ReadFs(path)
+	mustOpen(bdb, l)
+	err = bdb.StoreBulk(values)
 	if err != nil {
-		l.Fatalf("don't read png file: %s", err)
+		l.Fatalf("don't bulk store [%s]\n", err)
 	}
-	return dataImage
 }
 
-func Run(cfg *config.Config) {
+func mustOpen(bdb *boltdb.BoltDB, l *logger.Logger) {
+	err := bdb.ReOpen()
+	if err != nil {
+		l.Fatalf("don't open [%w]\n", err)
+	}
+}
+
+func Run_wails(assets embed.FS, icon []byte, logLev, dbPath string) {
 
 	l := logger.NewLogger(
-		logger.WithLogTextFormatter(), logger.WithLogLevel(&cfg.Log.Level),
+		logger.WithLogTextFormatter(), logger.WithLogLevel(&logLev),
 	)
 
-	ImageMap := make(map[string][]byte)
-	dataPng := readEmbed(cfg.AppImagePathConnected, l)
-	ImageMap[cfg.TempDir+strings.Split(cfg.AppImagePathConnected, "/")[1]] = dataPng
-
-	dataPng = readEmbed(cfg.AppImagePathDisconnected, l)
-	ImageMap[cfg.TempDir+strings.Split(cfg.AppImagePathDisconnected, "/")[1]] = dataPng
-
-	dataPng = readEmbed(cfg.AppImagePathBlink, l)
-	ImageMap[cfg.TempDir+strings.Split(cfg.AppImagePathBlink, "/")[1]] = dataPng
-
-	dataPng = readEmbed(cfg.AppImagePathOpen, l)
-	ImageMap[cfg.TempDir+strings.Split(cfg.AppImagePathOpen, "/")[1]] = dataPng
-
-	dataPng = readEmbed(cfg.AppIcon, l)
-	ImageMap[cfg.TempDir+strings.Split(cfg.AppIcon, "/")[1]] = dataPng
-
-	var files []string
 	file := fileextended.NewFile()
-	if runtime.GOOS == "windows" {
-		path := os.Getenv(`USERPROFILE`)
-		files = getFiles(l, file, path+"\\"+cfg.ConfigsPath)
-	} else {
-		files = getFiles(l, file, cfg.ConfigsPath)
+
+	file.SetPath(dbPath)
+	absDb, err := file.AbsolutePath()
+	if err != nil {
+		l.Fatal(err)
 	}
-	command := cli.NewCmd()
-	cmdResolver := cli.NewResolver(cli.WithCliResolver(command))
+	file.SetPath("")
+	bdb, err := boltdb.NewBoltDB(*absDb)
+	if err != nil {
+		l.Fatalf("don't get constructor [%w]\n", err)
+	}
 
-	app := widgets.NewQApplication(len(os.Args), os.Args)
-	mainWindown := widgets.NewQMainWindow(nil, 0)
-	centralwidget := widgets.NewQWidget(mainWindown, core.Qt__Widget)
-	comboBox := widgets.NewQComboBox(centralwidget)
-	gridLayout := widgets.NewQGridLayout(centralwidget)
-	horizontalLayout := widgets.NewQHBoxLayout()
-	pushButtonClear := widgets.NewQPushButton2("Clear", centralwidget)
-	pushButtonConnect := widgets.NewQPushButton2("Connect", centralwidget)
-	pushButtonDisconnect := widgets.NewQPushButton2("Disconnect", centralwidget)
-	pushButtonExit := widgets.NewQPushButton2("Exit", centralwidget)
-	textEditReadOnly := widgets.NewQTextEdit(centralwidget)
-	verticalLayout := widgets.NewQVBoxLayout()
+	useSystemd := false
+	configsPath := `~/ovpnconfigs`
+	if runtime.GOOS == "windows" {
+		userPath := os.Getenv(`USERPROFILE`)
+		configsPath = userPath + `\` + `Desktop` + `\` + `ovpnconfigs` + `\`
+	}
+	countReccon := "3"
 
-	mainUiWindow := gui.NewUiMainWindow(
+	mustOpen(bdb, l)
+	bdb.SetNameBucket(`general_configure`)
 
-		gui.WithApp(mainWindown),
-		gui.WithCentralwidget(centralwidget),
-		gui.WithComboBox(comboBox),
-		gui.WithGridLayout(gridLayout),
-		gui.WithHorizontalLayout(horizontalLayout),
-		gui.WithPushButtonClear(pushButtonClear),
-		gui.WithPushButtonConnect(pushButtonConnect),
-		gui.WithPushButtonDisconnect(pushButtonDisconnect),
-		gui.WithPushButtonExit(pushButtonExit),
-		gui.WithTextEditReadOnly(textEditReadOnly),
-		gui.WithVerticalLayout(verticalLayout),
+	if !bdb.BucketIsCreate() {
+
+		values := []entity.Message{
+			{AtrId: "#ssl", Value: "0"},
+			{AtrId: "#cmp", Value: "yes"},
+		}
+		SaveHardCodedParams(bdb, l, "ssl_cmp", values)
+
+		values = []entity.Message{
+			{AtrId: "tun_persist", Value: "checkbox"},
+			{AtrId: "legacy_algo", Value: "checkbox"},
+			{AtrId: "preferred_dc_algo", Value: "checkbox"},
+		}
+
+		if runtime.GOOS == `windows` {
+			for _, e := range values {
+				if e.AtrId == "legacy_algo" {
+					e.Value = ""
+				}
+			}
+		}
+
+		SaveHardCodedParams(bdb, l, "general_openvpn_library", values)
+
+		values = []entity.Message{
+			{AtrId: "config_dir_path", Value: configsPath},
+			{AtrId: "reconn_count", Value: countReccon},
+		}
+		SaveHardCodedParams(bdb, l, "general_configure", values)
+
+		values = []entity.Message{
+			{AtrId: "with_conn_timeout", Value: "0"},
+		}
+		SaveHardCodedParams(bdb, l, "other_options", values)
+	}
+
+	param := config.NewParamsDefault(bdb, l)
+	param = param.GetParamIfStoreInDb()
+
+	if runtime.GOOS == `windows` {
+		param.SetLegacyAlgo(false)
+	}
+	sessOvpn := session.NewOpenvpnClient(
+		context.TODO(),
+		ovpncli.WithConnTimeout(param.ConnTimeout()),
+		ovpncli.WithCompressionMode(param.CompressionMode()),
+		ovpncli.WithDisableClientCert(param.DisableCert()),
+		ovpncli.WithTunPersist(param.TunPersist()),
+		ovpncli.WithLegacyAlgorithms(param.LegacyAlgorithms()),
+		ovpncli.WithNonPreferredDCAlgorithms(param.NonPreferredDCAlgorithms()),
 	)
-	trayIcon := widgets.NewQSystemTrayIcon(nil)
-	menu := widgets.NewQMenu(nil)
-
-	stray := gui.NewSysTray(
-		gui.WithSystemTrayIcon(trayIcon),
-		gui.WithSystemTrayMenu(menu),
-		gui.WithImage(ImageMap),
-	)
+	useSystemd = param.UseSystemd()
 
 	gl := parser.NewConfig()
-	cl := &close.ShutdownApp{}
-
-	sessOvpn := session.NewOpenvpnClient(
-		ovpncli.WithCompressionMode(cfg.App.CompressionMode),
-		ovpncli.WithDisableClientCert(cfg.App.CheckDisableClientCert),
-		ovpncli.WithTunPersist(cfg.App.TunPersist),
-		ovpncli.WithLegacyAlgorithms(true),
-		ovpncli.WithNonPreferredDCAlgorithms(true),
-	)
 
 	ocl := sessOvpn.GetOverwriteClient()
 	ocl.ClientAPI_OpenVPNClient = sessOvpn.Client
@@ -166,20 +152,25 @@ func Run(cfg *config.Config) {
 		l.Fatalf("don't get constructor [%w]\n", err)
 	}
 
+	command := cli.NewCmd()
+	cmdResolver := cli.NewResolver(cli.WithCliResolver(command))
+
 	dnsUseCase, err := usecasedns.NewDnsUseCase(
 		command, command, cmdResolver, command, cmdResolver,
 	)
+
 	if err != nil {
-		l.Fatalf("don't get constructor [%w]\n", err)
+		l.Fatalf("don't get constructor [%s]\n", err)
 	}
+
+	fileExt := fileextended.NewFile()
 
 	vpnUseCase, _ := usecase.NewVpnUseCase(
 		sessOvpn, sessOvpn, gl, gl, gl, gl, gl, gl,
-		sessOvpn.GetOverwriteClient(), mainUiWindow, mainUiWindow, mainUiWindow,
-		stray, file, file, cmdResolver,
+		sessOvpn.GetOverwriteClient(), file, file, cmdResolver,
 	)
 
-	sys, err := dns.NewSystem(runtime.GOOS, dnsUseCase, dnsUseCase, cfg.App.UseSystemd)
+	sys, err := dns.NewSystem(runtime.GOOS, dnsUseCase, dnsUseCase, useSystemd)
 	if err != nil {
 		l.Fatalf("don't get constructor [%w]\n", err)
 	}
@@ -193,116 +184,76 @@ func Run(cfg *config.Config) {
 	var tr *transport.TransportOvpnClient
 	if runtime.GOOS != "windows" {
 		tr = transport.New(
-			cfg.App.ConfigsPath, cfg.StopTimeout,
-			vpnUseCase, profileUseCase, names, l,
+			configsPath+"/", vpnUseCase,
+			profileUseCase, names, l, bdb, sessOvpn,
 		)
 	} else {
-		path := os.Getenv(`USERPROFILE`)
+
 		tr = transport.New(
-			path+`\\`+cfg.ConfigsPath, cfg.StopTimeout,
-			vpnUseCase, profileUseCase, names, l,
+			configsPath, vpnUseCase,
+			profileUseCase, names, l, bdb, sessOvpn,
 		)
 	}
+	gui := gui.NewGui(fileExt, sessOvpn, bdb, l, tr)
 
-	appIconPath, err := stray.SearchKeyInMap("app")
+	err = wails.Run(&options.App{
+		Title:             "Goovpn",
+		Width:             450,
+		Height:            850,
+		MinWidth:          450,
+		DisableResize:     false,
+		Fullscreen:        false,
+		Frameless:         false,
+		StartHidden:       false,
+		HideWindowOnClose: false,
+		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255, A: 255},
+		Assets:            assets,
+		Menu:              nil,
+		Logger:            nil,
+		LogLevel:          lg.DEBUG,
+		OnStartup: func(ctx context.Context) {
+			sessOvpn.SetContext(ctx)
+			gui.Startup(ctx)
+			tr.SetContext(ctx)
+		},
+		OnDomReady:       gui.DomReady,
+		OnBeforeClose:    gui.BeforeClose,
+		OnShutdown:       gui.Shutdown,
+		WindowStartState: options.Normal,
+		Bind: []interface{}{
+			gui, tr,
+		},
+		// Windows platform specific options
+		Windows: &windows.Options{
+			WebviewIsTransparent: false,
+			WindowIsTranslucent:  false,
+			DisableWindowIcon:    false,
+			// DisableFramelessWindowDecorations: false,
+			WebviewUserDataPath: "",
+		},
+		// Mac platform specific options
+		Mac: &mac.Options{
+			TitleBar: &mac.TitleBar{
+				TitlebarAppearsTransparent: true,
+				HideTitle:                  false,
+				HideTitleBar:               false,
+				FullSizeContent:            false,
+				UseToolbar:                 false,
+				HideToolbarSeparator:       true,
+			},
+			Appearance:           mac.NSAppearanceNameDarkAqua,
+			WebviewIsTransparent: true,
+			WindowIsTranslucent:  true,
+			About: &mac.AboutInfo{
+				Title:   "Goovpn",
+				Message: "",
+				Icon:    icon,
+			},
+		},
+	})
+
 	if err != nil {
-		l.Fatalf("don't found key in map [%w]\n", err)
+		l.Fatal(err)
 	}
-	mainUiWindow.SetupUI(
-		app, cfg.ConfigsPath,
-		cfg.Log.Level, cfg.TempDir,
-		cfg.Name,
-		*appIconPath,
-		files,
-	)
 
-	exit, main, updateCfgs, err := stray.SetupSysTray()
-	if err != nil {
-		l.Fatalf("setup systray failed: [%w]\n", err)
-	}
-	mainWindown.SetWindowFlags(core.Qt__Dialog)
-	app.SetQuitOnLastWindowClosed(false)
-
-	main.ConnectTriggered(func(bool) { mainWindown.Show() })
-	updateCfgs.ConnectTriggered(func(bool) {
-		if mainUiWindow.IsEnableCombo() {
-			files, err := file.FilesInDir(cfg.ConfigsPath)
-			if err != nil {
-				l.Fatalf("don't read dir: [%s]\n", err)
-			}
-			mainUiWindow.UpdateComboBox(files)
-		}
-	})
-
-	CreateDir(cfg.TempDir, file)
-	CopyImages(file, stray)
-
-	path, err := stray.SearchKeyInMap(`disconnect`)
-	if err != nil {
-		l.Fatalf("don't found key in map: [%w]\n", err)
-	}
-	stray.SetIcon(*path)
-
-	trayIcon.SetContextMenu(menu)
-	trayIcon.Show()
-	mainWindown.Show()
-
-	mainUiWindow.PushButtonClear.ConnectClicked(func(_ bool) {
-		mainUiWindow.ClearLogForm()
-	})
-
-	flag := false
-	mainUiWindow.PushButtonConnect.ConnectClicked(func(_ bool) {
-
-		if flag {
-			ocl := session.NewOverwriteClient()
-			sessOvpn.OverwriteClient = *ocl
-			ocl.ClientAPI_OpenVPNClient = sessOvpn.Client
-			sessOvpn.SetClient(ovpncli.NewClient(ocl))
-		}
-
-		ctx, cancel := context.WithCancel(context.Background())
-
-		cl.SetBind(tr.Disconnect(cancel))
-		cl.Binder()
-
-		go func() {
-			err = sessOvpn.CallbackError()
-			if err != nil {
-				l.Fatalf("session failed: [%w]\n", err)
-			}
-		}()
-
-		err := tr.Connect(ctx, cfg.CountReconn)()
-		if err != nil {
-			l.Fatalf("connect failed: [%w]\n", err)
-		}
-		flag = true
-
-		mainUiWindow.PushButtonDiscconnect.ConnectClicked(func(_ bool) {
-			mainUiWindow.ButtonDisconnectDisable()
-			tr.Disconnect(cancel)()
-		})
-
-		exit.ConnectTriggered(func(bool) {
-			tr.Disconnect(cancel)()
-			app.Exit(0)
-		})
-
-		mainUiWindow.PushButtonExit.ConnectClicked(func(_ bool) {
-			tr.Disconnect(cancel)()
-			app.Exit(0)
-		})
-	})
-
-	exit.ConnectTriggered(func(bool) {
-		app.Exit(0)
-	})
-
-	mainUiWindow.PushButtonExit.ConnectClicked(func(_ bool) {
-		app.Exit(0)
-	})
-
-	mainUiWindow.ButtonDisconnectDisable()
-	widgets.QApplication_Exec()
 }

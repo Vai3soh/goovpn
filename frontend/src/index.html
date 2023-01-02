@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/static/js/itc-custom-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/itc-custom-select.css"> 
+    <link rel="stylesheet" type="text/css" href="/static/css/settings.css"> 
+</head>
+<body>
+    <div class="href-container">
+        <ul>
+            <li class="option">
+                <a href="/home.html">Home</a>
+            </li>
+        </ul>
+    </div>
+    <fieldset>
+        <legend>General configure:</legend>
+        <div class="select__">
+            <div class="systemd">   
+                <input id="use_systemd" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_configure')" type='checkbox'/>
+                <p style="display: inline-block;">Use systemd</p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="config_dir">   
+                <p style="display: inline-block;">Configs dir path</p>
+                <input id="config_dir_path" type='text'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(config_dir_path.id, 'general_configure')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="count_reconn">   
+                <p style="display: inline-block;">Count of reconnection attempts</p>
+                <input id="reconn_count" type='text'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(reconn_count.id, 'general_configure')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>General openvpn library:</legend>
+        <div class="options">
+            <input name="options" id="tun_persist" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Tun Persist</label>
+        </div>
+        <div>
+            <input name="options" id="legacy_algo" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Legacy Algorithms</label>
+        </div>
+        <div class="options">
+            <input name="options" id="preferred_dc_algo" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Non Preferred DC Algorithms</label>
+        </div>
+        <div class="options">
+            <input name="options" id="disable_client_cert" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Disable Client Cert</label>
+        </div>
+        <div class="options">
+            <input name="options" id="retry_on_failed" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Retry On Auth Failed</label>
+        </div>
+        <div class="options">
+            <input name="options" id="allow_local_dns_resolvers" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Allow Local Dns Resolvers</label>
+        </div>
+        <div class="options">
+            <input name="options" id="allow_local_lan_access" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Allow Local Lan Access</label>
+        </div>
+        <div class="options">
+            <input name="options" id="alt_proxy" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Alt Proxy</label>
+        </div>
+        <div class="options">
+            <input name="options" id="auto_login_sessions" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Autologin Sessions</label>
+        </div>
+
+        <div class="options">
+            <input name="options" id="use_dco" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Use Dco</label>
+        </div>
+
+        <div class="options">
+            <input name="options" id="with_echo" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>With Echo</label>
+        </div>
+
+        <div class="options">
+            <input name="options" id="tun_builder_cupture_event" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Generate Tun Builder Capture Event</label>
+        </div>
+
+        <div class="options">
+            <input name="options" id="google_dns_fallback" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Google Dns Fallback</label>
+        </div>
+        <div class="options">
+            <input name="options" id="info" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>With Info</label>
+        </div>
+        <div class="options">
+            <input name="options" id="synch_dns_lookup" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Synchronous Dns Lookup</label>
+        </div>
+        <div class="options">
+            <input name="options" id="enable_win_tun" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Enable Win Tun</label>
+        </div>
+        <div class="options">
+            <input name="options" id="proxy_allow_clear_text_auth" onclick="SetAndSaveValueOpenVpnLibrary(this.id, 'general_openvpn_library')" type="checkbox">
+            <label>Proxy Allow Clear Text Auth</label>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Debug and Compression:</legend>
+        <div class="select_">
+            <div class="ssl_debug">   
+                <p style="display: inline-block;">Ssl Debug Level</p>
+                <div id="ssl"></div>
+            </div>
+        </div>
+        <div class="select_">
+            <div class="compress">             
+                <p style="display: inline-block;">Compression Mode</p>
+                <div id="cmp"></div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Other options:</legend>
+        <div class="select__">
+            <div class="timeout_conn">   
+                <p style="display: inline-block;">Connection Timeout</p>
+                <input id="with_conn_timeout" type='text' readonly="true" onkeypress='validate(event,/[0-9]|\./)'/>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="addr_families">             
+                <p style="display: inline-block;">Unused Addr Families</p>
+                <input type='text' id="with_allow_unused_addr_families" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_allow_unused_addr_families.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="clock_tick">             
+                <p style="display: inline-block;">Clock Tick(MS)</p>
+                <input id="with_clock_tick_ms" type='text' onkeypress='validate(event,/[0-9]|\./)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_clock_tick_ms.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="pki_external">             
+                <p style="display: inline-block;">External Pki Alias</p>
+                <input type='text' id="with_external_pki_alias" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_external_pki_alias.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="gremlin_cfg">             
+                <p style="display: inline-block;">Gremlin Config</p>
+                <input type='text' id="with_gremlin_config" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_gremlin_config.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="gui_ver">             
+                <p style="display: inline-block;">Gui Version</p>
+                <input type='text' id="with_gui_version" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_gui_version.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="hw_override">             
+                <p style="display: inline-block;">HwAddr Override</p>
+                <input type='text' id="with_hwaddr_override" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_hwaddr_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="platform_ver">             
+                <p style="display: inline-block;">Platform Version</p>
+                <input type='text' id="with_platform_version" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_platform_version.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="port_override">             
+                <p style="display: inline-block;">Port override</p>
+                <input type='text' id="with_port_override" onkeypress='validate(event,/[0-9]|\./)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_port_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="private_key_password">             
+                <p style="display: inline-block;">Private Key Password</p>
+                <input type='text' id="with_private_key_password" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_private_key_password.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="proto_override">             
+                <p style="display: inline-block;">Proto Override</p>
+                <input type='text' id="with_proto_override" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_proto_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="proto_ver_override">   
+                <p style="display: inline-block;">Proto Version Override</p>
+                <input id="with_proto_version_override" type='text' onkeypress='validate(event,/[0-9]|\./)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_proto_version_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="proxy_host">   
+                <p style="display: inline-block;">Proxy Host</p>
+                <input type='text' id="with_proxy_host" />
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_proxy_host.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="proxy_user">   
+                <p style="display: inline-block;">Proxy Username</p>
+                <input type='text' id="with_proxy_username" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_proxy_username.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="proxy_pass">   
+                <p style="display: inline-block;">Proxy Password</p>
+                <input type='text' id="with_proxy_password" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_proxy_password.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="proxy_port">   
+                <p style="display: inline-block;">Proxy Port</p>
+                <input type='text' id="with_proxy_port" onkeypress='validate(event,/[0-9]|\./)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_proxy_port.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="srv_override">   
+                <p style="display: inline-block;">Server Override</p>
+                <input type='text' id="with_server_override" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_server_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="sso">   
+                <p style="display: inline-block;">Sso Methods</p>
+                <input type='text' id="with_sso_methods" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_sso_methods.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="tls_override">   
+                <p style="display: inline-block;">Tls Cert Profile Override</p>
+                <input type='text' id="with_tls_cert_profile_override" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_tls_cert_profile_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="tls_cipher_list">   
+                <p style="display: inline-block;">Tls Cipher List</p>
+                <input type='text' id="with_tls_cipher_list" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_tls_cipher_list.id,'other_options')"  value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="tls_ciphersuites_list">   
+                <p style="display: inline-block;">Tls Ciphersuites List</p>
+                <input type='text' id="with_tls_cipher_suites_list" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_tls_cipher_suites_list.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="tls_min_override">   
+                <p style="display: inline-block;">Tls Version Min Override</p>
+                <input type='text' id="with_tls_version_min_override" onkeypress='validate(event,/^[a-z]+$/i)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_tls_version_min_override.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+        <div class="select__">
+            <div class="def_key_direction">   
+                <p style="display: inline-block;">Default Key Direction</p>
+                <input id="with_default_key_direction" type='text' onkeypress='validate(event,/[0-9]|\./)'/>
+                <p style="display: inline-block;">
+                    <input class="submit" onclick="SetAndSaveValueOtherOpt(with_default_key_direction.id,'other_options')" value="Save" type="submit" />
+                </p>
+            </div>
+        </div>
+    </fieldset>
+    <script src="/static/js/index.js"></script>
+</body>
+</html>

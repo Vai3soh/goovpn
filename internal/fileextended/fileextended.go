@@ -57,8 +57,31 @@ func (f *File) filesDir(dir string) ([]fs.DirEntry, error) {
 	return files, nil
 }
 
-func (f *File) FilesInDir(dir string) ([]string, error) {
+func (f *File) ChangeWorkingDir(path string) error {
+	if strings.Contains(path, `~`) {
+		user := `/home/` + os.Getenv(`SUDO_USER`)
+		if os.Getenv(`SUDO_USER`) == "" {
+			user = os.Getenv(`HOME`)
+		}
+		w := strings.Split(path, `~`)
+		path = user + w[len(w)-1]
+	}
+	err := os.Chdir(path)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
+func (f *File) FilesInDir(dir string) ([]string, error) {
+	if strings.Contains(dir, `~`) {
+		user := `/home/` + os.Getenv(`SUDO_USER`)
+		if os.Getenv(`SUDO_USER`) == "" {
+			user = os.Getenv(`HOME`)
+		}
+		w := strings.Split(dir, `~`)
+		dir = user + w[len(w)-1]
+	}
 	files, err := f.filesDir(dir)
 	if err != nil {
 		return nil, fmt.Errorf("get files failed: [%w]", err)

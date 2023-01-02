@@ -2,6 +2,7 @@ package usecaseprofile
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/Vai3soh/goovpn/entity"
@@ -131,11 +132,6 @@ func (p *ProfileUseCase) GetProfileFromCache(cfg string) entity.Profile {
 	return p.profileRepo.Find(cfg)
 }
 
-func (p *ProfileUseCase) CheckFileExists(f string) bool {
-	p.fileSetters.SetPath(f)
-	return p.fileToolsManager.CheckFileExists()
-}
-
 func (p *ProfileUseCase) CheckUseCfgFile() bool {
 	return p.cfgCheck.CheckConfigUseFiles()
 }
@@ -153,7 +149,16 @@ func (p *ProfileUseCase) SaveProfile(cfg string) error {
 
 	if profile.Body == "" {
 		for _, f := range [2]string{cfg + ".ovpn", cfg + ".conf"} {
-			if p.CheckFileExists(f) {
+			if strings.Contains(f, `~`) {
+				user := `/home/` + os.Getenv(`SUDO_USER`)
+				if os.Getenv(`SUDO_USER`) == "" {
+					user = os.Getenv(`HOME`)
+				}
+				w := strings.Split(f, `~`)
+				f = user + w[len(w)-1]
+			}
+			p.fileSetters.SetPath(f)
+			if p.fileToolsManager.CheckFileExists() {
 				break
 			}
 		}

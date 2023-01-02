@@ -1,20 +1,24 @@
 Goovpn
 
-This gui openvpn client for linux.
+This gui openvpn client for linux, windows.
 Program uses the following libraries:
 
 | Package                                   | Changes commits 
 | ----------------------------------------- | ----------------------------------------
-| github.com/mysteriumnetwork/go-openvpn    | 7ec797ccb0654e1ecc5459b1199471afcf2e9554
-| github.com/therecipe/qt                   |
+| github.com/Vai3soh/ovpncli (core)         |
+| github.com/wailsapp/wails                 |
 | github.com/fangdingjun/go-log/v5          |
+
 
 Build:
 
-```git clone --recurse-submodules github.com/Vai3soh/goovpn```
+```git clone github.com/Vai3soh/goovpn```
 
-Build binary with docker:
-```make build_docker```
+Build binary:
+	linux:
+		```make build_bin_linux```
+	windows:
+		```make build_bin_windows```
 
 And then run build(deb/rpm package):
 ```make build_package```
@@ -27,23 +31,17 @@ Download deb, rpm, appimage package in realese:
 ```github.com/Vai3soh/goovpn/releases```
 
 Install package:
-```sudo dpkg -i goovpn_1.0.0_amd64.deb or sudo dnf goovpn-1.0.0.x86_64.rpm```
+```sudo dpkg -i goovpn_1.0.3_amd64.deb or sudo dnf goovpn-1.0.3.x86_64.rpm```
 
 After install run:
-```sudo edit /etc/goovpn/config.yml```
 
-and modify path to configs dir (configs_path: '~/ovpnconfigs/')
+Run soft ```goovpn``` and modify path to configs dir (option ```Configs dir path```)
 add path to current user aka: ```/home/user/ovpnconfigs```,
 create dir ```mkdir /home/user/ovpnconfigs```,
-move your openvpn configs files to this dir and run program:
-
-1. From terminal: ```goovpn -config /etc/goovpn/config.yml```
-2. From menu in DE 
-
-If use Goovpn-x86_64.AppImage, config file is located ```~/.config/goovpn/config.yml```
+move your openvpn configs files to this dir.
 
 DNS query:
-1. If your distr with systemd, modify config directive ```use_systemd: false``` set ```use_systemd: true``` and install ```systemd-resolve```.
+1. If your distr with systemd, enable the option ```Use systemd``` and install ```systemd-resolve```.
 
 After restart unit systemd-resolved, your ```/etc/resolv.conf```
 ```
@@ -73,11 +71,17 @@ Current DNS Server: 10.211.254.254
        DNS Servers: 10.211.254.254 8.8.8.8
         DNS Domain: ~.
 ```
-2. If use ```use_systemd: false``` install ```resolvconf```
+2. If system not use systemd disable ```Use systemd``` install ```resolvconf```
 
+For windows OS (dependencies):
+	install webview2: https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+	install tap or wintun driver:
+		go to ```https://swupdate.openvpn.org/community/releases/OpenVPN-2.5.8-I604-amd64.msi``` download installer
+		run and custom install only tap and wintun driver.
+	 
 Screenshot:
 
 
-![Data_Label](https://raw.githubusercontent.com/Vai3soh/goovpn/master/goovpn_screen.png)
-
+![Data_Label](https://raw.githubusercontent.com/Vai3soh/goovpn/master/goovpn_screen1.png)
+![Data_Label](https://raw.githubusercontent.com/Vai3soh/goovpn/master/goovpn_screen2.png)
 

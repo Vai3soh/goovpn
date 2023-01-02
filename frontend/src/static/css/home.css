@@ -1,0 +1,111 @@
+body {
+    background: #5D666D none no-repeat scroll 0% 100%;   
+}
+
+.content-wrapper{
+    height: 100%;
+    
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    resize:none;
+    height: 80vh;
+    margin-top: 1em;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.3);
+}
+
+@font-face {
+    font-family: 'GraublauWeb';
+    font-weight: bold;
+    src: url("fonts/GraublauWeb.otf") format("opentype");
+}
+
+.itc-select__toggle {
+    font-family: GraublauWeb
+}
+
+li.itc-select__option {
+    font-family: GraublauWeb
+}
+
+.myButton {
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+	background-color:#ededed;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	cursor:pointer;
+	color:#080808;
+	font-family:'Arial Narrow';
+	font-size:15px;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffffff;  
+    width:98%;
+}
+
+.myButton:hover {
+	background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+	background-color:#dfdfdf;
+}
+
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+.flex-container {
+    width: 100%;
+    margin-top: 1em;
+    display: -webkit-flex;
+    display: flex; 
+    height: 100%;
+}
+
+.flex-container div {
+    -webkit-flex: 1;
+    -ms-flex: 1; 
+    flex: 1;
+}
+
+ul { 
+    list-style: none; 
+    padding-left: 0;
+}
+
+a {
+    text-decoration: none;
+    color:#080808;
+    font-family:'Arial Narrow';
+	font-size: 20px;
+}
+
+
+li.option {
+    list-style: none; 
+    background: url(/static/icons/settings.svg) no-repeat 0 1px;
+    padding-left: 24px;
+}
+
+li.option:active {
+	position:relative;
+	top:1px;
+}
+
+#btnDisconnect {
+    cursor: not-allowed;
+}

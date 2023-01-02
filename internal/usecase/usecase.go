@@ -1,29 +1,26 @@
 package usecase
 
 import (
-	"context"
 	"fmt"
-	"runtime"
-	"time"
 )
 
 type VpnUseCase struct {
-	sessionSetters       SessionSetters
-	sessionManager       SessionManager
-	cfgSetters           ConfigSetters
-	cfgBody              ConfigBody
-	cfgRemover           ConfigRemover
-	cfgCheck             ConfigChecker
-	cfgMerg              ConfigMerger
-	cfgTools             ConfigTools
-	sessionLoger         SessionLoger
-	uiLogFormManager     UiLogFormManager
-	uiButtonsManager     UiButtonsManager
-	uiListConfigsManager UiListConfigsManager
-	sysTrayIconsManager  SysTrayIconsManager
-	fileSetters          FileSetters
-	fileReader           FileReader
-	dnsSetters           DnsSetters
+	sessionSetters SessionSetters
+	sessionManager SessionManager
+	cfgSetters     ConfigSetters
+	cfgBody        ConfigBody
+	cfgRemover     ConfigRemover
+	cfgCheck       ConfigChecker
+	cfgMerg        ConfigMerger
+	cfgTools       ConfigTools
+	sessionLoger   SessionLoger
+	/* 	uiLogFormManager     UiLogFormManager
+	   	uiButtonsManager     UiButtonsManager
+	   	uiListConfigsManager UiListConfigsManager
+	   	sysTrayIconsManager  SysTrayIconsManager */
+	fileSetters FileSetters
+	fileReader  FileReader
+	dnsSetters  DnsSetters
 }
 
 func NewVpnUseCase(
@@ -37,31 +34,31 @@ func NewVpnUseCase(
 	cfgMerg ConfigMerger,
 	cfgTools ConfigTools,
 	sessionLoger SessionLoger,
-	uiLogFormManager UiLogFormManager,
-	uiButtonsManager UiButtonsManager,
-	uiListConfigsManager UiListConfigsManager,
-	sysTrayIconsManager SysTrayIconsManager,
+	/* 	uiLogFormManager UiLogFormManager,
+	   	uiButtonsManager UiButtonsManager,
+	   	uiListConfigsManager UiListConfigsManager,
+	   	sysTrayIconsManager SysTrayIconsManager, */
 	fileSetters FileSetters,
 	fileReader FileReader,
 	dnsSetters DnsSetters,
 ) (obj *VpnUseCase, err error) {
 	obj = &VpnUseCase{
-		sessionSetters:       sessionSetters,
-		sessionManager:       sessionManager,
-		cfgSetters:           cfgSetters,
-		cfgBody:              cfgBody,
-		cfgRemover:           cfgRemover,
-		cfgCheck:             cfgCheck,
-		cfgMerg:              cfgMerg,
-		cfgTools:             cfgTools,
-		sessionLoger:         sessionLoger,
-		uiLogFormManager:     uiLogFormManager,
+		sessionSetters: sessionSetters,
+		sessionManager: sessionManager,
+		cfgSetters:     cfgSetters,
+		cfgBody:        cfgBody,
+		cfgRemover:     cfgRemover,
+		cfgCheck:       cfgCheck,
+		cfgMerg:        cfgMerg,
+		cfgTools:       cfgTools,
+		sessionLoger:   sessionLoger,
+		/* uiLogFormManager:     uiLogFormManager,
 		uiButtonsManager:     uiButtonsManager,
 		uiListConfigsManager: uiListConfigsManager,
-		sysTrayIconsManager:  sysTrayIconsManager,
-		fileSetters:          fileSetters,
-		fileReader:           fileReader,
-		dnsSetters:           dnsSetters,
+		sysTrayIconsManager:  sysTrayIconsManager, */
+		fileSetters: fileSetters,
+		fileReader:  fileReader,
+		dnsSetters:  dnsSetters,
 	}
 	return
 }
@@ -71,7 +68,7 @@ func (v *VpnUseCase) GetChanVpnLog() chan string {
 	return logChan
 }
 
-func (vp *VpnUseCase) CaseSetLogsInTextWidget(text string) {
+/* func (vp *VpnUseCase) CaseSetLogsInTextWidget(text string) {
 	if runtime.GOOS != "windows" {
 		time.Sleep(time.Duration(50) * time.Millisecond)
 	}
@@ -120,11 +117,13 @@ func (v *VpnUseCase) TraySetImageConnect() error {
 	return nil
 }
 
+*/
+
 func (v *VpnUseCase) SetPhyseInterface(i string) {
 	v.dnsSetters.SetInterface(i)
 }
 
-func (vp *VpnUseCase) CaseFlickeringIcon() error {
+/* func (vp *VpnUseCase) CaseFlickeringIcon() error {
 
 	if runtime.GOOS != "windows" {
 		time.Sleep(time.Duration(250) * time.Millisecond)
@@ -152,7 +151,7 @@ func (vp *VpnUseCase) CaseFlickeringIcon() error {
 
 func (vp *VpnUseCase) GetTextFromComboBox() string {
 	return *vp.uiListConfigsManager.SelectedCfgFromListConfigs()
-}
+} */
 
 func (vp *VpnUseCase) ReadFile() ([]byte, error) {
 	body, err := vp.fileReader.ReadFileAsByte()
@@ -175,8 +174,8 @@ func (vp *VpnUseCase) CheckOvpnUseAuthUserPass() bool {
 	return vp.cfgCheck.CheckStringAuthUserPass()
 }
 
-func (vp *VpnUseCase) RunSession(ctx context.Context) error {
-	return vp.sessionManager.StartSession(ctx)
+func (vp *VpnUseCase) RunSession() error {
+	return vp.sessionManager.StartSession()
 }
 
 func (vp *VpnUseCase) DestroyVpnClient() {

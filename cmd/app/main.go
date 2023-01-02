@@ -1,32 +1,25 @@
-//go:build linux
-// +build linux
-
 package main
 
 import (
-	"flag"
 	"log"
 
-	"github.com/Vai3soh/goovpn/config"
+	embedfile "github.com/Vai3soh/goovpn"
 	"github.com/Vai3soh/goovpn/internal/app"
-	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/caarlos0/env/v6"
 )
 
-var Config = flag.String(
-	"config", "./config/config.yml",
-	"path to configuration file",
-)
-
-func init() {
-	flag.Parse()
+type config struct {
+	LogLvl string `env:"LVL_GOOVPN" envDefault:"debug"`
+	PathDB string `env:"DB_GOOVPN"  envDefault:"goovpn.db"`
 }
 
 func main() {
-	cfg := config.Config{}
-	err := cleanenv.ReadConfig(*Config, &cfg)
-	if err != nil {
-		log.Fatalf("Config error: [%s]\n", err)
+	embd := embedfile.NewData()
+
+	cfg := config{}
+	if err := env.Parse(&cfg); err != nil {
+		log.Fatal(err)
 	}
 
-	app.Run(&cfg)
+	app.Run_wails(*embd.Fs, embd.Icon, cfg.LogLvl, cfg.PathDB)
 }
