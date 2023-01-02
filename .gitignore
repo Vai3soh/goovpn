@@ -1,6 +1,8 @@
 .vscode/*
 cmd/app/goovpn
+cmd/app/goovpn.db
 cmd/app/qtbox
+build/bin/*
 build/package/*
 bug
 extra
