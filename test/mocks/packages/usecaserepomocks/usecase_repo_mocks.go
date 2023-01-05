@@ -5,7 +5,6 @@
 package usecaserepomocks
 
 import (
-	context "context"
 	fs "io/fs"
 	os "os"
 	reflect "reflect"
@@ -136,17 +135,17 @@ func (mr *MockSessionManagerMockRecorder) DestroyClient() *gomock.Call {
 }
 
 // StartSession mocks base method.
-func (m *MockSessionManager) StartSession(ctx context.Context) error {
+func (m *MockSessionManager) StartSession() error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StartSession", ctx)
+	ret := m.ctrl.Call(m, "StartSession")
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // StartSession indicates an expected call of StartSession.
-func (mr *MockSessionManagerMockRecorder) StartSession(ctx interface{}) *gomock.Call {
+func (mr *MockSessionManagerMockRecorder) StartSession() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartSession", reflect.TypeOf((*MockSessionManager)(nil).StartSession), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartSession", reflect.TypeOf((*MockSessionManager)(nil).StartSession))
 }
 
 // StopSession mocks base method.
