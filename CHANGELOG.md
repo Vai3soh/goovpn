@@ -1,4 +1,39 @@
 
+1.0.3
+=============
+2023-01-05
+
+* Use local module wails, with Notifications (c9d73391)
+* Add ignore build binary files (dcbf9707)
+* Remove QT, use Wails. Prepared a pre release for Windows (f99ea7cc)
+* Remove old core openvpn3, use new library from upstream (5cf65b03)
+* Disable timeouts for windows OS (a7003d2a)
+* Fix windows crash app (672140fd)
+* Added missing options to config, according to session API (79a67a87)
+* Remove QT debug option (6fe1c307)
+* Fix error config path on windows platform (3f73be57)
+* Windows platform use env USERPROFILE (a3eb9807)
+* Debug on, app exit code 1 (1aeb2084)
+* Change path save directory config (7d4e26c4)
+* Remove not use module (c9f5d911)
+* Fix git checkout (d6c8b587)
+* Update dockerfile for windows OS (c4a1862e)
+* Refactoring code application with use windows system (b95b14a1)
+* Add new entry point for windows OS and add config (f06a9861)
+* Add new package this logic rules app (9092533a)
+* Move, rename refactoring old package to other dir (7ef549ee)
+* Add logic app for transport openvpn (aa9c4933)
+* Add dockerfiles for windows system (e67602dc)
+* Update gitignore, move Dockerfile (fa347617)
+* Refactoring code in package (b486f2a5)
+* Delete some package, refactoring code (53021cf6)
+* Refactoring code in package, update usecase (d18ba943)
+* Refactoring code in package (8704e36a)
+* Update go.mod/go.sum (30d19bbc)
+* Refactor session module (0dcdfc64)
+* Move submodule to third_party dir (a3bbc460)
+* Update library openvpn3, after build (tag v1.0.2) (dcc5805e)
+
 1.0.2
 =============
 2022-08-10

@@ -1,3 +1,275 @@
+- semver: 1.0.3
+  date: 2023-01-05T12:24:56+10:00
+  packager: GitHub <noreply@github.com>
+  changes:
+    - commit: c9d73391c99628a16077e5cf11d0fa8be912283f
+      note: |-
+        Use local module wails, with Notifications
+
+        Add notify connection state
+        Testing on win10, linux
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: dcbf9707c6977fe11551860c2d3d232c8bcf7281
+      note: Add ignore build binary files
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: f99ea7cc4ce87139b7967a703174e1fef6ece97a
+      note: |-
+        Remove QT, use Wails. Prepared a pre release for Windows
+
+        Removed QT framework due to complex build system.
+        Use Wails https://github.com/wailsapp/wails
+        Remove using config files, use Boltdb https://github.com/etcd-io/bbolt to store configuration application
+
+        Bugs:
+        In windows version there is a DNS leak, create issue https://github.com/OpenVPN/openvpn3/issues/253
+
+        What need to do:
+        Notification missing, need merge pull request https://github.com/wailsapp/wails/pull/2206
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 5cf65b031eb6c86f3f1c272965cb16bc6ebedeb6
+      note: |-
+        Remove old core openvpn3, use new library from upstream
+
+        Since there is a bug with the connection for the win system,
+        it was decided to update the library Openvpn3.
+        Now there are problems building the project, due to the complex build system in GUI project:
+        github.com/therecipe/qt.
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: a7003d2a2cd2c3d2eb5f2e19de71e251e0be45b2
+      note: Disable timeouts for windows OS
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 672140fd04d6abf28bc1af945b3820e296812117
+      note: |-
+        Fix windows crash app
+        If dns not pushed use cloudflare DNS
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 79a67a878da4f66e0c34bae593a89bbe18508870
+      note: Added missing options to config, according to session API
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 6fe1c307af393fb4cf4c726de5d42cfa236eaaad
+      note: Remove QT debug option
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 3f73be570efe4d8c43660de58ee2edb15397fc8e
+      note: Fix error config path on windows platform
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: a3eb98079c5ba6fad694ec9b34baebece1fa4f5f
+      note: Windows platform use env USERPROFILE
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 1aeb208466afdf6043b9c99fd782e70d94b3ec89
+      note: Debug on, app exit code 1
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 7d4e26c4010b4e3f30a5079e7baaecc8bbd6fe1a
+      note: Change path save directory config
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: c9f5d9115cc7814c0c0bf9b704a8fc45c145d371
+      note: Remove not use module
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: d6c8b58793029ee7374efa654d7bb184b5558bb9
+      note: Fix git checkout
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: c4a1862e41bc94404170b8d79dfd27de2c404530
+      note: Update dockerfile for windows OS
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: b95b14a1906214db5e25471955edc4301933c0e9
+      note: Refactoring code application with use windows system
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: f06a98613052b4d1f4664254fd383bef007c7431
+      note: Add new entry point for windows OS and add config
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 9092533ab4ca0fbb60ce977a70376d78a9ed9b4e
+      note: Add new package this logic rules app
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 7ef549ee9494b3e0ce1ee573d4fcb6a9b6a132e7
+      note: Move, rename refactoring old package to other dir
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: aa9c4933aec44c9084e6a51eded2e45d3acca557
+      note: Add logic app for transport openvpn
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: e67602dc51e74078f0321d75b47993eafc2244e7
+      note: Add dockerfiles for windows system
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: fa3476170da40e673fb839ce8e154ad13d0bbfe5
+      note: Update gitignore, move Dockerfile
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: b486f2a51ae349915aa3d3480a395b5c18f17aba
+      note: Refactoring code in package
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 53021cf60782b83ed99f5a45f5e863f26784528b
+      note: Delete some package, refactoring code
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: d18ba9433f0b9b9524e49c96c801c3525f82538d
+      note: Refactoring code in package, update usecase
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 8704e36aa93335ab3703fdad673ecf768288bf4c
+      note: Refactoring code in package
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 30d19bbcfeec1b436ec60361242ff9f1e63a81dc
+      note: Update go.mod/go.sum
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 0dcdfc64395e63a90e05370ff68439d7e01b56ca
+      note: |-
+        Refactor session module
+        Remove use Waitgroup and add errgroup, add to struct Session field unsafe Pointer.
+        Using context functional for stop session.
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: a3bbc4607fdbd96b77a244a1cb56c49a0acbbedc
+      note: |-
+        Move submodule to third_party dir
+        Add changlog to project
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: dcc5805ee94e283379407f9011b2b1fbafd747ea
+      note: Update library openvpn3, after build (tag v1.0.2)
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
 - semver: 1.0.2
   date: 2022-08-10T12:45:29+10:00
   packager: GitHub <noreply@github.com>
