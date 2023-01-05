@@ -16,6 +16,9 @@ build_bin_windows:
 build_debug_race:
 	cd $(main_path) && wails build -debug -race
 
+build_debug_windows:
+	cd $(main_path) && CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++-posix wails build -debug -platform windows/amd64 -skipbindings -ldflags "-linkmode external -extldflags -static"  
+	
 build_package:
 	@nfpm package -t ./build/package -p deb
 	@nfpm package -t ./build/package -p rpm

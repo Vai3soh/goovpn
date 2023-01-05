@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"regexp"
+	rtime "runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -17,6 +18,11 @@ type Logger interface {
 	Debugf(string, ...interface{})
 	Fatalf(string, ...interface{})
 	Info(...interface{})
+}
+
+type notiferService interface {
+	DisconnectNotify() error
+	ConnectNotify() error
 }
 
 type sessionService interface {
@@ -70,12 +76,13 @@ type TransportOvpnClient struct {
 
 	dbService DBService
 	sessionService
+	notiferService
 }
 
 func New(
 	configsPath string, core core,
 	pcore ProfileCore, dnsManager DnsManager,
-	l Logger, db DBService, s sessionService,
+	l Logger, db DBService, s sessionService, n notiferService,
 ) *TransportOvpnClient {
 
 	return &TransportOvpnClient{
@@ -86,6 +93,7 @@ func New(
 		l:              l,
 		dbService:      db,
 		sessionService: s,
+		notiferService: n,
 	}
 }
 
@@ -103,7 +111,7 @@ func (t *TransportOvpnClient) getVpnCread(ok bool) (string, string) {
 		}
 		absPathCredFile, err := t.pcore.SearchFileAbsolutePath(fileAuth)
 		if err != nil {
-			t.l.Fatalf("don't get file absolute path: [%w]\n", err)
+			t.l.Fatalf("don't get file absolute path: [%s]\n", err)
 		}
 		t.core.SetPathToFile(*absPathCredFile)
 		CredFileBody, err := t.core.ReadFile()
@@ -170,7 +178,7 @@ func (t *TransportOvpnClient) Connect(cfgName string) {
 	if profile.Body == "" {
 		err := t.pcore.SaveProfileWithoutCfgFile(cfg)
 		if err != nil {
-			t.l.Fatalf("pcore failed: [%w]\n", err)
+			t.l.Fatalf("pcore failed: [%s]\n", err)
 		}
 		if !t.pcore.CheckUseCfgFile() {
 			profile := t.pcore.GetProfileFromCache(cfg)
@@ -181,7 +189,7 @@ func (t *TransportOvpnClient) Connect(cfgName string) {
 			os.Chdir(t.configsPath)
 			err := t.pcore.SaveProfileWithCfgFile(cfg)
 			if err != nil {
-				t.l.Fatalf("pcore failed: [%w]\n", err)
+				t.l.Fatalf("pcore failed: [%s]\n", err)
 			}
 			profile := t.pcore.GetProfileFromCache(cfg)
 			t.caseRunSessionOpenvpn(profile.Body)
@@ -196,7 +204,7 @@ func (t *TransportOvpnClient) Disconnect() {
 	t.dnsManager.ConfigureDns(`revert`)
 	err := t.dnsManager.SetupDns(`revert`)
 	if err != nil {
-		t.l.Fatalf("don't manager dns: [%w]\n", err)
+		t.l.Fatalf("don't manager dns: [%s]\n", err)
 	}
 }
 
@@ -231,23 +239,33 @@ func (t *TransportOvpnClient) readLogsFromChan(countReccon int) {
 		}
 
 		if strings.Contains(text, `event name: DISCONNECTED`) {
-
+			err := t.notiferService.DisconnectNotify()
+			if err != nil {
+				t.l.Fatalf("notify send err [%s]\n", err)
+			}
 			if !iterSkip {
 				t.dnsManager.ConfigureDns(`revert`)
 				err := t.dnsManager.SetupDns(`revert`)
 				if err != nil {
-					t.l.Fatalf("don't manager dns: [%w]\n", err)
+					t.l.Fatalf("don't manager dns: [%s]\n", err)
 				}
 			}
 			toBreak = true
 		}
 
 		if strings.Contains(text, `event name: CONNECTED`) {
+			err := t.notiferService.ConnectNotify()
+			if err != nil {
+				t.l.Fatalf("notify send err [%s]\n", err)
+			}
 			continue
 		}
 
 		if strings.Contains(text, `event name: RECONNECTING`) {
-
+			err := t.notiferService.DisconnectNotify()
+			if err != nil {
+				t.l.Fatalf("notify send err [%s]\n", err)
+			}
 		}
 
 		if iterSkip {
@@ -264,13 +282,19 @@ func (t *TransportOvpnClient) readLogsFromChan(countReccon int) {
 			t.dnsManager.ConfigureDns(`setup`)
 			err := t.dnsManager.SetupDns(`setup`)
 			if err != nil {
-				t.l.Fatalf("setup dns err [%w]\n", err)
+				t.l.Fatalf("setup dns err [%s]\n", err)
 			}
 
 			iterSkip = true
 			continue
 
 		} else {
+			if rtime.GOOS != "windows" {
+				err := t.notiferService.DisconnectNotify()
+				if err != nil {
+					t.l.Fatalf("notify send err [%s]\n", err)
+				}
+			}
 
 		}
 	}

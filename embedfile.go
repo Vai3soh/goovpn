@@ -7,18 +7,26 @@ import (
 var (
 	//go:embed frontend/src
 	assets embed.FS
-	//go:embed  build/appicon.png
+	//go:embed  embedfile/assets/app.png
 	icon []byte
+	//go:embed  embedfile/assets/connecting.png
+	connectIcon []byte
+	//go:embed  embedfile/assets/disconnect.png
+	disconnectIcon []byte
 )
 
 type Data struct {
-	Fs   *embed.FS
-	Icon []byte
+	Fs             *embed.FS
+	AppIcon        []byte
+	ConnectIcon    []byte
+	DisconnectIcon []byte
 }
 
 func NewData() *Data {
 	return &Data{
-		Fs:   &assets,
-		Icon: icon,
+		Fs:             &assets,
+		AppIcon:        icon,
+		ConnectIcon:    connectIcon,
+		DisconnectIcon: disconnectIcon,
 	}
 }

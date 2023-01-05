@@ -21,5 +21,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app.Run_wails(*embd.Fs, embd.Icon, cfg.LogLvl, cfg.PathDB)
+	app.Run_wails(
+		*embd.Fs, embd.AppIcon, embd.ConnectIcon,
+		embd.DisconnectIcon, cfg.LogLvl, cfg.PathDB,
+	)
 }

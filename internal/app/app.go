@@ -13,6 +13,7 @@ import (
 	"github.com/Vai3soh/goovpn/internal/dns"
 	"github.com/Vai3soh/goovpn/internal/fileextended"
 	"github.com/Vai3soh/goovpn/internal/gui"
+	"github.com/Vai3soh/goovpn/internal/notify"
 	"github.com/Vai3soh/goovpn/internal/parser"
 	"github.com/Vai3soh/goovpn/internal/session"
 	transport "github.com/Vai3soh/goovpn/internal/transport/openvpn"
@@ -53,7 +54,12 @@ func mustOpen(bdb *boltdb.BoltDB, l *logger.Logger) {
 	}
 }
 
-func Run_wails(assets embed.FS, icon []byte, logLev, dbPath string) {
+func Run_wails(
+	assets embed.FS, appicon, connIcon,
+	disconnIcon []byte, logLev, dbPath string,
+) {
+
+	n := notify.NewNotify(connIcon, disconnIcon)
 
 	l := logger.NewLogger(
 		logger.WithLogTextFormatter(), logger.WithLogLevel(&logLev),
@@ -185,13 +191,13 @@ func Run_wails(assets embed.FS, icon []byte, logLev, dbPath string) {
 	if runtime.GOOS != "windows" {
 		tr = transport.New(
 			configsPath+"/", vpnUseCase,
-			profileUseCase, names, l, bdb, sessOvpn,
+			profileUseCase, names, l, bdb, sessOvpn, n,
 		)
 	} else {
 
 		tr = transport.New(
 			configsPath, vpnUseCase,
-			profileUseCase, names, l, bdb, sessOvpn,
+			profileUseCase, names, l, bdb, sessOvpn, n,
 		)
 	}
 	gui := gui.NewGui(fileExt, sessOvpn, bdb, l, tr)
@@ -215,13 +221,14 @@ func Run_wails(assets embed.FS, icon []byte, logLev, dbPath string) {
 			sessOvpn.SetContext(ctx)
 			gui.Startup(ctx)
 			tr.SetContext(ctx)
+			n.SetContext(ctx)
 		},
 		OnDomReady:       gui.DomReady,
 		OnBeforeClose:    gui.BeforeClose,
 		OnShutdown:       gui.Shutdown,
 		WindowStartState: options.Normal,
 		Bind: []interface{}{
-			gui, tr,
+			gui, tr, n,
 		},
 		// Windows platform specific options
 		Windows: &windows.Options{
@@ -247,7 +254,7 @@ func Run_wails(assets embed.FS, icon []byte, logLev, dbPath string) {
 			About: &mac.AboutInfo{
 				Title:   "Goovpn",
 				Message: "",
-				Icon:    icon,
+				Icon:    appicon,
 			},
 		},
 	})

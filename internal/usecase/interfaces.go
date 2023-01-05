@@ -56,38 +56,6 @@ type (
 		GetUserAndPass() (string, string)
 	}
 
-	/* 	UiLogFormManager interface {
-	   		GetTextFromLogForm() string
-	   		SetTextInLogForm(text string)
-	   		ClearLogForm()
-	   	}
-
-	   	UiButtonsManager interface {
-	   		ButtonConnectEnable()
-	   		ButtonConnectDisable()
-	   		ButtonDisconnectEnable()
-	   		ButtonDisconnectDisable()
-	   	}
-
-	   	UiListConfigsManager interface {
-	   		DisableListConfigsBox()
-	   		EnableListConfigsBox()
-	   		SelectedCfgFromListConfigs() *string
-	   	}
-
-	   	SysTrayIconsManager interface {
-	   		SetIcon(path string)
-	   		SetDisconnectIcon() error
-	   		SetConnectIcon() error
-	   		SetOpenIcon() error
-	   		SetBlinkIcon() error
-	   	}
-
-	   	SysTrayImagesManager interface {
-	   		SearchKeyInMap(s string) (*string, error)
-	   		Image() map[string][]byte
-	   	} */
-
 	FileSetters interface {
 		SetBody([]byte)
 		SetPath(path string)

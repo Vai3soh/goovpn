@@ -6,12 +6,20 @@ export function Connect(arg1) {
   return window['go']['openvpn']['TransportOvpnClient']['Connect'](arg1);
 }
 
+export function ConnectNotify() {
+  return window['go']['openvpn']['TransportOvpnClient']['ConnectNotify']();
+}
+
 export function Context() {
   return window['go']['openvpn']['TransportOvpnClient']['Context']();
 }
 
 export function Disconnect() {
   return window['go']['openvpn']['TransportOvpnClient']['Disconnect']();
+}
+
+export function DisconnectNotify() {
+  return window['go']['openvpn']['TransportOvpnClient']['DisconnectNotify']();
 }
 
 export function ReloadClient(arg1) {
