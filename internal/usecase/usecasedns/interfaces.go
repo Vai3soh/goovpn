@@ -13,7 +13,7 @@ type CmdToolsManager interface {
 
 type CmdResolver interface {
 	CmdResolvConfAndPrintf() (*string, *string, error)
-	CmdSystemdResolv() (*string, error)
+	CmdSystemdResolv() (*string, *string, error)
 	CmdDownResolvConf() (*string, error)
 }
 

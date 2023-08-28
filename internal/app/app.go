@@ -50,7 +50,7 @@ func SaveHardCodedParams(
 func mustOpen(bdb *boltdb.BoltDB, l *logger.Logger) {
 	err := bdb.ReOpen()
 	if err != nil {
-		l.Fatalf("don't open [%w]\n", err)
+		l.Fatalf("don't open [%s]\n", err)
 	}
 }
 
@@ -75,7 +75,7 @@ func Run_wails(
 	file.SetPath("")
 	bdb, err := boltdb.NewBoltDB(*absDb)
 	if err != nil {
-		l.Fatalf("don't get constructor [%w]\n", err)
+		l.Fatalf("don't get constructor [%s]\n", err)
 	}
 
 	useSystemd := false
@@ -155,7 +155,7 @@ func Run_wails(
 		file, file, file, gl, gl, gl, gl, gl, gl, memory,
 	)
 	if err != nil {
-		l.Fatalf("don't get constructor [%w]\n", err)
+		l.Fatalf("don't get constructor [%s]\n", err)
 	}
 
 	command := cli.NewCmd()
@@ -178,12 +178,12 @@ func Run_wails(
 
 	sys, err := dns.NewSystem(runtime.GOOS, dnsUseCase, dnsUseCase, useSystemd)
 	if err != nil {
-		l.Fatalf("don't get constructor [%w]\n", err)
+		l.Fatalf("don't get constructor [%s]\n", err)
 	}
 
 	names, err := dns.NewNames(dnsUseCase)
 	if err != nil {
-		l.Fatalf("don't get constructor [%w]\n", err)
+		l.Fatalf("don't get constructor [%s]\n", err)
 	}
 	names.SetGoos(*sys)
 

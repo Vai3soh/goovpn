@@ -5,7 +5,7 @@ go 1.19
 replace github.com/wailsapp/wails/v2 => ./pkg/wails/v2
 
 require (
-	github.com/Vai3soh/ovpncli v1.0.4
+	github.com/Vai3soh/ovpncli v1.0.6
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/fangdingjun/go-log/v5 v5.0.0
 	github.com/golang/mock v1.6.0

@@ -58,15 +58,15 @@ func (c *cmdResolver) CmdDownResolvConf() (*string, error) {
 	return &cmdDown, nil
 }
 
-func (c *cmdResolver) CmdSystemdResolv() (*string, error) {
-	c.CmdSeacher.SetCommand("systemd-resolve")
+func (c *cmdResolver) CmdSystemdResolv() (*string, *string, error) {
+	c.CmdSeacher.SetCommand("resolvectl")
 	full, err := c.CmdSeacher.getBinaryPath()
 	if err != nil {
-		return nil, fmt.Errorf("cmd systemd-resolve err: [%w]", err)
+		return nil, nil, fmt.Errorf("cmd resolvectl err: [%w]", err)
 	}
-	cmd := *full + " " + "-i " + c.iface + " --set-Resolver=" +
-		strings.Join(c.address[:], " --set-Resolver=") + " --set-domain=~"
-	return &cmd, nil
+	cmdDns := *full + " " + "dns " + c.iface + " " + strings.Join(c.address[:], " ")
+	cmdDomain := *full + " " + "domain " + c.iface + " ~."
+	return &cmdDns, &cmdDomain, nil
 }
 
 func (c *cmdResolver) CmdResolvConfAndPrintf() (*string, *string, error) {

@@ -56,15 +56,23 @@ func (dns *DnsUseCase) CaseSetupDnsNotUseSystemd() error {
 }
 
 func (dns *DnsUseCase) CaseSetupDnsWithUseSystemd() error {
-	cmdResolv, err := dns.cmdResolver.CmdSystemdResolv()
+	cmdDns, CmdDomain, err := dns.cmdResolver.CmdSystemdResolv()
 	if err != nil {
 		return err
 	}
-	cmdArg, err := dns.SplitCommand(*cmdResolv)
+	cmdArgDns, err := dns.SplitCommand(*cmdDns)
 	if err != nil {
 		return err
 	}
-	err = dns.RunProcessCmd(cmdArg)
+	err = dns.RunProcessCmd(cmdArgDns)
+	if err != nil {
+		return err
+	}
+	cmdArgDomain, err := dns.SplitCommand(*CmdDomain)
+	if err != nil {
+		return err
+	}
+	err = dns.RunProcessCmd(cmdArgDomain)
 	if err != nil {
 		return err
 	}

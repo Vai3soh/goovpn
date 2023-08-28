@@ -1,7 +1,7 @@
 name: "goovpn"
 arch: "amd64"
 platform: "linux"
-version: "v1.0.3"
+version: "v1.0.4"
 section: "default"
 priority: "extra"
 

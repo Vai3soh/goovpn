@@ -14,7 +14,14 @@ Build:
 
 ```git clone github.com/Vai3soh/goovpn```
 
-Build binary:
+Linux (deb) install packages deps: 
+	```apt install libwebkit2gtk-4.0-dev libssl-dev```
+	
+For windows cross-compile need:
+	```apt install gcc-mingw-w64 g++-mingw-w64```
+	
+	
+Build binary, need install wails:
 	linux:
 		```make build_bin_linux```
 	windows:
@@ -31,7 +38,7 @@ Download deb, rpm, appimage package in realese:
 ```github.com/Vai3soh/goovpn/releases```
 
 Install package:
-```sudo dpkg -i goovpn_1.0.3_amd64.deb or sudo dnf goovpn-1.0.3.x86_64.rpm```
+```sudo dpkg -i goovpn_1.0.4_amd64.deb or sudo dnf goovpn-1.0.4.x86_64.rpm```
 
 After install run:
 
@@ -41,8 +48,9 @@ create dir ```mkdir /home/user/ovpnconfigs```,
 move your openvpn configs files to this dir.
 
 DNS query:
-1. If your distr with systemd, enable the option ```Use systemd``` and install ```systemd-resolve```.
-
+1. If your distr with systemd, enable the option ```Use systemd``` and install package ```systemd-resolved```.
+   This version use ```resolvectl``` util for configure dns.
+   
 After restart unit systemd-resolved, your ```/etc/resolv.conf```
 ```
 # This file is managed by man:systemd-resolved(8). Do not edit.
