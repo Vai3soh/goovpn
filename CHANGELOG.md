@@ -1,8 +1,16 @@
 
+1.0.4
+=============
+2023-08-28
+
+* Remove systemd-resolve (ec9a0520)
+
 1.0.3
 =============
 2023-01-05
 
+* Update repo gen mock (73b8ec12)
+* Update changelog (7250fd1f)
 * Use local module wails, with Notifications (c9d73391)
 * Add ignore build binary files (dcbf9707)
 * Remove QT, use Wails. Prepared a pre release for Windows (f99ea7cc)
