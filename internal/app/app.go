@@ -187,16 +187,34 @@ func Run_wails(
 	}
 	names.SetGoos(*sys)
 
+	bdb.SetNameBucket("general_configure")
+	err = bdb.ReOpen()
+	if err != nil {
+		l.Fatal(err)
+	}
+	err = bdb.GetValueFromBucket(`config_dir_path`)
+	if err != nil {
+		l.Fatal(err)
+	}
+	message := bdb.Message()
+
+	if len(message) == 0 {
+		message = append(message,
+			entity.Message{
+				AtrId: "config_dir_path", Value: configsPath,
+			})
+	}
+
 	var tr *transport.TransportOvpnClient
 	if runtime.GOOS != "windows" {
 		tr = transport.New(
-			configsPath+"/", vpnUseCase,
+			message[0].Value+"/", vpnUseCase,
 			profileUseCase, names, l, bdb, sessOvpn, n,
 		)
 	} else {
 
 		tr = transport.New(
-			configsPath, vpnUseCase,
+			message[0].Value, vpnUseCase,
 			profileUseCase, names, l, bdb, sessOvpn, n,
 		)
 	}

@@ -173,7 +173,17 @@ func (t *TransportOvpnClient) Connect(cfgName string) {
 	message := t.dbService.Message()
 	v, _ := strconv.Atoi(message[0].Value)
 	go t.readLogsFromChan(v)
-	cfg := t.configsPath + cfgName
+	err = t.dbService.ReOpen()
+	if err != nil {
+		t.l.Fatal(err)
+	}
+	err = t.dbService.GetValueFromBucket(`config_dir_path`)
+	if err != nil {
+		t.l.Fatal(err)
+	}
+	message = t.dbService.Message()
+	t.configsPath = message[0].Value
+	cfg := t.configsPath + "/" + cfgName
 	profile := t.pcore.GetProfileFromCache(cfg)
 	if profile.Body == "" {
 		err := t.pcore.SaveProfileWithoutCfgFile(cfg)
