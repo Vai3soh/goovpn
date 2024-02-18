@@ -1,4 +1,11 @@
 
+1.0.5
+=============
+2024-02-17
+
+* Fix crash application (8fb2249f)
+* Update changelog v1.0.4 (5eb663fa)
+
 1.0.4
 =============
 2023-08-28
