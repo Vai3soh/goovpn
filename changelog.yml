@@ -1,3 +1,27 @@
+- semver: 1.0.6
+  date: 2024-02-19T11:34:11+10:00
+  packager: GitHub <noreply@github.com>
+  changes:
+    - commit: 645890c42fa87006985a392b16e2d4175a30de3f
+      note: |-
+        Update parser config
+
+        This commit fixes an application crash when the certificate and key block
+        is not at the end of the config. The test has also been updated.
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+    - commit: 46fc6cf17a1ffa0fdaffcb87df6388467ab3f383
+      note: Update changelog v1.0.5
+      author:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
+      committer:
+        name: Vai3soh
+        email: work.rwx.seven@gmail.com
 - semver: 1.0.5
   date: 2024-02-17T18:30:15+10:00
   packager: GitHub <noreply@github.com>
