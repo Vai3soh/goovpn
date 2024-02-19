@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"bufio"
-	"os"
 	"regexp"
 	"strings"
 
@@ -69,39 +67,26 @@ func (c *Config) RemoveCertsAndKeys() {
 	c.Body = regexp.MustCompile(r).ReplaceAllString(c.Body, "")
 }
 
-func contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-	return false
-}
-
 func (c *Config) CheckConfigUseFiles() bool {
-	r := `(?m)^cert\s+|^ca\s+|^key\s+|^tls-auth\s+|^tls-crypt\s+` //
+	r := `(?m)^cert\s+|^ca\s+|^key\s+|^tls-auth\s+|^tls-crypt\s+`
 	return regexp.MustCompile(r).MatchString(c.Body)
 }
 
-func (c *Config) AddStringToConfig(inFile *os.File) string {
-
-	defer inFile.Close()
-	scanner := bufio.NewScanner(inFile)
-	scanner.Split(bufio.ScanLines)
-
-	var strs []string
+func (c *Config) AddStringToConfig() {
 	substr := `deadline`
-	for scanner.Scan() {
-		if !contains(strs, substr) {
-			r := `(?m)^ca\s+|^key\s+|^cert\s+|^tls-auth\s+|^tls-crypt\s+`
-			if regexp.MustCompile(r).MatchString(scanner.Text()) {
+	if !strings.Contains(c.Body, substr) {
+		r := `(?m)^ca\s+|^key\s+|^cert\s+|^tls-auth\s+|^tls-crypt\s+`
+		lines := strings.Split(c.Body, "\n")
+		var strs []string
+		for _, line := range lines {
+			if regexp.MustCompile(r).MatchString(line) &&
+				!strings.Contains(strings.Join(strs, "\n"), substr) {
 				strs = append(strs, substr)
 			}
+			strs = append(strs, line)
 		}
-		strs = append(strs, scanner.Text())
+		c.Body = strings.Join(strs, "\n")
 	}
-	body := strings.Join(strs, "\n")
-	return body
 }
 
 func (c *Config) SearchFilesPaths() map[string]string {
@@ -113,6 +98,19 @@ func (c *Config) SearchFilesPaths() map[string]string {
 		CertKeysMap[match[1]] = match[2]
 	}
 	return CertKeysMap
+}
+
+func (c *Config) MoveCertKeyBlockIfNeeded() {
+
+	certKeyRegex := regexp.MustCompile(`(?m)(ca|cert|key) '.*'\s*$`)
+	certKeyMatches := certKeyRegex.FindAllString(c.Body, -1)
+	if len(certKeyMatches) == 0 {
+		return
+	}
+	modifiedBody := certKeyRegex.ReplaceAllString(c.Body, "")
+	modifiedBody = strings.TrimSpace(modifiedBody)
+	modifiedBody += "\n" + strings.Join(certKeyMatches, "\n")
+	c.Body = modifiedBody
 }
 
 func (c *Config) MergeCertsAndKeys(key string) string {

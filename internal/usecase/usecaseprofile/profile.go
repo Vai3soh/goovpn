@@ -83,12 +83,9 @@ func (p *ProfileUseCase) GetMergedStringCfg(
 }
 
 func (p *ProfileUseCase) OpenFileAndAddToConfig() (*string, error) {
-
-	infile, err := p.fileToolsManager.FileOpen()
-	if err != nil {
-		return nil, fmt.Errorf("file open err: [%w]", err)
-	}
-	s := p.cfgTools.AddStringToConfig(infile)
+	p.cfgTools.MoveCertKeyBlockIfNeeded()
+	p.cfgTools.AddStringToConfig()
+	s := p.cfgTools.GetBody()
 	return &s, nil
 }
 

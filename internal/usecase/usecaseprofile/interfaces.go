@@ -55,10 +55,12 @@ type ProfileRepository interface {
 }
 
 type ConfigTools interface {
-	AddStringToConfig(inFile *os.File) string
+	AddStringToConfig()
+	GetBody() string
 	SearchFilesPaths() map[string]string
 	GetAuthpathFileName() string
 	GetUserAndPass() (string, string)
+	MoveCertKeyBlockIfNeeded()
 }
 
 type ConfigChecker interface {

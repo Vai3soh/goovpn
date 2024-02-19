@@ -50,7 +50,7 @@ type (
 	}
 
 	ConfigTools interface {
-		AddStringToConfig(inFile *os.File) string
+		AddStringToConfig()
 		SearchFilesPaths() map[string]string
 		GetAuthpathFileName() string
 		GetUserAndPass() (string, string)

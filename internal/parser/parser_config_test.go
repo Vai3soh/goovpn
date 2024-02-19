@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"os"
 	"regexp"
 	"testing"
 
@@ -183,47 +182,39 @@ func TestGetUserAndPass(t *testing.T) {
 	require.Contains(t, pass, "userPwd")
 }
 
-func getOsFile(file string) *os.File {
-	infile, _ := os.Create("/tmp/cfgFile")
-	infile.WriteString(file)
-	infile.Close()
-	infile, _ = os.Open("/tmp/cfgFile")
-	return infile
-}
-
 func TestAddStringToConfig(t *testing.T) {
-	infile := getOsFile(test_config_with_files)
-	body := cfg.AddStringToConfig(infile)
-	require.Contains(t, body, "deadline")
+	cfg.Body = test_config_with_files
+	cfg.AddStringToConfig()
+	require.Contains(t, cfg.GetBody(), "deadline")
 }
 
 func TestRemoveCertsAndKeys(t *testing.T) {
-	file := getOsFile(test_config_with_files)
-	body := cfg.AddStringToConfig(file)
-	cfg.Body = body
+	cfg.Body = test_config_with_files
+	cfg.MoveCertKeyBlockIfNeeded()
+	cfg.AddStringToConfig()
 	cfg.RemoveCertsAndKeys()
-	require.NotContains(t, cfg.Body, "deadline")
-	require.NotContains(t, cfg.Body, "ca /etc/openvpn/ca.crt")
-	require.NotContains(t, cfg.Body, "cert /etc/openvpn/client.crt")
-	require.NotContains(t, cfg.Body, "key /etc/openvpn/client.key")
+	require.NotContains(t, cfg.GetBody(), "deadline")
+	require.NotContains(t, cfg.GetBody(), "ca /etc/openvpn/ca.crt")
+	require.NotContains(t, cfg.GetBody(), "cert /etc/openvpn/client.crt")
+	require.NotContains(t, cfg.GetBody(), "key /etc/openvpn/client.key")
 }
 
 func TestRemoveNotCertsAndKeys(t *testing.T) {
-	file := getOsFile(test_config_with_files)
-	body := cfg.AddStringToConfig(file)
-	cfg.Body = body
+	cfg.Body = test_config_with_files
+	cfg.MoveCertKeyBlockIfNeeded()
+	cfg.AddStringToConfig()
 	cfg.RemoveNotCertsAndKeys()
-	require.Contains(t, cfg.Body, "ca /etc/openvpn/ca.crt")
-	require.Contains(t, cfg.Body, "cert /etc/openvpn/client.crt")
-	require.Contains(t, cfg.Body, "key /etc/openvpn/client.key")
-	require.NotContains(t, cfg.Body, "deadline")
-	require.NotContains(t, cfg.Body, "resolv-retry infinite")
+	require.Contains(t, cfg.GetBody(), "ca /etc/openvpn/ca.crt")
+	require.Contains(t, cfg.GetBody(), "cert /etc/openvpn/client.crt")
+	require.Contains(t, cfg.GetBody(), "key /etc/openvpn/client.key")
+	require.NotContains(t, cfg.GetBody(), "deadline")
+	require.NotContains(t, cfg.GetBody(), "resolv-retry infinite")
 }
 
 func TestSearchFilesPaths(t *testing.T) {
-	file := getOsFile(test_config_with_files)
-	body := cfg.AddStringToConfig(file)
-	cfg.Body = body
+	cfg.Body = test_config_with_files
+	cfg.MoveCertKeyBlockIfNeeded()
+	cfg.AddStringToConfig()
 	cfg.RemoveNotCertsAndKeys()
 	require.Equal(t, cfg.SearchFilesPaths(),
 		map[string]string{
@@ -269,7 +260,3 @@ M7muBbF0XN7VO80iJPv+PmIZdEIAkpwKfi201YB+BafCIuGxIF50Vg==
 	require.Contains(t, check, "</"+`key`+">\n")
 	require.Contains(t, check, "\n<"+`key`+">\n")
 }
-
-//go test -coverprofile=p.out .
-//go tool cover -html=p.out
-//go test -v -count=1 .

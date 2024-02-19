@@ -36,3 +36,6 @@ changelog_update:
 	rm -rf changelog.yml
 	chglog init
 	chglog format --template repo > CHANGELOG.md
+
+run_tests:
+	go test -v internal/parser/parser_config_test.go internal/parser/parser_config.go
